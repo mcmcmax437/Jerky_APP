@@ -1,0 +1,273 @@
+{
+  "meta": {
+    "siteName": "JERKY",
+    "description": "Lokalny prototyp marki beef jerky. Robocza nazwa, trzy smaki po 100 g, bez płatności i bez niepotwierdzonego składu."
+  },
+  "nav": {
+    "shop": "Sklep",
+    "story": "Nasza historia",
+    "faq": "FAQ",
+    "contact": "Kontakt",
+    "cart": "Koszyk",
+    "openMenu": "Otwórz menu",
+    "closeMenu": "Zamknij menu",
+    "language": "Język",
+    "home": "Strona główna",
+    "primary": "Główne",
+    "skip": "Przejdź do treści",
+    "account": "Konto",
+    "admin": "Panel"
+  },
+  "footer": {
+    "note": "Prototyp lokalny. Bez płatności, wysyłki i prawdziwych zamówień. Nazwa marki nie jest jeszcze wybrana.",
+    "privacy": "Prywatność",
+    "terms": "Warunki",
+    "languages": "Języki",
+    "tagline": "Bez kompromisów. Tylko dobry smak."
+  },
+  "home": {
+    "eyebrow": "Rzemieślnicze beef jerky",
+    "title": "Wybierz swój smak",
+    "lede": "Trzy dopracowane receptury. 100 g w każdej paczce.",
+    "filtersLabel": "Smaki",
+    "all": "Wszystkie",
+    "classic": "Klasyczne",
+    "sweet": "Słodko-słone",
+    "hot": "Ostre",
+    "sortLabel": "Sortuj",
+    "sortRecommended": "Polecane",
+    "sortName": "Nazwa",
+    "view": "Zobacz produkt",
+    "fresh": "Nowość",
+    "ratingEmpty": "— / 5",
+    "priceSoon": "Cena wkrótce",
+    "cards": {
+      "original": "Klasyczny, wyrazisty smak wołowiny z czosnkiem i czarnym pieprzem. Sprawdzona receptura.",
+      "teriyaki": "Słodko-słony smak z nutą imbiru i sosu sojowego. Idealna równowaga aromatu i delikatnej słodyczy.",
+      "hot-chili": "Pikantna receptura z papryką chili i cayenne. Dla tych, którzy lubią mocniejsze wrażenia."
+    }
+  },
+  "shop": {
+    "eyebrow": "Katalog",
+    "title": "Sklep",
+    "lede": "Trzy robocze smaki. Każdy w planowanej paczce 100 g. Cena nie jest jeszcze ustalona.",
+    "view": "Zobacz"
+  },
+  "product": {
+    "draft": "Opis roboczy",
+    "weight": "Masa netto",
+    "add": "Dodaj do koszyka",
+    "added": "Dodano do koszyka.",
+    "addNote": "Pozycja zostaje w koszyku tej przeglądarki. Zamówienie testowe nie pobiera płatności i nie jest wysyłane.",
+    "ingredientsTitle": "Skład, alergeny, wartość odżywcza",
+    "ingredientsBody": "Te informacje zostaną opublikowane dopiero po potwierdzeniu receptury i obliczeń. Nie podajemy ich z góry.",
+    "storageTitle": "Przechowywanie",
+    "storageBody": "Warunki przechowywania i termin przydatności podamy po zatwierdzeniu procesu.",
+    "reviewsTitle": "Opinie",
+    "reviewsEmpty": "Nie ma jeszcze zatwierdzonych opinii.",
+    "related": "Pozostałe smaki",
+    "placeholder": "Szkic koncepcyjny. To nie jest zdjęcie produktu ani gotowe opakowanie.",
+    "back": "Wróć do sklepu"
+  },
+  "story": {
+    "eyebrow": "Historia",
+    "title": "Marka bez ostatecznej nazwy.",
+    "paragraphs": [
+      "To lokalna podstawa przyszłej marki beef jerky. Nazwa, znak i opakowanie są robocze i mają dać się później wymienić.",
+      "Na pierwszym miejscu jest sam produkt: smak, tekstura i spokojna fotografia. Bez kowbojskiego sztafażu i bez głośnych obietnic.",
+      "Receptury, próby i koszty partii zostają w prywatnym warsztacie. Na stronie widać tylko to, co można już pokazać uczciwie.",
+      "Pierwszy rynek to Polska. Polski jest językiem domyślnym."
+    ]
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Pytania",
+    "lede": "Krótkie odpowiedzi o tej lokalnej wersji. Nie zastępują etykiety ani regulaminu sprzedaży.",
+    "items": [
+      {
+        "q": "Czy można już kupić?",
+        "a": "Można złożyć tylko lokalne zamówienie testowe na tym komputerze. Płatności i wysyłki nie ma."
+      },
+      {
+        "q": "Jaka jest masa paczki?",
+        "a": "Planowany format detaliczny to 100 g na jedną paczkę."
+      },
+      {
+        "q": "Jaki jest skład?",
+        "a": "Skład, alergeny i wartość odżywcza nie są publikowane, dopóki receptura nie zostanie potwierdzona."
+      },
+      {
+        "q": "Dlaczego nie ma ocen?",
+        "a": "Publiczna średnia liczy się tylko z zatwierdzonych opinii. Takich opinii jeszcze nie ma. Oceny warsztatowe nie są widoczne dla kupujących."
+      },
+      {
+        "q": "W jakiej walucie?",
+        "a": "PLN. Kwota będzie formatowana według języka strony, gdy cena zostanie ustalona."
+      }
+    ]
+  },
+  "contact": {
+    "eyebrow": "Kontakt",
+    "title": "Dane pojawią się przed sprzedażą.",
+    "lede": "Adres, telefon i e-mail firmy nie są jeszcze ustalone. Ta strona ich nie wymyśla.",
+    "name": "Imię",
+    "email": "E-mail",
+    "message": "Wiadomość",
+    "disabledNote": "Formularz jest wyłączony. Nic nie zostaje zapisane i nic nie jest wysyłane."
+  },
+  "legal": {
+    "draft": "Szkic. To nie jest zatwierdzony dokument prawny.",
+    "privacyTitle": "Prywatność",
+    "privacyBody": [
+      "Testowe zamówienie zapisuje imię, e-mail, telefon i adres w lokalnej bazie MySQL na tym komputerze.",
+      "Konto lokalne zapisuje imię, e-mail i skrót hasła w tej samej bazie. Hasło w postaci jawnej nie jest przechowywane i nie jest wysyłane.",
+      "Te dane nie są wysyłane do płatności, poczty ani kuriera. Formularz kontaktowy pozostaje wyłączony.",
+      "Przed publiczną sprzedażą ten tekst trzeba zastąpić sprawdzoną informacją o danych osobowych."
+    ],
+    "termsTitle": "Warunki",
+    "termsBody": [
+      "Można zapisać tylko lokalne zamówienie testowe. Płatność nie jest pobierana, a zamówienie nie trafia do sprzedawcy ani do firmy kurierskiej.",
+      "Opisy smaków są robocze i nie są oświadczeniem o składzie, pochodzeniu mięsa ani właściwościach produktu.",
+      "Przed sprzedażą trzeba przygotować prawdziwe warunki zakupu, dostawy i zwrotów."
+    ]
+  },
+  "price": {
+    "comingSoon": "Wkrótce"
+  },
+  "cart": {
+    "eyebrow": "Koszyk",
+    "title": "Koszyk",
+    "empty": "Koszyk jest pusty.",
+    "toShop": "Przejdź do sklepu",
+    "quantity": "Ilość",
+    "remove": "Usuń",
+    "subtotal": "Suma",
+    "total": "Razem",
+    "pricePending": "Cena sprzedaży nie jest ustalona, więc kwota nie jest liczona. Zapisujemy ilość.",
+    "checkout": "Złóż zamówienie testowe",
+    "note": "To nie jest sprzedaż. Nic nie jest opłacane ani wysyłane."
+  },
+  "checkout": {
+    "eyebrow": "Zamówienie testowe",
+    "title": "Dane do testu",
+    "lede": "Pola służą tylko do sprawdzenia scenariusza na tym komputerze. Nie wysyłamy ich nigdzie.",
+    "name": "Imię i nazwisko",
+    "email": "E-mail",
+    "phone": "Telefon",
+    "optional": "opcjonalnie",
+    "country": "Kraj",
+    "city": "Miasto",
+    "postalCode": "Kod pocztowy",
+    "address": "Adres",
+    "submit": "Zapisz zamówienie testowe",
+    "pending": "Zapisywanie…",
+    "errors": {
+      "customerName": "Podaj imię i nazwisko.",
+      "email": "Podaj poprawny e-mail.",
+      "city": "Podaj miasto.",
+      "postalCode": "Podaj kod pocztowy.",
+      "addressLine": "Podaj adres.",
+      "items": "Koszyk jest pusty albo produkt nie jest dostępny."
+    }
+  },
+  "order": {
+    "eyebrow": "Zamówienie testowe",
+    "title": "Zapisane lokalnie",
+    "banner": "To lokalne zamówienie testowe. Płatność nie jest pobierana, a zamówienie nie trafia do sprzedawcy ani do firmy kurierskiej.",
+    "number": "Numer",
+    "status": "TEST",
+    "back": "Wróć do sklepu"
+  },
+  "auth": {
+    "loginEyebrow": "Konto lokalne",
+    "loginTitle": "Wejście",
+    "loginLede": "Konto działa tylko na tym komputerze. Nie wysyłamy e-maila i nie łączymy go z płatnością.",
+    "registerEyebrow": "Konto lokalne",
+    "registerTitle": "Rejestracja",
+    "registerLede": "Zapisujemy imię, e-mail i skrót hasła w lokalnej bazie. Hasło nie jest wysyłane.",
+    "name": "Imię i nazwisko",
+    "email": "E-mail",
+    "password": "Hasło",
+    "confirm": "Powtórz hasło",
+    "submitLogin": "Wejdź",
+    "submitRegister": "Utwórz konto",
+    "pending": "Zapisywanie…",
+    "haveAccount": "Masz już konto?",
+    "needAccount": "Nie masz konta?",
+    "logout": "Wyjdź",
+    "errors": {
+      "name": "Podaj imię i nazwisko.",
+      "email": "Podaj poprawny e-mail.",
+      "password": "Hasło musi mieć co najmniej 8 znaków.",
+      "confirm": "Hasła nie są takie same.",
+      "credentials": "E-mail albo hasło jest niepoprawne.",
+      "taken": "To konto już istnieje.",
+      "failed": "Nie udało się zapisać. Spróbuj jeszcze raz."
+    }
+  },
+  "account": {
+    "eyebrow": "Konto",
+    "title": "Twoje konto",
+    "lede": "Zamówienia testowe powiązane z tym kontem. To nadal nie jest sprzedaż.",
+    "empty": "Nie ma jeszcze zamówień na tym koncie.",
+    "orders": "Zamówienia",
+    "customer": "Klient",
+    "admin": "Administrator",
+    "panel": "Panel",
+    "test": "TEST"
+  },
+  "admin": {
+    "dashboard": "Przegląd",
+    "orders": "Zamówienia",
+    "products": "Produkty",
+    "back": "Sklep",
+    "overviewEyebrow": "Panel",
+    "overviewTitle": "Warsztat",
+    "overviewLede": "Lokalny dostęp do zamówień testowych i kart produktów. Płatności tu nie ma.",
+    "orderCount": "Zamówienia",
+    "productCount": "Produkty",
+    "latest": "Ostatnie",
+    "empty": "Nic tu nie ma.",
+    "search": "Numer, e-mail albo nazwisko",
+    "status": "Status",
+    "all": "Wszystkie",
+    "filter": "Filtruj",
+    "customer": "Klient",
+    "address": "Adres",
+    "items": "Pozycje",
+    "history": "Historia",
+    "notes": "Notatki",
+    "noteLabel": "Notatka",
+    "addNote": "Dodaj notatkę",
+    "saveStatus": "Zapisz status",
+    "testBanner": "To zamówienie testowe zostaje lokalne. Zmiana statusu nie pobiera płatności i niczego nie wysyła.",
+    "published": "Opublikowany",
+    "price": "Cena PLN",
+    "priceHint": "Puste pole oznacza, że ceny jeszcze nie ma. Nie wpisuj kwoty, której nie ustalono.",
+    "sort": "Kolejność",
+    "slug": "Adres",
+    "accent": "Znak",
+    "profile": "Opis",
+    "create": "Nowy produkt",
+    "edit": "Edycja",
+    "save": "Zapisz",
+    "newTitle": "Nowy produkt",
+    "saved": "Zapisano.",
+    "errors": {
+      "price": "Podaj cenę w złotych, na przykład 24.90, albo zostaw pole puste.",
+      "slug": "Taki adres już istnieje albo jest niepoprawny.",
+      "fields": "Uzupełnij nazwę i opis we wszystkich językach.",
+      "note": "Notatka nie może być pusta."
+    },
+    "statuses": {
+      "NEW": "Nowe",
+      "CONFIRMED": "Potwierdzone",
+      "PREPARING": "W przygotowaniu",
+      "READY": "Gotowe",
+      "SHIPPED": "Wysłane",
+      "COMPLETED": "Zakończone",
+      "CANCELLED": "Anulowane",
+      "REFUNDED": "Zwrot"
+    }
+  }
+}

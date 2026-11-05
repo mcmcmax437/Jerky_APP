@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#101010"/>
+  <ellipse cx="470" cy="430" rx="260" ry="340" fill="#3a2422" opacity="0.8"/>
+  <path d="M250 150h250l48 70v560c0 42-30 70-74 70H276c-44 0-74-28-74-70V220l48-70z" fill="#171717"/>
+  <path d="M276 220h248" stroke="#3c3832" stroke-width="2"/>
+  <g fill="#F5F1EA">
+    <rect x="338" y="300" width="124" height="10"/>
+    <rect x="354" y="324" width="92" height="10"/>
+    <rect x="370" y="348" width="60" height="10"/>
+  </g>
+  <text x="400" y="470" text-anchor="middle" fill="#F5F1EA" font-family="Georgia, serif" font-size="44" letter-spacing="3">HOT CHILI</text>
+  <text x="400" y="512" text-anchor="middle" fill="#C9C1B5" font-family="Arial, sans-serif" font-size="16" letter-spacing="6">BEEF JERKY</text>
+  <text x="400" y="760" text-anchor="middle" fill="#F5F1EA" font-family="Arial, sans-serif" font-size="18" letter-spacing="3">NET WT. 100 g</text>
+  <rect x="376" y="800" width="48" height="8" fill="#8E3834"/>
+</svg>

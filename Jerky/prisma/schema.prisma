@@ -1,0 +1,450 @@
+// MySQL is the local database for this project.
+// Prisma ORM 7 is used because the MySQL library in Prisma ORM 8
+// can migrate and read, but cannot write rows yet.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum OrderStatus {
+  NEW
+  CONFIRMED
+  PREPARING
+  READY
+  SHIPPED
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum RecipeStatus {
+  DRAFT
+  TESTING
+  APPROVED
+  ARCHIVED
+}
+
+enum BatchDecision {
+  PASS
+  REPEAT
+  FAIL
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  HIDDEN
+}
+
+enum CostCategory {
+  MEAT
+  INGREDIENT
+  CONSUMABLE
+  PACKAGING
+  ELECTRICITY
+  UTILITIES
+  LABOR
+  EQUIPMENT
+  OTHER
+}
+
+enum MediaCategory {
+  INGREDIENTS
+  CUTTING
+  MARINADE
+  PRE_DRY
+  PROCESS
+  RESULT
+  PACKAGING
+  PACKSHOT
+  LIFESTYLE
+  HERO
+  TEXTURE
+  OTHER
+}
+
+enum MeasureUnit {
+  G
+  KG
+  ML
+  L
+  PCS
+}
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique @db.VarChar(190)
+  name         String   @db.VarChar(160)
+  passwordHash String   @db.VarChar(255)
+  role         UserRole @default(CUSTOMER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions Session[]
+  orders   Order[]
+
+  @@index([role])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String   @unique @db.Char(64)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}
+
+model Product {
+  id                   String   @id @default(cuid())
+  slug                 String   @unique @db.VarChar(80)
+  netWeightG           Int      @default(100)
+  priceMinor           Int?
+  currency             String   @default("PLN") @db.VarChar(3)
+  published            Boolean  @default(false)
+  accent               String   @db.VarChar(32)
+  sortOrder            Int      @default(0)
+  ingredientsConfirmed Boolean  @default(false)
+  allergensConfirmed   Boolean  @default(false)
+  nutritionConfirmed   Boolean  @default(false)
+  storageConfirmed     Boolean  @default(false)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  translations ProductTranslation[]
+  media        ProductMedia[]
+  recipes      Recipe[]
+  reviews      CustomerReview[]
+  orderItems   OrderItem[]
+
+  @@index([published, sortOrder])
+}
+
+model ProductTranslation {
+  id        String  @id @default(cuid())
+  productId String
+  locale    String  @db.VarChar(5)
+  name      String  @db.VarChar(120)
+  profile   String  @db.Text
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, locale])
+}
+
+model ProductMedia {
+  id            String  @id @default(cuid())
+  productId     String
+  kind          String  @db.VarChar(32)
+  sortOrder     Int     @default(0)
+  publicPath    String  @db.VarChar(255)
+  isPlaceholder Boolean @default(true)
+  product       Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, sortOrder])
+}
+
+model Order {
+  id             String      @id @default(cuid())
+  number         String      @unique @db.VarChar(32)
+  isTest         Boolean     @default(true)
+  status         OrderStatus @default(NEW)
+  locale         String      @db.VarChar(5)
+  customerName   String      @db.VarChar(160)
+  email          String      @db.VarChar(190)
+  phone          String?     @db.VarChar(40)
+  country        String?     @db.VarChar(80)
+  city           String?     @db.VarChar(120)
+  postalCode     String?     @db.VarChar(20)
+  addressLine    String?     @db.VarChar(255)
+  subtotalMinor  Int?
+  totalMinor     Int?
+  currency       String      @default("PLN") @db.VarChar(3)
+  userId         String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  user    User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items   OrderItem[]
+  events  OrderStatusEvent[]
+  notes   OrderNote[]
+  reviews CustomerReview[]
+
+  @@index([status, createdAt])
+  @@index([email])
+  @@index([userId])
+}
+
+/// Snapshot of the product at the moment a test order is placed.
+model OrderItem {
+  id             String   @id @default(cuid())
+  orderId        String
+  productId      String?
+  slug           String   @db.VarChar(80)
+  name           String   @db.VarChar(160)
+  netWeightG     Int
+  unitPriceMinor Int?
+  quantity       Int
+  lineTotalMinor Int?
+  currency       String   @default("PLN") @db.VarChar(3)
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product        Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+}
+
+model OrderStatusEvent {
+  id         String       @id @default(cuid())
+  orderId    String
+  fromStatus OrderStatus?
+  toStatus   OrderStatus
+  note       String?      @db.VarChar(500)
+  createdAt  DateTime     @default(now())
+  order      Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId, createdAt])
+}
+
+model OrderNote {
+  id        String   @id @default(cuid())
+  orderId   String
+  body      String   @db.Text
+  createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId, createdAt])
+}
+
+model Ingredient {
+  id        String      @id @default(cuid())
+  name      String      @db.VarChar(160)
+  unit      MeasureUnit
+  notes     String?     @db.Text
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  prices      IngredientPriceRecord[]
+  recipeLines RecipeIngredient[]
+  batchUsages BatchIngredientUsage[]
+}
+
+model IngredientPriceRecord {
+  id           String     @id @default(cuid())
+  ingredientId String
+  pricePerUnit Decimal    @db.Decimal(12, 4)
+  currency     String     @default("PLN") @db.VarChar(3)
+  supplierNote String?    @db.VarChar(255)
+  recordedAt   DateTime   @default(now())
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  @@index([ingredientId, recordedAt])
+}
+
+model Recipe {
+  id        String       @id @default(cuid())
+  productId String?
+  title     String       @db.VarChar(160)
+  status    RecipeStatus @default(DRAFT)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  product   Product?     @relation(fields: [productId], references: [id], onDelete: SetNull)
+  versions  RecipeVersion[]
+
+  @@index([productId, status])
+}
+
+model RecipeVersion {
+  id               String   @id @default(cuid())
+  recipeId         String
+  versionNumber    Int
+  rawMeatWeightG   Int?
+  cutName          String?  @db.VarChar(160)
+  marinadeNotes    String?  @db.Text
+  marinadeHours    Decimal? @db.Decimal(8, 2)
+  sliceMethod      String?  @db.VarChar(255)
+  sliceThicknessMm Decimal? @db.Decimal(6, 2)
+  equipment        String?  @db.Text
+  processPlan      String?  @db.Text
+  ownerNotes       String?  @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  recipe           Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredients      RecipeIngredient[]
+  steps            RecipeStep[]
+  batches          TestBatch[]
+  assets           MediaAsset[]
+
+  @@unique([recipeId, versionNumber])
+}
+
+model RecipeIngredient {
+  id               String        @id @default(cuid())
+  recipeVersionId  String
+  ingredientId     String?
+  name             String        @db.VarChar(160)
+  quantity         Decimal       @db.Decimal(12, 3)
+  unit             MeasureUnit
+  plannedUnitPrice Decimal?      @db.Decimal(12, 4)
+  currency         String        @default("PLN") @db.VarChar(3)
+  sortOrder        Int           @default(0)
+  recipeVersion    RecipeVersion @relation(fields: [recipeVersionId], references: [id], onDelete: Cascade)
+  ingredient       Ingredient?   @relation(fields: [ingredientId], references: [id], onDelete: SetNull)
+
+  @@index([recipeVersionId, sortOrder])
+}
+
+model RecipeStep {
+  id              String        @id @default(cuid())
+  recipeVersionId String
+  sortOrder       Int
+  body            String        @db.Text
+  recipeVersion   RecipeVersion @relation(fields: [recipeVersionId], references: [id], onDelete: Cascade)
+
+  @@index([recipeVersionId, sortOrder])
+}
+
+model TestBatch {
+  id               String         @id @default(cuid())
+  code             String         @unique @db.VarChar(40)
+  recipeVersionId  String
+  madeOn           DateTime
+  rawMeatWeightG   Int?
+  sliceThicknessMm Decimal?       @db.Decimal(6, 2)
+  marinadeHours    Decimal?       @db.Decimal(8, 2)
+  equipment        String?        @db.Text
+  processLog       String?        @db.Text
+  deviationNotes   String?        @db.Text
+  decision         BatchDecision?
+  recipeVersion    RecipeVersion  @relation(fields: [recipeVersionId], references: [id], onDelete: Restrict)
+  usages           BatchIngredientUsage[]
+  costLines        BatchCostLine[]
+  output           BatchOutput?
+  evaluation       BatchEvaluation?
+  assets           MediaAsset[]
+
+  @@index([recipeVersionId, madeOn])
+}
+
+/// Actual quantity and purchase price captured for this batch.
+/// Later price changes must not rewrite this snapshot.
+model BatchIngredientUsage {
+  id           String      @id @default(cuid())
+  testBatchId  String
+  ingredientId String?
+  name         String      @db.VarChar(160)
+  plannedQty   Decimal?    @db.Decimal(12, 3)
+  actualQty    Decimal     @db.Decimal(12, 3)
+  unit         MeasureUnit
+  unitPrice    Decimal     @db.Decimal(12, 4)
+  currency     String      @default("PLN") @db.VarChar(3)
+  testBatch    TestBatch   @relation(fields: [testBatchId], references: [id], onDelete: Cascade)
+  ingredient   Ingredient? @relation(fields: [ingredientId], references: [id], onDelete: SetNull)
+
+  @@index([testBatchId])
+}
+
+model BatchCostLine {
+  id          String       @id @default(cuid())
+  testBatchId String
+  category    CostCategory
+  label       String       @db.VarChar(160)
+  amount      Decimal      @db.Decimal(12, 2)
+  currency    String       @default("PLN") @db.VarChar(3)
+  included    Boolean      @default(true)
+  /// False marks labour, equipment, and other extended costs.
+  direct      Boolean      @default(true)
+  note        String?      @db.VarChar(500)
+  testBatch   TestBatch    @relation(fields: [testBatchId], references: [id], onDelete: Cascade)
+
+  @@index([testBatchId, category])
+}
+
+model BatchOutput {
+  id                    String    @id @default(cuid())
+  testBatchId           String    @unique
+  rawMeatWeightG        Int
+  finishedWeightG       Int
+  saleableWeightG       Int
+  sampleWeightG         Int       @default(0)
+  wasteWeightG          Int       @default(0)
+  yieldPercent          Decimal   @db.Decimal(6, 2)
+  saleablePackCount100g Int
+  remainderG            Int
+  testBatch             TestBatch @relation(fields: [testBatchId], references: [id], onDelete: Cascade)
+}
+
+/// Private 1–10 owner scores. Never expose these on the public site.
+model BatchEvaluation {
+  id            String        @id @default(cuid())
+  testBatchId   String        @unique
+  taste         Int
+  texture       Int
+  aroma         Int
+  appearance    Int
+  saltBalance   Int
+  heatBalance   Int?
+  repeatability Int
+  overall       Int
+  wentWell      String?       @db.Text
+  wentPoorly    String?       @db.Text
+  nextChange    String?       @db.Text
+  ownerNote     String?       @db.Text
+  decision      BatchDecision
+  createdAt     DateTime      @default(now())
+  testBatch     TestBatch     @relation(fields: [testBatchId], references: [id], onDelete: Cascade)
+}
+
+model CustomerReview {
+  id            String       @id @default(cuid())
+  productId     String
+  orderId       String?
+  rating        Int
+  body          String       @db.Text
+  displayName   String       @db.VarChar(80)
+  status        ReviewStatus @default(PENDING)
+  moderatorNote String?      @db.Text
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  product       Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  order         Order?       @relation(fields: [orderId], references: [id], onDelete: SetNull)
+
+  @@index([productId, status])
+}
+
+/// Private R&D files live under storage/uploads and are served only by a server route.
+model MediaAsset {
+  id              String         @id @default(cuid())
+  relativePath    String         @db.VarChar(255)
+  mimeType        String         @db.VarChar(80)
+  sizeBytes       Int
+  caption         String?        @db.VarChar(255)
+  category        MediaCategory  @default(OTHER)
+  isPrivate       Boolean        @default(true)
+  recipeVersionId String?
+  testBatchId     String?
+  createdAt       DateTime       @default(now())
+  recipeVersion   RecipeVersion? @relation(fields: [recipeVersionId], references: [id], onDelete: SetNull)
+  testBatch       TestBatch?     @relation(fields: [testBatchId], references: [id], onDelete: SetNull)
+
+  @@index([recipeVersionId])
+  @@index([testBatchId])
+}
+
+model AdminSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique @db.VarChar(80)
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}

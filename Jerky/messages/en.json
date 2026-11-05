@@ -1,0 +1,273 @@
+{
+  "meta": {
+    "siteName": "JERKY",
+    "description": "A local beef jerky brand prototype. Working name, three flavors at 100 g, no payments and no unconfirmed ingredients."
+  },
+  "nav": {
+    "shop": "Shop",
+    "story": "Our story",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "cart": "Cart",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "language": "Language",
+    "home": "Home",
+    "primary": "Primary",
+    "skip": "Skip to content",
+    "account": "Account",
+    "admin": "Panel"
+  },
+  "footer": {
+    "note": "Local prototype. No payments, shipping, or real orders. The brand name has not been chosen.",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "languages": "Languages",
+    "tagline": "No compromise. Only a good flavor."
+  },
+  "home": {
+    "eyebrow": "Craft beef jerky",
+    "title": "Choose your flavor",
+    "lede": "Three finished recipes. 100 g in every pack.",
+    "filtersLabel": "Flavors",
+    "all": "All",
+    "classic": "Classic",
+    "sweet": "Sweet-salty",
+    "hot": "Hot",
+    "sortLabel": "Sort",
+    "sortRecommended": "Recommended",
+    "sortName": "Name",
+    "view": "View product",
+    "fresh": "New",
+    "ratingEmpty": "— / 5",
+    "priceSoon": "Price coming soon",
+    "cards": {
+      "original": "A classic, vivid beef flavor with garlic and black pepper. A checked recipe.",
+      "teriyaki": "Sweet-salty, with a note of ginger and soy sauce. A balance of aroma and gentle sweetness.",
+      "hot-chili": "A hot recipe with chili and cayenne. For people who want a stronger hit."
+    }
+  },
+  "shop": {
+    "eyebrow": "Catalog",
+    "title": "Shop",
+    "lede": "Three working flavors. Each one is a planned 100 g pack. The price is not set.",
+    "view": "View"
+  },
+  "product": {
+    "draft": "Working description",
+    "weight": "Net weight",
+    "add": "Add to cart",
+    "added": "Added to the cart.",
+    "addNote": "The item stays in this browser’s cart. A test order takes no payment and is not sent anywhere.",
+    "ingredientsTitle": "Ingredients, allergens, nutrition",
+    "ingredientsBody": "These details will be published only after the recipe and the calculations are confirmed. They are not invented ahead of that.",
+    "storageTitle": "Storage",
+    "storageBody": "Storage conditions and shelf life will be published after the process is approved.",
+    "reviewsTitle": "Reviews",
+    "reviewsEmpty": "There are no approved reviews yet.",
+    "related": "Other flavors",
+    "placeholder": "Concept sketch. This is not a product photograph or finished packaging.",
+    "back": "Back to the shop"
+  },
+  "story": {
+    "eyebrow": "Our Story",
+    "title": "A brand without a final name.",
+    "paragraphs": [
+      "This is the local foundation of a future beef jerky brand. The name, mark, and pack are temporary and meant to be replaced.",
+      "The product comes first: flavor, texture, and quiet photography. No cowboy costume and no loud promises.",
+      "Recipes, trials, and batch costs stay in a private workshop. The site shows only what can already be said honestly.",
+      "The first market is Poland. Polish is the default language."
+    ]
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Questions",
+    "lede": "Short answers about this local version. They do not replace a label or terms of sale.",
+    "items": [
+      {
+        "q": "Can this be bought yet?",
+        "a": "You can save only a local test order on this computer. There is no payment and no shipping."
+      },
+      {
+        "q": "What is the pack weight?",
+        "a": "The planned retail format is 100 g per pack."
+      },
+      {
+        "q": "What is in it?",
+        "a": "Ingredients, allergens, and nutrition stay unpublished until the recipe is confirmed."
+      },
+      {
+        "q": "Why are there no ratings?",
+        "a": "A public average uses approved reviews only. There are none yet. Workshop scores are not shown to customers."
+      },
+      {
+        "q": "Which currency?",
+        "a": "PLN. The amount will be formatted for the page language once a price is set."
+      }
+    ]
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Details will be published before any sale.",
+    "lede": "The company address, phone, and email are not set. This page does not invent them.",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "disabledNote": "The form is switched off. Nothing is stored and nothing is sent."
+  },
+  "legal": {
+    "draft": "Draft. This is not an approved legal document.",
+    "privacyTitle": "Privacy",
+    "privacyBody": [
+      "A test order stores the name, email, phone, and address in the local MySQL database on this computer.",
+      "A local account stores the name, email, and a password hash in the same database. The password itself is not stored and is not sent anywhere.",
+      "That data is not sent to payments, email, or a courier. The contact form stays switched off.",
+      "Before a public sale, this text must be replaced with a reviewed privacy notice."
+    ],
+    "termsTitle": "Terms",
+    "termsBody": [
+      "Only a local test order can be saved. No payment is taken, and the order is not passed to a seller or a courier.",
+      "Flavor descriptions are drafts. They are not statements about ingredients, meat origin, or product properties.",
+      "Real terms for purchase, delivery, and returns are required before any sale."
+    ]
+  },
+  "price": {
+    "comingSoon": "Coming soon"
+  },
+  "cart": {
+    "eyebrow": "Cart",
+    "title": "Cart",
+    "empty": "The cart is empty.",
+    "toShop": "Go to the shop",
+    "quantity": "Quantity",
+    "remove": "Remove",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "pricePending": "The retail price is not set, so no amount is calculated. The quantity is saved.",
+    "checkout": "Place a test order",
+    "note": "This is not a sale. Nothing is paid or shipped."
+  },
+  "checkout": {
+    "eyebrow": "Test order",
+    "title": "Details for the test",
+    "lede": "These fields only exercise the scenario on this computer. They are not sent anywhere.",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "optional": "optional",
+    "country": "Country",
+    "city": "City",
+    "postalCode": "Postal code",
+    "address": "Address",
+    "submit": "Save the test order",
+    "pending": "Saving…",
+    "errors": {
+      "customerName": "Enter a name.",
+      "email": "Enter a valid email.",
+      "city": "Enter a city.",
+      "postalCode": "Enter a postal code.",
+      "addressLine": "Enter an address.",
+      "items": "The cart is empty or the product is unavailable."
+    }
+  },
+  "order": {
+    "eyebrow": "Test order",
+    "title": "Saved locally",
+    "banner": "This is a local test order. No payment is taken, and the order is not passed to a seller or a delivery service.",
+    "number": "Number",
+    "status": "TEST",
+    "back": "Back to the shop"
+  },
+  "auth": {
+    "loginEyebrow": "Local account",
+    "loginTitle": "Sign in",
+    "loginLede": "The account works only on this computer. No email is sent, and it is not connected to a payment.",
+    "registerEyebrow": "Local account",
+    "registerTitle": "Register",
+    "registerLede": "We store the name, email, and a password hash in the local database. The password is not sent anywhere.",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "confirm": "Repeat the password",
+    "submitLogin": "Sign in",
+    "submitRegister": "Create the account",
+    "pending": "Saving…",
+    "haveAccount": "Already have an account?",
+    "needAccount": "No account yet?",
+    "logout": "Sign out",
+    "errors": {
+      "name": "Enter a name.",
+      "email": "Enter a valid email.",
+      "password": "The password needs at least 8 characters.",
+      "confirm": "The passwords do not match.",
+      "credentials": "The email or password is wrong.",
+      "taken": "This account already exists.",
+      "failed": "Could not save. Try again."
+    }
+  },
+  "account": {
+    "eyebrow": "Account",
+    "title": "Your account",
+    "lede": "Test orders linked to this account. This is still not a sale.",
+    "empty": "There are no orders on this account yet.",
+    "orders": "Orders",
+    "customer": "Customer",
+    "admin": "Administrator",
+    "panel": "Panel",
+    "test": "TEST"
+  },
+  "admin": {
+    "dashboard": "Overview",
+    "orders": "Orders",
+    "products": "Products",
+    "back": "Shop",
+    "overviewEyebrow": "Panel",
+    "overviewTitle": "Workshop",
+    "overviewLede": "Local access to test orders and product cards. There is no payment here.",
+    "orderCount": "Orders",
+    "productCount": "Products",
+    "latest": "Latest",
+    "empty": "Nothing here.",
+    "search": "Number, email, or name",
+    "status": "Status",
+    "all": "All",
+    "filter": "Filter",
+    "customer": "Customer",
+    "address": "Address",
+    "items": "Items",
+    "history": "History",
+    "notes": "Notes",
+    "noteLabel": "Note",
+    "addNote": "Add a note",
+    "saveStatus": "Save status",
+    "testBanner": "This test order stays local. Changing the status does not take payment and does not ship anything.",
+    "published": "Published",
+    "price": "Price PLN",
+    "priceHint": "An empty field means the price is not set. Do not enter an amount that has not been decided.",
+    "sort": "Order",
+    "slug": "Address",
+    "accent": "Mark",
+    "profile": "Description",
+    "create": "New product",
+    "edit": "Edit",
+    "save": "Save",
+    "newTitle": "New product",
+    "saved": "Saved.",
+    "errors": {
+      "price": "Enter a price in zloty, for example 24.90, or leave the field empty.",
+      "slug": "That address already exists or is not valid.",
+      "fields": "Fill in the name and description in every language.",
+      "note": "The note cannot be empty."
+    },
+    "statuses": {
+      "NEW": "New",
+      "CONFIRMED": "Confirmed",
+      "PREPARING": "Preparing",
+      "READY": "Ready",
+      "SHIPPED": "Shipped",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled",
+      "REFUNDED": "Refund"
+    }
+  }
+}
