@@ -35,7 +35,7 @@ export default async function AccountPage({
         <p>
           {session.email}
           <span className="ml-3 text-sm uppercase tracking-[0.16em] text-text-dark/70">
-            {session.role === "ADMIN" ? dict.account.admin : dict.account.customer}
+            {dict.account.customer}
           </span>
         </p>
         <div className="flex flex-wrap gap-4">
