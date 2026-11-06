@@ -6,7 +6,7 @@ const locales = ["pl", "uk", "en"] as const;
 const accents = ["bone", "teriyaki", "chili"] as const;
 
 const fieldClass =
-  "mt-2 w-full rounded-lg border border-white/10 bg-[#100e0c] px-3 py-2 text-sm text-[#f3efe6] outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper";
+  "mt-2 w-full rounded-lg border border-white/10 bg-[#100e0c] px-3 py-2 text-sm text-[#f3efe6] outline-none placeholder:normal-case placeholder:tracking-normal placeholder:text-[#8d8278] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper";
 
 export function ProductForm({
   locale,
@@ -58,7 +58,7 @@ export function ProductForm({
         ) : (
           <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
             {dict.admin.slug}
-            <input name="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*" className={fieldClass} />
+            <input name="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder={dict.admin.example.slug} className={fieldClass} />
           </label>
         )}
         <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
@@ -82,7 +82,7 @@ export function ProductForm({
         </label>
         <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
           {dict.admin.price}
-          <input name="price" inputMode="decimal" defaultValue={formatPriceInput(product?.priceMinor ?? null)} placeholder={dict.price.comingSoon} className={fieldClass} />
+          <input name="price" inputMode="decimal" defaultValue={formatPriceInput(product?.priceMinor ?? null)} placeholder={dict.admin.example.price} className={fieldClass} />
           <span className="mt-2 block text-sm font-normal normal-case tracking-normal text-[#9c9186]">{dict.admin.priceHint}</span>
         </label>
       </div>
@@ -106,16 +106,16 @@ export function ProductForm({
             <legend className="px-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">{item}</legend>
             <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
               {dict.auth.name}
-              <input name={`name-${item}`} required maxLength={120} defaultValue={copy?.name ?? ""} className={fieldClass} />
+              <input name={`name-${item}`} required maxLength={120} defaultValue={copy?.name ?? ""} placeholder={dict.admin.example.name[item]} className={fieldClass} />
             </label>
             <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
               {dict.admin.card}
-              <textarea name={`card-${item}`} maxLength={400} rows={3} defaultValue={copy?.card ?? ""} className={fieldClass} />
+              <textarea name={`card-${item}`} maxLength={400} rows={3} defaultValue={copy?.card ?? ""} placeholder={dict.admin.example.card[item]} className={fieldClass} />
               <span className="mt-2 block text-sm font-normal normal-case tracking-normal text-[#9c9186]">{dict.admin.cardHint}</span>
             </label>
             <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
               {dict.admin.profile}
-              <textarea name={`profile-${item}`} required maxLength={2000} rows={4} defaultValue={copy?.profile ?? ""} className={fieldClass} />
+              <textarea name={`profile-${item}`} required maxLength={2000} rows={4} defaultValue={copy?.profile ?? ""} placeholder={dict.admin.example.profile[item]} className={fieldClass} />
             </label>
           </fieldset>
         );

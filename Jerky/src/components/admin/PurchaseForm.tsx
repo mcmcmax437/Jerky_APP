@@ -7,7 +7,7 @@ import type { Dictionary } from "@/lib/i18n/types";
 type Line = { name: string; quantity: string; unit: "G" | "KG" | "ML" | "L" | "PCS" };
 
 const fieldClass =
-  "mt-2 w-full rounded-lg border border-white/10 bg-[#100e0c] px-3 py-2 text-sm text-[#f3efe6] outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper";
+  "mt-2 w-full rounded-lg border border-white/10 bg-[#100e0c] px-3 py-2 text-sm text-[#f3efe6] outline-none placeholder:normal-case placeholder:tracking-normal placeholder:text-[#8d8278] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper";
 
 export function PurchaseForm({
   locale,
@@ -37,7 +37,7 @@ export function PurchaseForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
           {copy.name}
-          <input name="name" required maxLength={160} className={fieldClass} />
+          <input name="name" required maxLength={160} placeholder={copy.example.name} className={fieldClass} />
         </label>
         <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
           {copy.date}
@@ -67,11 +67,11 @@ export function PurchaseForm({
       </div>
       <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
         {copy.unitPrice}
-        <input name="unitPrice" required inputMode="decimal" className={fieldClass} />
+        <input name="unitPrice" required inputMode="decimal" placeholder={copy.example.price} className={fieldClass} />
       </label>
       <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
         {copy.note}
-        <input name="note" maxLength={500} className={fieldClass} />
+        <input name="note" maxLength={500} placeholder={copy.example.note} className={fieldClass} />
       </label>
       <button type="submit" disabled={lines.length === 0} className="w-fit rounded-lg bg-[#e7d3bc] px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-[#1a1612] disabled:opacity-40">
         {copy.add}

@@ -22,7 +22,7 @@ function parseAmount(value: string) {
 }
 
 const fieldClass =
-  "mt-2 w-full rounded-lg border border-white/10 bg-[#100e0c] px-3 py-2 text-sm text-[#f3efe6] outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper";
+  "mt-2 w-full rounded-lg border border-white/10 bg-[#100e0c] px-3 py-2 text-sm text-[#f3efe6] outline-none placeholder:normal-case placeholder:tracking-normal placeholder:text-[#8d8278] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper";
 
 export function RecipeForm({
   locale,
@@ -73,7 +73,7 @@ export function RecipeForm({
       {saved ? <p className="text-sm text-emerald-300">{dict.admin.saved}</p> : null}
       <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
         {copy.title}
-        <input name="title" required maxLength={160} defaultValue={recipe?.title ?? ""} className={fieldClass} />
+        <input name="title" required maxLength={160} defaultValue={recipe?.title ?? ""} placeholder={copy.example.title} className={fieldClass} />
       </label>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
@@ -113,7 +113,7 @@ export function RecipeForm({
         </label>
         <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
           {copy.hours}
-          <input name="marinadeHours" inputMode="decimal" defaultValue={recipe?.marinadeHours ?? ""} className={fieldClass} />
+          <input name="marinadeHours" inputMode="decimal" defaultValue={recipe?.marinadeHours ?? ""} placeholder={copy.example.hours} className={fieldClass} />
         </label>
       </div>
 
@@ -132,6 +132,7 @@ export function RecipeForm({
                   aria-label={copy.ingredientName}
                   value={row.name}
                   maxLength={160}
+                  placeholder={copy.example.ingredient}
                   onChange={(event) => update({ name: event.target.value })}
                   className={fieldClass}
                 />
@@ -139,6 +140,7 @@ export function RecipeForm({
                   name="componentQty"
                   aria-label={copy.quantity}
                   inputMode="decimal"
+                  placeholder={copy.example.quantity}
                   value={row.quantity}
                   onChange={(event) => update({ quantity: event.target.value })}
                   className={fieldClass}
@@ -160,6 +162,7 @@ export function RecipeForm({
                   name="componentPrice"
                   aria-label={copy.unitPrice}
                   inputMode="decimal"
+                  placeholder={copy.example.price}
                   value={row.unitPrice}
                   onChange={(event) => update({ unitPrice: event.target.value })}
                   className={fieldClass}
@@ -193,7 +196,7 @@ export function RecipeForm({
 
       <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
         {copy.process}
-        <textarea name="processPlan" rows={4} defaultValue={recipe?.processPlan ?? ""} className={fieldClass} />
+        <textarea name="processPlan" rows={4} defaultValue={recipe?.processPlan ?? ""} placeholder={copy.example.process} className={fieldClass} />
       </label>
 
       <div className="flex flex-wrap gap-3">

@@ -113,6 +113,11 @@
     "name": "Name",
     "email": "Email",
     "message": "Message",
+    "example": {
+      "name": "Anna Kowalska",
+      "email": "anna@example.com",
+      "message": "I want to know when the Original flavor will be available."
+    },
     "disabledNote": "The form is switched off. Nothing is stored and nothing is sent."
   },
   "legal": {
@@ -159,6 +164,15 @@
     "city": "City",
     "postalCode": "Postal code",
     "address": "Address",
+    "example": {
+      "name": "Anna Kowalska",
+      "email": "anna@example.com",
+      "phone": "+48 500 000 000",
+      "country": "Poland",
+      "city": "Warsaw",
+      "postalCode": "00-001",
+      "address": "1 Marszalkowska Street"
+    },
     "submit": "Save the test order",
     "pending": "Saving…",
     "errors": {
@@ -195,6 +209,11 @@
     "haveAccount": "Already have an account?",
     "needAccount": "No account yet?",
     "logout": "Sign out",
+    "example": {
+      "name": "Anna Kowalska",
+      "email": "anna@example.com",
+      "password": "at least 8 characters"
+    },
     "errors": {
       "name": "Enter a name.",
       "email": "Enter a valid email.",
@@ -246,6 +265,7 @@
     "history": "History",
     "notes": "Notes",
     "noteLabel": "Note",
+    "noteExample": "The customer asked for a call before pickup.",
     "addNote": "Add a note",
     "saveStatus": "Save status",
     "testBanner": "This test order stays local. Changing the status does not take payment and does not ship anything.",
@@ -263,6 +283,21 @@
     "profile": "Description",
     "card": "Card",
     "cardHint": "Short text on the card. An empty field keeps the current description.",
+    "example": {
+      "slug": "black-pepper",
+      "price": "49.00",
+      "name": { "pl": "BLACK PEPPER", "uk": "BLACK PEPPER", "en": "BLACK PEPPER" },
+      "card": {
+        "pl": "Klasyczny smak z czarnym pieprzem. Paczka 100 g.",
+        "uk": "Класичний смак із чорним перцем. Пачка 100 г.",
+        "en": "A classic flavor with black pepper. 100 g pack."
+      },
+      "profile": {
+        "pl": "Krótko, jaki to smak i dla kogo. Skład publikujemy dopiero po zatwierdzeniu receptury.",
+        "uk": "Коротко, який це смак і для кого. Склад публікуємо лише після затвердження рецептури.",
+        "en": "A short note on the flavor and who it is for. Ingredients go live only after the recipe is approved."
+      }
+    },
     "photo": "Photo",
     "photoHint": "JPG, PNG, or WebP, up to 4 MB. It appears on the card and the product page.",
     "weight": "Weight, g",
@@ -296,7 +331,12 @@
         "scanHint": "The QR contains a component name, for example salt. Or name|recipe|component.",
         "camera": "The camera is unavailable. Allow it in the browser.",
         "unknown": "No recipe has that component.",
-        "many": "That component is in more than one recipe. Choose the recipe in the form."
+        "many": "That component is in more than one recipe. Choose the recipe in the form.",
+        "example": {
+          "name": "Salt, 1 kg bag",
+          "price": "4.50",
+          "note": "Bought at the shop by the warehouse"
+        }
       },
       "batches": "Production batches",
       "warehouse": "Warehouse",
@@ -333,6 +373,7 @@
         "banned": "Banned",
         "active": "Active",
         "reason": "Reason",
+        "reasonExample": "Repeated test orders",
         "role": "Role",
         "self": "This is your account"
       },
@@ -375,6 +416,14 @@
         "recipeCost": "Cost",
         "costMissing": "no price",
         "costHint": "Each ingredient quantity multiplied by the price paid for that ingredient.",
+        "example": {
+          "title": "Original marinade",
+          "hours": "12",
+          "ingredient": "salt",
+          "quantity": "20",
+          "price": "0.04",
+          "process": "Slice the meat, marinate it, then dry it."
+        },
         "addIngredient": "Add a marinade component",
         "removeLine": "Remove",
         "steps": "Steps",

@@ -96,7 +96,8 @@ export function CheckoutForm({
               aria-invalid={error ? true : undefined}
               aria-describedby={error ? `${id}-error` : undefined}
               onChange={(event) => setValues((current) => ({ ...current, [key]: event.target.value }))}
-              className="mt-2 w-full border border-ink-800/15 bg-ivory-100 px-3 py-3 text-base outline-none focus-visible:border-ink-800"
+              placeholder={dict.checkout.example[key === "customerName" ? "name" : key === "addressLine" ? "address" : key]}
+              className="mt-2 w-full border border-ink-800/15 bg-ivory-100 px-3 py-3 text-base outline-none placeholder:text-text-dark/40 focus-visible:border-ink-800"
             />
             {error ? (
               <p id={`${id}-error`} className="mt-2 text-sm text-chili">

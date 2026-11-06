@@ -8,7 +8,7 @@ import { getAdminOrder, orderLines } from "@/features/admin/queries";
 import { formatDateTime } from "@/lib/format";
 import { readLocale } from "@/lib/i18n/request";
 
-const fieldClass = "mt-2 block w-full rounded-lg border border-white/10 bg-[#161412] px-3 py-3 text-base font-normal text-[#f3efe6] normal-case tracking-normal";
+const fieldClass = "mt-2 block w-full rounded-lg border border-white/10 bg-[#161412] px-3 py-3 text-base font-normal text-[#f3efe6] normal-case tracking-normal placeholder:text-[#8d8278]";
 
 export async function generateMetadata({
   params,
@@ -86,7 +86,7 @@ export default async function AdminOrderPage({
           <input type="hidden" name="id" value={order.id} />
           <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
             {dict.admin.noteLabel}
-            <textarea name="body" required rows={4} className={fieldClass} />
+            <textarea name="body" required rows={4} placeholder={dict.admin.noteExample} className={fieldClass} />
           </label>
           <button type="submit" className="w-fit rounded-lg bg-[#e7d3bc] px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-[#1a1612]">
             {dict.admin.addNote}

@@ -58,6 +58,7 @@ export function AuthForm({
           type="text"
           autoComplete="name"
           value={values.name}
+          placeholder={dict.auth.example.name}
           error={error("name")}
           onChange={(name) => setValues((current) => ({ ...current, name }))}
         />
@@ -68,6 +69,7 @@ export function AuthForm({
         type="email"
         autoComplete="email"
         value={values.email}
+        placeholder={dict.auth.example.email}
         error={error("email") ?? error("taken")}
         onChange={(email) => setValues((current) => ({ ...current, email }))}
       />
@@ -77,6 +79,7 @@ export function AuthForm({
         type="password"
         autoComplete={mode === "login" ? "current-password" : "new-password"}
         value={values.password}
+        placeholder={dict.auth.example.password}
         error={error("password")}
         onChange={(password) => setValues((current) => ({ ...current, password }))}
       />
@@ -119,6 +122,7 @@ function Field({
   autoComplete,
   value,
   error,
+  placeholder,
   onChange,
 }: {
   id: string;
@@ -127,6 +131,7 @@ function Field({
   autoComplete: string;
   value: string;
   error: string | null;
+  placeholder?: string;
   onChange: (value: string) => void;
 }) {
   return (
@@ -141,10 +146,11 @@ function Field({
         autoComplete={autoComplete}
         required
         value={value}
+        placeholder={placeholder}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-2 w-full border border-ink-800/15 bg-ivory-100 px-3 py-3 text-base outline-none focus-visible:border-ink-800"
+        className="mt-2 w-full border border-ink-800/15 bg-ivory-100 px-3 py-3 text-base outline-none placeholder:text-text-dark/40 focus-visible:border-ink-800"
       />
       {error ? (
         <p id={`${id}-error`} className="mt-2 text-sm text-chili">

@@ -58,9 +58,9 @@ export default async function AdminUsersPage({
                         <input
                           name="reason"
                           maxLength={500}
-                          placeholder={copy.reason}
+                          placeholder={copy.reasonExample}
                           aria-label={copy.reason}
-                          className="w-40 rounded-lg border border-white/10 bg-[#100e0c] px-2 py-2 text-sm"
+                          className="w-56 rounded-lg border border-white/10 bg-[#100e0c] px-2 py-2 text-sm placeholder:text-[#8d8278]"
                         />
                       )}
                       <button

@@ -3,14 +3,16 @@ export function TextField({
   label,
   type = "text",
   multiline = false,
+  placeholder,
 }: {
   id: string;
   label: string;
   type?: "text" | "email";
   multiline?: boolean;
+  placeholder?: string;
 }) {
   const className =
-    "mt-2 w-full border border-ink-800/15 bg-ivory-100 px-3 py-3 text-base text-text-dark outline-none focus-visible:border-ink-800";
+    "mt-2 w-full border border-ink-800/15 bg-ivory-100 px-3 py-3 text-base text-text-dark outline-none placeholder:text-text-dark/40 focus-visible:border-ink-800";
 
   return (
     <div>
@@ -18,9 +20,9 @@ export function TextField({
         {label}
       </label>
       {multiline ? (
-        <textarea id={id} name={id} rows={5} className={className} />
+        <textarea id={id} name={id} rows={5} placeholder={placeholder} className={className} />
       ) : (
-        <input id={id} name={id} type={type} className={className} />
+        <input id={id} name={id} type={type} placeholder={placeholder} className={className} />
       )}
     </div>
   );

@@ -113,6 +113,11 @@
     "name": "Ім’я",
     "email": "E-mail",
     "message": "Повідомлення",
+    "example": {
+      "name": "Олена Коваль",
+      "email": "olena@example.com",
+      "message": "Хочу дізнатися, коли з’явиться смак Original."
+    },
     "disabledNote": "Форму вимкнено. Нічого не зберігається і нічого не надсилається."
   },
   "legal": {
@@ -159,6 +164,15 @@
     "city": "Місто",
     "postalCode": "Поштовий індекс",
     "address": "Адреса",
+    "example": {
+      "name": "Олена Коваль",
+      "email": "olena@example.com",
+      "phone": "+48 500 000 000",
+      "country": "Польща",
+      "city": "Варшава",
+      "postalCode": "00-001",
+      "address": "вул. Маршалковська, 1"
+    },
     "submit": "Зберегти тестове замовлення",
     "pending": "Збереження…",
     "errors": {
@@ -195,6 +209,11 @@
     "haveAccount": "Вже є акаунт?",
     "needAccount": "Немає акаунта?",
     "logout": "Вийти",
+    "example": {
+      "name": "Олена Коваль",
+      "email": "olena@example.com",
+      "password": "щонайменше 8 символів"
+    },
     "errors": {
       "name": "Вкажіть ім’я та прізвище.",
       "email": "Вкажіть коректний e-mail.",
@@ -246,6 +265,7 @@
     "history": "Історія",
     "notes": "Нотатки",
     "noteLabel": "Нотатка",
+    "noteExample": "Клієнт просив передзвонити перед видачею.",
     "addNote": "Додати нотатку",
     "saveStatus": "Зберегти статус",
     "testBanner": "Це тестове замовлення лишається локальним. Зміна статусу не бере оплату і нічого не відправляє.",
@@ -263,6 +283,21 @@
     "profile": "Опис",
     "card": "Картка",
     "cardHint": "Короткий текст на картці. Порожнє поле лишає поточний опис.",
+    "example": {
+      "slug": "black-pepper",
+      "price": "49.00",
+      "name": { "pl": "BLACK PEPPER", "uk": "BLACK PEPPER", "en": "BLACK PEPPER" },
+      "card": {
+        "pl": "Klasyczny smak z czarnym pieprzem. Paczka 100 g.",
+        "uk": "Класичний смак із чорним перцем. Пачка 100 г.",
+        "en": "A classic flavor with black pepper. 100 g pack."
+      },
+      "profile": {
+        "pl": "Krótko, jaki to smak i dla kogo. Skład publikujemy dopiero po zatwierdzeniu receptury.",
+        "uk": "Коротко, який це смак і для кого. Склад публікуємо лише після затвердження рецептури.",
+        "en": "A short note on the flavor and who it is for. Ingredients go live only after the recipe is approved."
+      }
+    },
     "photo": "Фото",
     "photoHint": "JPG, PNG або WebP, до 4 МБ. Його видно на картці і на сторінці продукту.",
     "weight": "Маса, г",
@@ -296,7 +331,12 @@
         "scanHint": "QR містить назву складової, наприклад сіль. Або назва|рецепт|складова.",
         "camera": "Камера недоступна. Дозвольте її у браузері.",
         "unknown": "У рецептах немає такої складової.",
-        "many": "Така складова є в кількох рецептах. Оберіть рецепт у формі."
+        "many": "Така складова є в кількох рецептах. Оберіть рецепт у формі.",
+        "example": {
+          "name": "Сіль, пакет 1 кг",
+          "price": "4.50",
+          "note": "Куплено в магазині біля складу"
+        }
       },
       "batches": "Виробничі партії",
       "warehouse": "Склад",
@@ -333,6 +373,7 @@
         "banned": "Забанений",
         "active": "Активний",
         "reason": "Причина",
+        "reasonExample": "Повторні тестові замовлення",
         "role": "Роль",
         "self": "Це ваш акаунт"
       },
@@ -375,6 +416,14 @@
         "recipeCost": "Собівартість",
         "costMissing": "немає ціни",
         "costHint": "Сума кількості кожної складової, помноженої на ціну, за яку її куплено.",
+        "example": {
+          "title": "Маринад Original",
+          "hours": "12",
+          "ingredient": "сіль",
+          "quantity": "20",
+          "price": "0.04",
+          "process": "Нарізати м’ясо, замаринувати і сушити."
+        },
         "addIngredient": "Додати компонент маринаду",
         "removeLine": "Прибрати",
         "steps": "Кроки",

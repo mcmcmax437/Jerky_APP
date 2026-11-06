@@ -92,6 +92,7 @@ export type Dictionary = {
     name: string;
     email: string;
     message: string;
+    example: { name: string; email: string; message: string };
     disabledNote: string;
   };
   legal: {
@@ -129,6 +130,15 @@ export type Dictionary = {
     city: string;
     postalCode: string;
     address: string;
+    example: {
+      name: string;
+      email: string;
+      phone: string;
+      country: string;
+      city: string;
+      postalCode: string;
+      address: string;
+    };
     submit: string;
     pending: string;
     errors: {
@@ -165,6 +175,7 @@ export type Dictionary = {
     haveAccount: string;
     needAccount: string;
     logout: string;
+    example: { name: string; email: string; password: string };
     errors: {
       name: string;
       email: string;
@@ -216,6 +227,7 @@ export type Dictionary = {
     history: string;
     notes: string;
     noteLabel: string;
+    noteExample: string;
     addNote: string;
     saveStatus: string;
     testBanner: string;
@@ -233,6 +245,13 @@ export type Dictionary = {
     profile: string;
     card: string;
     cardHint: string;
+    example: {
+      slug: string;
+      price: string;
+      name: { pl: string; uk: string; en: string };
+      card: { pl: string; uk: string; en: string };
+      profile: { pl: string; uk: string; en: string };
+    };
     photo: string;
     photoHint: string;
     weight: string;
@@ -267,6 +286,7 @@ export type Dictionary = {
         camera: string;
         unknown: string;
         many: string;
+        example: { name: string; price: string; note: string };
       };
       batches: string;
       warehouse: string;
@@ -303,6 +323,7 @@ export type Dictionary = {
         banned: string;
         active: string;
         reason: string;
+        reasonExample: string;
         role: string;
         self: string;
       };
@@ -338,6 +359,7 @@ export type Dictionary = {
         recipeCost: string;
         costMissing: string;
         costHint: string;
+        example: { title: string; hours: string; ingredient: string; quantity: string; price: string; process: string };
         addIngredient: string;
         removeLine: string;
         steps: string;
