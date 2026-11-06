@@ -141,7 +141,7 @@ export function ProductBoard({
                     <Link href={`/${locale}/admin/products/${product.id}`} className="flex items-center gap-3 font-semibold text-[#e7d3bc]">
                       {product.photo ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={product.photo} alt="" className="h-8 w-6 object-cover" />
+                        <img src={product.photo} alt="" className="h-16 w-12 object-cover" />
                       ) : null}
                       {product.name}
                     </Link>
@@ -165,7 +165,7 @@ export function ProductBoard({
           </table>
         </div>
       ) : (
-        <div className={`grid grid-cols-2 gap-3 md:grid-cols-3 ${pending ? "opacity-80" : ""}`}>
+        <div className={`grid gap-5 md:grid-cols-3 ${pending ? "opacity-80" : ""}`}>
           {shop.map((product) => (
             <article
               key={product.id}
@@ -211,7 +211,7 @@ export function ProductBoard({
                 <SlotMark slot={slotOf(product.id)} />
                 <h2 className="truncate text-sm font-semibold">{product.name}</h2>
               </div>
-              <div className="h-28 overflow-hidden bg-black">
+              <div className="aspect-[3/4] overflow-hidden bg-black">
                 {product.photo ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={product.photo} alt="" className="h-full w-full object-cover" />
