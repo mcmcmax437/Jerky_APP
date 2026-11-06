@@ -165,7 +165,7 @@ export function ProductBoard({
           </table>
         </div>
       ) : (
-        <div className={`grid gap-5 md:grid-cols-3 ${pending ? "opacity-80" : ""}`}>
+        <div className={`grid max-w-6xl gap-8 md:grid-cols-3 ${pending ? "opacity-80" : ""}`}>
           {shop.map((product) => (
             <article
               key={product.id}
@@ -203,21 +203,21 @@ export function ProductBoard({
                 event.preventDefault();
               }}
               onDragEnd={finishDrag}
-              className={`cursor-grab bg-[#161311] text-[#f3efe6] transition-opacity duration-200 active:cursor-grabbing ${
+              className={`cursor-grab text-[#f3efe6] transition-opacity duration-200 active:cursor-grabbing ${
                 dragId === product.id ? "opacity-50" : ""
               } ${overId === product.id ? "outline outline-1 outline-[#e7d3bc]" : ""}`}
             >
-              <div className="flex items-center gap-2 px-2 py-2">
-                <SlotMark slot={slotOf(product.id)} />
-                <h2 className="truncate text-sm font-semibold">{product.name}</h2>
-              </div>
               <div className="aspect-[3/4] overflow-hidden bg-black">
                 {product.photo ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={product.photo} alt="" className="h-full w-full object-cover" />
                 ) : null}
               </div>
-              <div className="flex items-center justify-between gap-2 px-2 py-2 text-xs">
+              <div className="flex items-center gap-2 pt-4">
+                <SlotMark slot={slotOf(product.id)} />
+                <h2 className="truncate font-display text-3xl leading-none">{product.name}</h2>
+              </div>
+              <div className="flex items-center justify-between gap-2 pt-3 text-sm">
                 <Price amountMinor={product.priceMinor} locale={locale} comingSoon={dict.price.comingSoon} />
                 <Link href={`/${locale}/admin/products/${product.id}`} className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e7d3bc]">
                   {dict.admin.editAction}
