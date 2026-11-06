@@ -7,7 +7,8 @@ Type=simple
 WorkingDirectory=/usr/src/Jerky_web/Jerky_APP/Jerky
 Environment=NODE_ENV=production
 EnvironmentFile=/usr/src/Jerky_web/Jerky_APP/Jerky/.env
-ExecStart=/usr/bin/env npm run start:prod
+KillMode=control-group
+ExecStart=/usr/bin/env node node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port __PORT__
 Restart=on-failure
 RestartSec=3
 

@@ -62,28 +62,90 @@ fi
 npx tsx deploy/ensure-admin.ts
 npm run build
 
-install -m 644 deploy/jerky.service /etc/systemd/system/jerky.service
+echo "=== listening sockets ==="
+ss -ltnp || true
+echo "=== nginx sites ==="
+if command -v nginx >/dev/null 2>&1; then
+  nginx -T 2>/dev/null | grep -E 'server_name|listen |proxy_pass' || true
+fi
+
+listener_pid() {
+  ss -ltnp "sport = :$1" 2>/dev/null | sed -n 's/.*pid=\([0-9][0-9]*\).*/\1/p' | head -1
+}
+
+is_jerky_pid() {
+  local pid="$1"
+  local cmd cwd
+  cmd=$(tr '\0' ' ' < "/proc/${pid}/cmdline" 2>/dev/null || true)
+  cwd=$(readlink "/proc/${pid}/cwd" 2>/dev/null || true)
+  case "${cwd}${cmd}" in
+    */usr/src/Jerky_web/Jerky_APP/Jerky*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+port=""
+if [ -f .deploy-port ]; then
+  saved=$(tr -cd '0-9' < .deploy-port)
+  if [ -n "$saved" ]; then
+    pid=$(listener_pid "$saved")
+    if [ -z "$pid" ] || is_jerky_pid "$pid"; then
+      port="$saved"
+    else
+      echo "Port ${saved} belongs to another site. It will not be stopped."
+    fi
+  fi
+fi
+if [ -z "$port" ]; then
+  for candidate in $(seq 3030 3099); do
+    if [ -z "$(listener_pid "$candidate")" ]; then
+      port="$candidate"
+      break
+    fi
+  done
+fi
+if [ -z "$port" ]; then
+  echo "No free port from 3030 to 3099."
+  exit 1
+fi
+echo "Jerky will use 127.0.0.1:${port}"
+printf '%s\n' "$port" > .deploy-port
+
+systemctl stop jerky || true
+pid=$(listener_pid "$port")
+if [ -n "$pid" ]; then
+  if is_jerky_pid "$pid"; then
+    echo "Stopping the previous Jerky process ${pid} on port ${port}."
+    kill "$pid" || true
+    sleep 1
+  else
+    echo "Port ${port} is busy with another site. Not stopping it."
+    exit 1
+  fi
+fi
+
+sed "s/__PORT__/${port}/g" deploy/jerky.service > /etc/systemd/system/jerky.service
 systemctl daemon-reload
 systemctl enable jerky
 systemctl restart jerky
 
 if command -v nginx >/dev/null 2>&1; then
   if [ -d /etc/nginx/sites-available ]; then
-    install -m 644 deploy/nginx-jerky.conf /etc/nginx/sites-available/jerky.conf
+    sed "s/__PORT__/${port}/g" deploy/nginx-jerky.conf > /etc/nginx/sites-available/jerky.conf
     ln -sfn /etc/nginx/sites-available/jerky.conf /etc/nginx/sites-enabled/jerky.conf
   elif [ -d /etc/nginx/conf.d ]; then
-    install -m 644 deploy/nginx-jerky.conf /etc/nginx/conf.d/jerky.conf
+    sed "s/__PORT__/${port}/g" deploy/nginx-jerky.conf > /etc/nginx/conf.d/jerky.conf
   fi
   nginx -t
   systemctl reload nginx
 else
-  echo "nginx is not installed. The app is listening on 127.0.0.1:3010 only."
+  echo "nginx is not installed. The app is listening on 127.0.0.1:${port} only."
   exit 1
 fi
 
 ok=0
 for _ in $(seq 1 30); do
-  if curl -fsS --max-time 5 http://127.0.0.1:3010/pl >/dev/null; then
+  if curl -fsS --max-time 5 "http://127.0.0.1:${port}/pl" >/dev/null; then
     ok=1
     break
   fi
@@ -91,10 +153,10 @@ for _ in $(seq 1 30); do
 done
 
 if [ "$ok" != "1" ]; then
-  echo "Jerky did not answer on 127.0.0.1:3010."
+  echo "Jerky did not answer on 127.0.0.1:${port}."
   systemctl status jerky --no-pager || true
   journalctl -u jerky -n 80 --no-pager || true
   exit 1
 fi
 
-echo "Jerky is serving http://127.0.0.1:3010/pl"
+echo "Jerky is serving http://127.0.0.1:${port}/pl"
