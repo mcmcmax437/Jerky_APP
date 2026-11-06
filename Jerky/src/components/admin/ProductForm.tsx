@@ -66,10 +66,11 @@ export function ProductForm({
           <select name="accent" defaultValue={product?.accent ?? "bone"} className={fieldClass}>
             {accents.map((accent) => (
               <option key={accent} value={accent}>
-                {accent}
+                {accent === "bone" ? dict.home.classic : accent === "teriyaki" ? dict.home.sweet : dict.home.hot}
               </option>
             ))}
           </select>
+          <span className="mt-2 block text-sm font-normal normal-case tracking-normal text-[#9c9186]">{dict.admin.accentHint}</span>
         </label>
         <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
           {dict.admin.sort}

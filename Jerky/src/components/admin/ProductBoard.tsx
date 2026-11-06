@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Price } from "@/components/product/Price";
@@ -43,6 +43,8 @@ export function ProductBoard({
   const [overId, setOverId] = useState<string | null>(null);
   const dragRef = useRef<string | null>(null);
   const overRef = useRef<string | null>(null);
+  const startOrder = useRef<string[] | null>(null);
+  const positions = useRef(new Map<string, DOMRect>());
   const shopRef = useRef(shop);
   shopRef.current = shop;
   const rest = products.filter((item) => !item.published);
@@ -52,22 +54,41 @@ export function ProductBoard({
     setShop(products.filter((item) => item.published));
   }, [products]);
 
+  useLayoutEffect(() => {
+    const nodes = document.querySelectorAll<HTMLElement>("[data-product-id]");
+    nodes.forEach((node) => {
+      const id = node.dataset.productId;
+      if (!id) return;
+      const next = node.getBoundingClientRect();
+      const previous = positions.current.get(id);
+      if (previous) {
+        const dx = previous.left - next.left;
+        const dy = previous.top - next.top;
+        if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+          node.animate(
+            [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "translate(0, 0)" }],
+            { duration: 220, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" },
+          );
+        }
+      }
+      positions.current.set(id, next);
+    });
+  }, [shop]);
+
   function slotOf(id: string) {
     const index = shop.findIndex((item) => item.id === id);
     return index < 0 ? null : index + 1;
   }
 
   function finishDrag() {
-    const from = dragRef.current;
-    const to = overRef.current;
+    const started = startOrder.current;
     dragRef.current = null;
     overRef.current = null;
+    startOrder.current = null;
     setDragId(null);
     setOverId(null);
-    if (!from || !to || from === to) return;
-    const next = moveShopItem(shopRef.current, from, to);
-    shopRef.current = next;
-    setShop(next);
+    const next = shopRef.current;
+    if (!started || next.map((item) => item.id).join() === started.join()) return;
     startTransition(async () => {
       await reorderProducts(next.map((item) => item.id));
       router.refresh();
@@ -120,7 +141,7 @@ export function ProductBoard({
                     <Link href={`/${locale}/admin/products/${product.id}`} className="flex items-center gap-3 font-semibold text-[#e7d3bc]">
                       {product.photo ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={product.photo} alt="" className="h-14 w-11 object-cover" />
+                        <img src={product.photo} alt="" className="h-8 w-6 object-cover" />
                       ) : null}
                       {product.name}
                     </Link>
@@ -144,7 +165,7 @@ export function ProductBoard({
           </table>
         </div>
       ) : (
-        <div className={`grid gap-5 md:grid-cols-3 ${pending ? "opacity-80" : ""}`}>
+        <div className={`grid grid-cols-2 gap-3 md:grid-cols-3 ${pending ? "opacity-80" : ""}`}>
           {shop.map((product) => (
             <article
               key={product.id}
@@ -158,33 +179,45 @@ export function ProductBoard({
                 event.dataTransfer.setData("text/plain", product.id);
                 event.dataTransfer.effectAllowed = "move";
                 dragRef.current = product.id;
+                startOrder.current = shopRef.current.map((item) => item.id);
                 setDragId(product.id);
               }}
               onDragOver={(event) => {
-                if (!dragRef.current || dragRef.current === product.id) return;
+                const from = dragRef.current;
+                if (!from || from === product.id || overRef.current === product.id) return;
                 event.preventDefault();
                 overRef.current = product.id;
                 setOverId(product.id);
+                setShop((current) => {
+                  const next = moveShopItem(current, from, product.id);
+                  shopRef.current = next;
+                  return next;
+                });
+              }}
+              onDragLeave={(event) => {
+                const next = event.relatedTarget;
+                if (next instanceof Node && event.currentTarget.contains(next)) return;
+                if (overRef.current === product.id) overRef.current = null;
               }}
               onDrop={(event) => {
                 event.preventDefault();
               }}
               onDragEnd={finishDrag}
-              className={`cursor-grab touch-none bg-[#161311] text-[#f3efe6] active:cursor-grabbing ${
-                dragId === product.id ? "opacity-70" : ""
-              } ${overId === product.id ? "outline outline-2 outline-[#e7d3bc]" : ""}`}
+              className={`cursor-grab bg-[#161311] text-[#f3efe6] transition-opacity duration-200 active:cursor-grabbing ${
+                dragId === product.id ? "opacity-50" : ""
+              } ${overId === product.id ? "outline outline-1 outline-[#e7d3bc]" : ""}`}
             >
-              <div className="flex items-center gap-3 p-3">
+              <div className="flex items-center gap-2 px-2 py-2">
                 <SlotMark slot={slotOf(product.id)} />
-                <h2 className="font-display text-3xl leading-none">{product.name}</h2>
+                <h2 className="truncate text-sm font-semibold">{product.name}</h2>
               </div>
-              <div className="aspect-[3/4] overflow-hidden bg-black">
+              <div className="h-28 overflow-hidden bg-black">
                 {product.photo ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={product.photo} alt="" className="h-full w-full object-cover" />
                 ) : null}
               </div>
-              <div className="flex items-center justify-between gap-3 p-4 text-sm">
+              <div className="flex items-center justify-between gap-2 px-2 py-2 text-xs">
                 <Price amountMinor={product.priceMinor} locale={locale} comingSoon={dict.price.comingSoon} />
                 <Link href={`/${locale}/admin/products/${product.id}`} className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e7d3bc]">
                   {dict.admin.editAction}

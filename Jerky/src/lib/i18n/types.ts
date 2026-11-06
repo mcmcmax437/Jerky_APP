@@ -229,6 +229,7 @@ export type Dictionary = {
     notInShop: string;
     slug: string;
     accent: string;
+    accentHint: string;
     profile: string;
     card: string;
     cardHint: string;
