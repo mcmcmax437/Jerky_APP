@@ -52,7 +52,7 @@ export function ShopCatalog({
 
   return (
     <section className="bg-[#f3efe8] text-text-dark">
-      <div className="mx-auto max-w-6xl px-5 py-8 md:px-8">
+      <div className="mx-auto max-w-[83rem] px-5 py-8 md:px-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div role="group" aria-label={dict.home.filtersLabel} className="flex flex-wrap gap-2">
             {filters.map((item) => {
@@ -137,10 +137,10 @@ function ShopCard({
   const list = view === "list";
 
   return (
-    <article className={`group overflow-hidden rounded-2xl bg-[#1b1714] text-[#f6f1ea] transition duration-500 ease-out hover:-translate-y-1.5 hover:shadow-[0_28px_54px_rgba(20,12,8,0.28)] ${list ? "md:grid md:grid-cols-[220px_minmax(0,1fr)]" : ""}`}>
+    <article className={`group overflow-hidden rounded-2xl bg-[#1b1714] text-[#f6f1ea] transition duration-500 ease-out hover:-translate-y-1.5 hover:shadow-[0_28px_54px_rgba(20,12,8,0.28)] ${list ? "md:grid md:grid-cols-[252px_minmax(0,1fr)]" : ""}`}>
       <Link href={`/${locale}/product/${product.slug}`} aria-label={product.name} className="relative block overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={src} alt="" className={`w-full object-cover transition duration-700 ease-out group-hover:scale-[1.06] ${list ? "aspect-[4/3] md:aspect-[3/4] md:h-full" : "aspect-[3/4]"}`} />
+        <img src={src} alt="" className={`w-full object-cover transition duration-700 ease-out group-hover:scale-[1.06] ${list ? "aspect-[4/3] md:aspect-[9/8] md:h-full" : "aspect-[9/8]"}`} />
         <span className="absolute top-3 right-3 rounded-full bg-black/55 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#f6f1ea]">
           {badge}
         </span>
