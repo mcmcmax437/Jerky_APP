@@ -12,7 +12,7 @@ export function CatalogHero({
       <picture>
         <source media="(min-width: 1600px)" srcSet="/home/hero-jerky-21x9.jpg" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/home/hero-jerky-16x9.jpg" alt="" className="h-[28rem] w-full object-cover object-[72%_center] md:h-auto md:object-center" />
+        <img src="/home/hero-jerky-16x9.jpg" alt="" className="hero-frame w-full object-cover object-[72%_center] md:object-center" />
       </picture>
       <div className="absolute inset-0 bg-gradient-to-r from-ink-950 via-ink-950/75 to-transparent" />
       <div className="absolute inset-0 flex items-center">

@@ -46,6 +46,24 @@ body {
   }
 }
 
+.hero-frame {
+  height: 19rem;
+  aspect-ratio: auto;
+}
+
+@media (min-width: 768px) {
+  .hero-frame {
+    height: auto;
+    aspect-ratio: 8 / 3;
+  }
+}
+
+@media (min-width: 1600px) {
+  .hero-frame {
+    aspect-ratio: 7 / 2;
+  }
+}
+
 @keyframes page-enter {
   from {
     opacity: 0;
