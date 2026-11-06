@@ -4,9 +4,9 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/usr/src/jerky
+WorkingDirectory=/usr/src/Jerky_web/Jerky_APP/Jerky
 Environment=NODE_ENV=production
-EnvironmentFile=/usr/src/jerky/.env
+EnvironmentFile=/usr/src/Jerky_web/Jerky_APP/Jerky/.env
 ExecStart=/usr/bin/env npm run start:prod
 Restart=on-failure
 RestartSec=3

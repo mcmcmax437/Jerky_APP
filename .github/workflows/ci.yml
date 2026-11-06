@@ -52,12 +52,12 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
           ssh_opts="-i $HOME/.ssh/deploy_key -o IdentitiesOnly=yes"
-          ssh $ssh_opts "$SSH_USER@$SSH_HOST" "mkdir -p /usr/src/jerky"
+          ssh $ssh_opts "$SSH_USER@$SSH_HOST" "mkdir -p /usr/src/Jerky_web/Jerky_APP/Jerky"
           tar -czf - \
             --exclude .git \
             --exclude node_modules \
             --exclude .next \
             --exclude .env \
             --exclude '*.tsbuildinfo' \
-            -C Jerky . | ssh $ssh_opts "$SSH_USER@$SSH_HOST" "tar -xzf - -C /usr/src/jerky"
-          ssh $ssh_opts "$SSH_USER@$SSH_HOST" "bash /usr/src/jerky/deploy/remote-update.sh"
+            -C Jerky . | ssh $ssh_opts "$SSH_USER@$SSH_HOST" "tar -xzf - -C /usr/src/Jerky_web/Jerky_APP/Jerky"
+          ssh $ssh_opts "$SSH_USER@$SSH_HOST" "bash /usr/src/Jerky_web/Jerky_APP/Jerky/deploy/remote-update.sh"

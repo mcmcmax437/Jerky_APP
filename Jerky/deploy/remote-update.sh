@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-cd /usr/src/jerky
+cd /usr/src/Jerky_web/Jerky_APP/Jerky
 
 if ! command -v node >/dev/null 2>&1 || ! command -v npm >/dev/null 2>&1; then
   echo "Node.js 22 and npm must be installed on the server."
@@ -43,7 +43,7 @@ ADMIN_PASSWORD="${admin_pass}"
 EOF
   unset db_pass admin_pass
   fresh_env=1
-  echo "Created /usr/src/jerky/.env and the MySQL database jerky. Passwords stay in that file."
+  echo "Created /usr/src/Jerky_web/Jerky_APP/Jerky/.env and the MySQL database jerky. Passwords stay in that file."
 fi
 
 npm ci
