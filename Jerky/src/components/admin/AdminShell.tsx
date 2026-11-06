@@ -53,7 +53,7 @@ export function AdminShell({
                 key={item.href}
                 href={item.href}
                 aria-current={current ? "page" : undefined}
-                className={`flex shrink-0 items-center gap-3 rounded-lg px-3 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper ${
+                className={`press flex shrink-0 items-center gap-3 rounded-lg px-3 py-2.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper ${
                   current ? "bg-[#3a2a22] text-[#f0d3b8]" : "text-[#c9bfb4] hover:bg-white/5"
                 }`}
               >

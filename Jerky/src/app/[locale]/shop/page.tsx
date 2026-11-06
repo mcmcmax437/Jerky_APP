@@ -27,7 +27,7 @@ export default async function ShopPage({
       <PageIntro eyebrow={dict.shop.eyebrow} title={dict.shop.title} />
       <section className="bg-ivory-100">
         <Container className="py-16 md:py-20">
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="rise grid gap-5 md:grid-cols-3">
             {products.map((product) => (
               <ProductCard key={product.slug} product={product} locale={locale} dict={dict} />
             ))}

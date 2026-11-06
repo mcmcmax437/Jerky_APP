@@ -66,7 +66,7 @@ export default async function AdminOrdersPage({
         </button>
       </form>
       {orders.length === 0 ? <p>{dict.admin.empty}</p> : null}
-      <ul className="divide-y divide-white/10 border-y border-white/10">
+      <ul className="rise divide-y divide-white/10 border-y border-white/10">
         {orders.map((order, index) => (
           <li key={order.id} className="py-4">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -78,7 +78,7 @@ export default async function AdminOrdersPage({
               <Link
                 href={`/${locale}/admin/orders/${order.id}`}
                 aria-label={dict.admin.editAction}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 text-[#e7d3bc]"
+                className="press inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 text-[#e7d3bc]"
               >
                 <Icon name="settings-02" size={18} />
               </Link>

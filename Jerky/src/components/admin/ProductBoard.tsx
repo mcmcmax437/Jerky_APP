@@ -105,7 +105,7 @@ export function ProductBoard({
               type="button"
               aria-pressed={view === item}
               onClick={() => setView(item)}
-              className={`rounded-lg px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] ${
+              className={`press rounded-lg px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] ${
                 view === item ? "bg-[#e7d3bc] text-[#1a1612]" : "border border-white/15 text-[#e7d3bc]"
               }`}
             >
@@ -131,7 +131,7 @@ export function ProductBoard({
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="rise-rows">
               {rows.map((product) => (
                 <tr key={product.id} className="border-b border-white/10">
                   <td className="py-3 pr-4">
@@ -154,7 +154,7 @@ export function ProductBoard({
                   <td className="py-3 text-right">
                     <Link
                       href={`/${locale}/admin/products/${product.id}`}
-                      className="inline-flex rounded-lg bg-[#e7d3bc] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#1a1612]"
+                      className="press inline-flex rounded-lg bg-[#e7d3bc] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#1a1612]"
                     >
                       {dict.admin.editAction}
                     </Link>
@@ -165,7 +165,7 @@ export function ProductBoard({
           </table>
         </div>
       ) : (
-        <div className={`grid max-w-6xl gap-8 md:grid-cols-3 ${pending ? "opacity-80" : ""}`}>
+        <div className={`rise grid max-w-6xl gap-8 md:grid-cols-3 ${pending ? "opacity-80" : ""}`}>
           {shop.map((product) => (
             <article
               key={product.id}
@@ -219,7 +219,7 @@ export function ProductBoard({
               </div>
               <div className="flex items-center justify-between gap-2 pt-3 text-sm">
                 <Price amountMinor={product.priceMinor} locale={locale} comingSoon={dict.price.comingSoon} />
-                <Link href={`/${locale}/admin/products/${product.id}`} className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e7d3bc]">
+                <Link href={`/${locale}/admin/products/${product.id}`} className="press inline-block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e7d3bc]">
                   {dict.admin.editAction}
                 </Link>
               </div>
@@ -229,7 +229,7 @@ export function ProductBoard({
       )}
 
       {view === "cards" && rest.length > 0 ? (
-        <ul className="grid gap-2">
+        <ul className="rise grid gap-2">
           {rest.map((product) => (
             <li key={product.id} className="text-sm text-[#b7aa9d]">
               <Link href={`/${locale}/admin/products/${product.id}`} className="text-[#e7d3bc]">

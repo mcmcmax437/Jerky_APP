@@ -27,7 +27,7 @@ export default async function AdminProductsPage({
       title={dict.admin.products}
       lede={dict.admin.priceHint}
       action={
-        <Link href={`/${locale}/admin/products/new`} className="rounded-lg bg-[#e7d3bc] px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#1a1612]">
+        <Link href={`/${locale}/admin/products/new`} className="press rounded-lg bg-[#e7d3bc] px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#1a1612]">
           {dict.admin.create}
         </Link>
       }

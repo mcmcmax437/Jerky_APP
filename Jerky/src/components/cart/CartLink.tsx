@@ -12,7 +12,7 @@ export function CartLink({ locale, label }: { locale: Locale; label: string }) {
     <Link
       href={`/${locale}/cart`}
       aria-label={count > 0 ? `${label}: ${count}` : label}
-      className="relative inline-flex h-11 w-11 items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
+      className="press relative inline-flex h-11 w-11 items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
     >
       <Icon name="shopping-bag-01" size={18} />
       <span className="absolute top-1 right-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-copper px-1 text-[9px] leading-none text-text-light tabular-nums">

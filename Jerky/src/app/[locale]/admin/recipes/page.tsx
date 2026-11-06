@@ -21,13 +21,13 @@ export default async function AdminRecipesPage({ params }: { params: Promise<{ l
       title={dict.admin.terminal.recipes}
       lede={copy.private}
       action={
-        <Link href={`/${locale}/admin/recipes/new`} className="rounded-lg bg-[#e7d3bc] px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-[#1a1612]">
+        <Link href={`/${locale}/admin/recipes/new`} className="press inline-flex rounded-lg bg-[#e7d3bc] px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-[#1a1612]">
           {copy.newTitle}
         </Link>
       }
     >
       {recipes.length === 0 ? <p className="text-sm text-[#b7aa9d]">{copy.empty}</p> : null}
-      <ul className="grid gap-2">
+      <ul className="rise grid gap-2">
         {recipes.map((recipe) => {
           const product = recipe.product?.translations.find((item) => item.locale === locale)?.name;
           const version = recipe.versions[0];
@@ -39,7 +39,7 @@ export default async function AdminRecipesPage({ params }: { params: Promise<{ l
           );
           return (
             <li key={recipe.id}>
-              <Link href={`/${locale}/admin/recipes/${recipe.id}`} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 px-4 py-3">
+              <Link href={`/${locale}/admin/recipes/${recipe.id}`} className="press flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 px-4 py-3">
                 <span>
                   <span className="block">{recipe.title}</span>
                   <span className="text-xs text-[#9c9186]">{[product, version ? `${copy.version} ${version.versionNumber}` : null, `${copy.recipeCost} ${formatAmount(cost.total, locale)}`].filter(Boolean).join(" · ")}</span>

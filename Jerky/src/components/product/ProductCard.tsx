@@ -23,7 +23,7 @@ export function ProductCard({
     <article className="h-full bg-ink-900 text-text-light">
       <Link
         href={`/${locale}/product/${product.slug}`}
-        className="group flex h-full flex-col focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-copper"
+        className="press group flex h-full flex-col focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-copper"
       >
         <div className="aspect-[3/4] overflow-hidden bg-ink-950">
           {/* eslint-disable-next-line @next/next/no-img-element */}

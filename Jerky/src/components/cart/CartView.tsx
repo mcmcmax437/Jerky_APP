@@ -40,7 +40,7 @@ export function CartView({ locale, dict }: { locale: Locale; dict: Dictionary })
 
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_280px]">
-      <ul className="divide-y divide-ink-800/10 border-y border-ink-800/10">
+      <ul className="rise divide-y divide-ink-800/10 border-y border-ink-800/10">
         {lines.map((line) => {
           const priced = quote?.lines.find((item) => item.slug === line.slug);
           return (

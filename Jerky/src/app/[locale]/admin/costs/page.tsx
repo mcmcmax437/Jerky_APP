@@ -20,7 +20,7 @@ export default async function AdminCostsPage({ params }: { params: Promise<{ loc
   return (
     <AdminPage title={dict.admin.terminal.costs} lede={copy.costHint}>
       {recipes.length === 0 ? <p className="text-sm text-[#b7aa9d]">{copy.empty}</p> : null}
-      <div className="grid gap-6">
+      <div className="rise grid gap-6">
         {recipes.map((recipe) => {
           const ingredients = recipe.versions[0]?.ingredients ?? [];
           const cost = recipeCost(
@@ -50,7 +50,7 @@ export default async function AdminCostsPage({ params }: { params: Promise<{ loc
                       <th className="py-2 font-medium">{copy.lineCost}</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody className="rise-rows">
                     {ingredients.map((item, index) => {
                       const unitPrice = item.plannedUnitPrice == null ? null : Number(item.plannedUnitPrice);
                       const amount = lineCost(Number(item.quantity), unitPrice);

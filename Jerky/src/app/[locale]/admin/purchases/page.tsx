@@ -72,7 +72,7 @@ export default async function AdminPurchasesPage({
                 <th className="py-2 font-medium">{copy.note}</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="rise-rows">
               {purchases.map((purchase) => {
                 const line = purchase.recipe.versions[0]?.ingredients.find(
                   (item) => item.name.trim().toLowerCase() === purchase.componentName.trim().toLowerCase(),

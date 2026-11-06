@@ -32,7 +32,7 @@ export function LanguageSwitcher({
             href={`/${item}${rest}`}
             hrefLang={item === "uk" ? "uk" : item}
             aria-current={active ? "page" : undefined}
-            className={`px-1.5 py-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper ${
+            className={`press inline-block px-1.5 py-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper ${
               active
                 ? "text-text-light underline decoration-copper underline-offset-4"
                 : "text-text-light/45 hover:text-text-light"

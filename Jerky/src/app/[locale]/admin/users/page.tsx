@@ -36,7 +36,7 @@ export default async function AdminUsersPage({
               <th className="py-2 font-medium">{copy.reason}</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="rise-rows">
             {users.map((user) => (
               <tr key={user.id} className="border-t border-white/10 align-top">
                 <td className="py-3 pr-4">{user.name}</td>

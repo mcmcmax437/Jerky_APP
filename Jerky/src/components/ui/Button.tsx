@@ -17,7 +17,7 @@ const styles: Record<Tone, Record<Variant, string>> = {
 
 function classNames(variant: Variant, tone: Tone, className?: string) {
   return [
-    "inline-flex items-center justify-center px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] transition-colors duration-200",
+    "press inline-flex items-center justify-center px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em]",
     "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper",
     "disabled:cursor-not-allowed disabled:opacity-45",
     styles[tone][variant],

@@ -67,7 +67,7 @@ export function HomeCatalog({
                   type="button"
                   aria-pressed={active}
                   onClick={() => setFlavor(item.id)}
-                  className={`text-[11px] font-semibold uppercase tracking-[0.2em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-copper ${
+                  className={`press text-[11px] font-semibold uppercase tracking-[0.2em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-copper ${
                     active ? "text-text-dark underline decoration-ink-950 underline-offset-8" : "text-muted hover:text-text-dark"
                   }`}
                 >
@@ -88,7 +88,7 @@ export function HomeCatalog({
             </select>
           </label>
         </div>
-        <div className="mt-8 grid gap-10 md:grid-cols-3 md:gap-8">
+        <div key={`${flavor}-${sort}`} className="rise mt-8 grid gap-10 md:grid-cols-3 md:gap-8">
           {visible.map((product) => (
             <FlavorCard key={product.slug} product={product} locale={locale} dict={dict} />
           ))}
@@ -142,7 +142,7 @@ function FlavorCard({
         <div className="mt-5 flex gap-2">
           <Link
             href={`/${locale}/product/${product.slug}`}
-            className="inline-flex flex-1 items-center justify-center bg-ink-950 px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-text-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
+            className="press inline-flex flex-1 items-center justify-center bg-ink-950 px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-text-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
           >
             {dict.home.view} →
           </Link>
@@ -150,7 +150,7 @@ function FlavorCard({
             type="button"
             aria-label={dict.product.add}
             onClick={() => add(product.slug, 1)}
-            className="inline-flex h-11 w-11 items-center justify-center border border-ink-800/20 text-text-dark hover:border-ink-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
+            className="press inline-flex h-11 w-11 items-center justify-center border border-ink-800/20 text-text-dark hover:border-ink-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
           >
             <Icon name="shopping-bag-01" />
           </button>

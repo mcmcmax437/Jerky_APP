@@ -41,12 +41,12 @@ export function MobileNav({
       </button>
       {open ? (
         <div id="mobile-menu" className="absolute inset-x-0 top-full border-b border-white/10 bg-ink-950">
-          <nav aria-label={dict.nav.primary} className="flex flex-col px-5 py-4">
+          <nav aria-label={dict.nav.primary} className="rise flex flex-col px-5 py-4">
             {links.map((item) => (
               <Link
                 key={item.href}
                 href={`/${locale}${item.href}`}
-                className="border-b border-white/10 py-4 text-sm uppercase tracking-[0.18em]"
+                className="press border-b border-white/10 py-4 text-sm uppercase tracking-[0.18em]"
                 onClick={() => setOpen(false)}
               >
                 {dict.nav[item.key]}
@@ -57,14 +57,14 @@ export function MobileNav({
             </div>
             <Link
               href={role === "ADMIN" ? `/${locale}/admin` : `/${locale}/account`}
-              className="border-b border-white/10 py-4 text-sm uppercase tracking-[0.18em]"
+              className="press border-b border-white/10 py-4 text-sm uppercase tracking-[0.18em]"
               onClick={() => setOpen(false)}
             >
               {role === "ADMIN" ? dict.nav.admin : dict.nav.account}
             </Link>
             <Link
               href={`/${locale}/cart`}
-              className="py-4 text-sm uppercase tracking-[0.18em]"
+              className="press py-4 text-sm uppercase tracking-[0.18em]"
               onClick={() => setOpen(false)}
             >
               {dict.nav.cart}
