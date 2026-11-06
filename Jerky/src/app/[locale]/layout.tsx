@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { CartProvider } from "@/features/cart/cart-context";
 import { getSession } from "@/features/auth/session";
 import { Footer } from "@/components/layout/Footer";
@@ -33,6 +34,12 @@ export default async function LocaleLayout({
 }) {
   const { locale, dict } = await readLocale(params);
   const session = await getSession();
+  const pathname = (await headers()).get("x-pathname") ?? "";
+  const isAdmin = pathname === `/${locale}/admin` || pathname.startsWith(`/${locale}/admin/`);
+
+  if (isAdmin) {
+    return <main id="content" className="min-h-screen bg-[#100e0c]">{children}</main>;
+  }
 
   return (
     <>

@@ -39,7 +39,7 @@ export function ProductCard({
             <Badge accent={product.accent} />
           </div>
           <p className="text-sm text-text-light/70">{formatWeight(product.netWeightG, locale)}</p>
-          <p className="line-clamp-4 text-sm leading-relaxed text-text-light/75">{product.profile}</p>
+          <p className="line-clamp-4 text-sm leading-relaxed text-text-light/75">{product.card || product.profile}</p>
           <div className="mt-auto flex items-center justify-between pt-2 text-sm">
             <Price
               amountMinor={product.priceMinor}

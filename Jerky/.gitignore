@@ -10,6 +10,9 @@ next-env.d.ts
 src/generated
 npm-debug.log*
 
+/public/catalog/uploads/**
+!/public/catalog/uploads/
+!/public/catalog/uploads/.gitkeep
 /storage/uploads/**
 !/storage/uploads/**/
 !/storage/uploads/**/.gitkeep

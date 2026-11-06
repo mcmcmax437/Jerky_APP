@@ -53,6 +53,8 @@ export default async function HomePage({
         products={products.map((product) => ({
           slug: product.slug,
           name: product.name,
+          card: product.card,
+          image: product.images.find((item) => item.kind === "packshot")?.src ?? product.images[0]?.src ?? null,
           netWeightG: product.netWeightG,
           priceMinor: product.priceMinor,
           accent: product.accent,

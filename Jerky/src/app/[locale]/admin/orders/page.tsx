@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PageBody, PageIntro } from "@/components/layout/PageIntro";
-import { isAdminOrderStatus, listAdminOrders } from "@/features/admin/queries";
+import { AdminPage } from "@/components/admin/AdminPage";
+import { Icon } from "@/components/brand/Icon";
+import { OrderLines } from "@/components/admin/OrderLines";
+import { OrderStatusPill } from "@/components/admin/OrderStatus";
+import { orderStatuses } from "@/features/admin/order-status";
+import { isAdminOrderStatus, listAdminOrders, orderLines } from "@/features/admin/queries";
 import { formatDateTime } from "@/lib/format";
 import { readLocale } from "@/lib/i18n/request";
-
-const statuses = ["NEW", "CONFIRMED", "PREPARING", "READY", "SHIPPED", "COMPLETED", "CANCELLED", "REFUNDED"] as const;
 
 export async function generateMetadata({
   params,
@@ -27,70 +29,70 @@ export default async function AdminOrdersPage({
   const query = await searchParams;
   const status = query.status && isAdminOrderStatus(query.status) ? query.status : undefined;
   const orders = await listAdminOrders({ status, query: query.q });
+  const flatLines = await orderLines(orders.flatMap((order) => order.items));
+  const lines = orders.map((order) => {
+    const slice = flatLines.splice(0, order.items.length);
+    return slice;
+  });
 
   return (
-    <>
-      <PageIntro eyebrow={dict.admin.overviewEyebrow} title={dict.admin.orders} lede={dict.admin.overviewLede} />
-      <PageBody>
-        <form className="flex flex-wrap items-end gap-4" method="get">
-          <label className="text-xs font-semibold uppercase tracking-[0.16em]">
-            {dict.admin.search}
-            <input
-              name="q"
-              defaultValue={query.q ?? ""}
-              className="mt-2 block w-64 border border-ink-800/15 bg-ivory-100 px-3 py-3 text-base font-normal normal-case tracking-normal"
-            />
-          </label>
-          <label className="text-xs font-semibold uppercase tracking-[0.16em]">
-            {dict.admin.status}
-            <select
-              name="status"
-              defaultValue={status ?? ""}
-              className="mt-2 block border border-ink-800/15 bg-ivory-100 px-3 py-3 text-base font-normal normal-case tracking-normal"
-            >
-              <option value="">{dict.admin.all}</option>
-              {statuses.map((item) => (
-                <option key={item} value={item}>
-                  {dict.admin.statuses[item]}
-                </option>
-              ))}
-            </select>
-          </label>
-          <button type="submit" className="bg-ink-950 px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-text-light">
-            {dict.admin.filter}
-          </button>
-        </form>
-        {orders.length === 0 ? <p>{dict.admin.empty}</p> : null}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-ink-800/15 text-xs uppercase tracking-[0.16em]">
-                <th className="py-3 pr-4 font-semibold">{dict.order.number}</th>
-                <th className="py-3 pr-4 font-semibold">{dict.admin.customer}</th>
-                <th className="py-3 pr-4 font-semibold">{dict.admin.status}</th>
-                <th className="py-3 font-semibold">{dict.admin.latest}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order.id} className="border-b border-ink-800/10">
-                  <td className="py-3 pr-4">
-                    <Link href={`/${locale}/admin/orders/${order.id}`} className="font-semibold underline">
-                      {order.number}
-                    </Link>
-                  </td>
-                  <td className="py-3 pr-4">
-                    {order.customerName}
-                    <span className="mt-1 block text-text-dark/70">{order.email}</span>
-                  </td>
-                  <td className="py-3 pr-4">{dict.admin.statuses[order.status]}</td>
-                  <td className="py-3">{formatDateTime(order.createdAt, locale)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </PageBody>
-    </>
+    <AdminPage title={dict.admin.orders} lede={dict.admin.testBanner}>
+      <form className="flex flex-wrap items-end gap-4" method="get">
+        <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
+          {dict.admin.search}
+          <input
+            name="q"
+            defaultValue={query.q ?? ""}
+            className="mt-2 block w-64 rounded-lg border border-white/10 bg-[#161412] px-3 py-3 text-base font-normal text-[#f3efe6] normal-case tracking-normal"
+          />
+        </label>
+        <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
+          {dict.admin.status}
+          <select
+            name="status"
+            defaultValue={status ?? ""}
+            className="mt-2 block rounded-lg border border-white/10 bg-[#161412] px-3 py-3 text-base font-normal text-[#f3efe6] normal-case tracking-normal"
+          >
+            <option value="">{dict.admin.all}</option>
+            {orderStatuses.map((item) => (
+              <option key={item} value={item}>
+                {dict.admin.statuses[item]}
+              </option>
+            ))}
+          </select>
+        </label>
+        <button type="submit" className="rounded-lg bg-[#e7d3bc] px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#1a1612]">
+          {dict.admin.filter}
+        </button>
+      </form>
+      {orders.length === 0 ? <p>{dict.admin.empty}</p> : null}
+      <ul className="divide-y divide-white/10 border-y border-white/10">
+        {orders.map((order, index) => (
+          <li key={order.id} className="py-4">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <Link href={`/${locale}/admin/orders/${order.id}`} className="font-semibold text-[#e7d3bc]">
+                {order.number}
+              </Link>
+              <OrderStatusPill status={order.status} label={dict.admin.statuses[order.status]} />
+              <span className="text-xs text-[#9c9186]">{formatDateTime(order.createdAt, locale)}</span>
+              <Link
+                href={`/${locale}/admin/orders/${order.id}`}
+                aria-label={dict.admin.editAction}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 text-[#e7d3bc]"
+              >
+                <Icon name="settings-02" size={18} />
+              </Link>
+            </div>
+            <p className="mt-2">
+              {order.customerName}
+              <span className="text-[#9c9186]"> · {order.email}</span>
+            </p>
+            <div className="mt-2">
+              <OrderLines lines={lines[index] ?? []} dict={dict} />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </AdminPage>
   );
 }

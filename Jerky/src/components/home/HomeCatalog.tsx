@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ShoppingBag } from "lucide-react";
+import { Icon } from "@/components/brand/Icon";
 import { useCart } from "@/features/cart/cart-context";
 import { catalogPackshot } from "@/features/catalog/packshots";
 import { formatPrice, formatWeight } from "@/lib/format";
@@ -15,6 +15,8 @@ type Sort = "recommended" | "name";
 export type HomeProduct = {
   slug: string;
   name: string;
+  card: string | null;
+  image: string | null;
   netWeightG: number;
   priceMinor: number | null;
   accent: "bone" | "teriyaki" | "chili";
@@ -106,8 +108,8 @@ function FlavorCard({
   dict: Dictionary;
 }) {
   const { add } = useCart();
-  const blurb = dict.home.cards[product.slug as keyof typeof dict.home.cards] ?? product.name;
-  const photo = catalogPackshot(product.slug);
+  const blurb = product.card || dict.home.cards[product.slug as keyof typeof dict.home.cards] || product.name;
+  const photo = product.image || catalogPackshot(product.slug);
   const price =
     product.priceMinor == null
       ? dict.home.priceSoon
@@ -150,7 +152,7 @@ function FlavorCard({
             onClick={() => add(product.slug, 1)}
             className="inline-flex h-11 w-11 items-center justify-center border border-ink-800/20 text-text-dark hover:border-ink-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
           >
-            <ShoppingBag aria-hidden="true" size={16} />
+            <Icon name="shopping-bag-01" />
           </button>
         </div>
       </div>

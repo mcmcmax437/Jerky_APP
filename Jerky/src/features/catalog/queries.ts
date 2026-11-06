@@ -10,7 +10,7 @@ type ProductRecord = {
   priceMinor: number | null;
   currency: string;
   accent: string;
-  translations: { locale: string; name: string; profile: string }[];
+  translations: { locale: string; name: string; card: string | null; profile: string }[];
   media: { publicPath: string; kind: string; isPlaceholder: boolean; sortOrder: number }[];
   reviews: { rating: number }[];
 };
@@ -39,6 +39,7 @@ export function toCatalogProduct(product: ProductRecord, locale: Locale): Catalo
   return {
     slug: product.slug,
     name: translation.name,
+    card: translation.card,
     profile: translation.profile,
     netWeightG: product.netWeightG,
     priceMinor: product.priceMinor,

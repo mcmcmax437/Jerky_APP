@@ -35,6 +35,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang={locale} data-scroll-behavior="smooth" className={`${display.variable} ${sans.variable}`}>
+      <head>
+        <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css" />
+      </head>
       <body className="min-h-screen bg-ivory-100 font-sans text-text-dark antialiased">{children}</body>
     </html>
   );

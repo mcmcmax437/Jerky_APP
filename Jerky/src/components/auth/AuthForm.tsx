@@ -91,7 +91,7 @@ export function AuthForm({
           onChange={(confirm) => setValues((current) => ({ ...current, confirm }))}
         />
       ) : null}
-      {field === "credentials" || field === "failed" ? (
+      {field === "credentials" || field === "failed" || field === "banned" ? (
         <p className="text-sm text-chili">{dict.auth.errors[field]}</p>
       ) : null}
       <Button type="submit" tone="light" disabled={pending}>

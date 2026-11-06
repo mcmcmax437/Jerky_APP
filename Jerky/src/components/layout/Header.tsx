@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { UserRound } from "lucide-react";
+import { Icon } from "@/components/brand/Icon";
 import type { Locale } from "@/lib/i18n/locales";
 import type { Dictionary } from "@/lib/i18n/types";
 import { LanguageSwitcher } from "@/components/brand/LanguageSwitcher";
@@ -41,7 +41,7 @@ export function Header({
             aria-label={dict.nav.account}
             className="inline-flex h-11 w-11 items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
           >
-            <UserRound aria-hidden="true" size={18} />
+            <Icon name="user" size={18} />
           </Link>
           <CartLink locale={locale} label={dict.nav.cart} />
           <MobileNav locale={locale} dict={dict} role={role} />

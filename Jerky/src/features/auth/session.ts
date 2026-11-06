@@ -49,7 +49,13 @@ export async function getSession(): Promise<CurrentUser | null> {
     where: { tokenHash: hashToken(token) },
     include: { user: true },
   });
-  if (!row || row.expiresAt.getTime() <= Date.now()) return null;
+  if (!row || row.expiresAt.getTime() <= Date.now() || row.user.banned) {
+    if (row?.user.banned) {
+      await prisma.session.deleteMany({ where: { userId: row.userId } });
+      jar.set(cookieName, "", { httpOnly: true, path: "/", maxAge: 0 });
+    }
+    return null;
+  }
   return {
     id: row.user.id,
     email: row.user.email,

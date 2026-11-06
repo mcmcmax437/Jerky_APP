@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PageBody, PageIntro } from "@/components/layout/PageIntro";
+import { AdminPage } from "@/components/admin/AdminPage";
 import { ProductForm } from "@/components/admin/ProductForm";
 import { createProduct } from "@/features/admin/actions";
 import { readLocale } from "@/lib/i18n/request";
@@ -24,11 +24,8 @@ export default async function NewProductPage({
   const query = await searchParams;
 
   return (
-    <>
-      <PageIntro eyebrow={dict.admin.overviewEyebrow} title={dict.admin.newTitle} lede={dict.admin.priceHint} />
-      <PageBody>
-        <ProductForm locale={locale} dict={dict} action={createProduct} error={query.error} />
-      </PageBody>
-    </>
+    <AdminPage title={dict.admin.newTitle} lede={dict.admin.priceHint}>
+      <ProductForm locale={locale} dict={dict} action={createProduct} error={query.error} />
+    </AdminPage>
   );
 }

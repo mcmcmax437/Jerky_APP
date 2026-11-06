@@ -1,0 +1,166 @@
+"use client";
+
+import { useState } from "react";
+import { meatTypes, recipeUnits, type MeatTypeName, type RecipeUnit } from "@/features/admin/recipe";
+import type { Locale } from "@/lib/i18n/locales";
+import type { Dictionary } from "@/lib/i18n/types";
+
+type ComponentRow = { name: string; quantity: string; unit: RecipeUnit };
+
+const fieldClass =
+  "mt-2 w-full rounded-lg border border-white/10 bg-[#100e0c] px-3 py-2 text-sm text-[#f3efe6] outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper";
+
+export function RecipeForm({
+  locale,
+  dict,
+  action,
+  error,
+  saved,
+  products,
+  recipe,
+}: {
+  locale: Locale;
+  dict: Dictionary;
+  action: (formData: FormData) => void | Promise<void>;
+  error?: string;
+  saved?: boolean;
+  products: { id: string; name: string }[];
+  recipe?: {
+    id: string;
+    title: string;
+    status: string;
+    productId: string | null;
+    versionNumber: number;
+    meatType: MeatTypeName | "";
+    marinadeHours: string;
+    processPlan: string;
+    components: ComponentRow[];
+  };
+}) {
+  const copy = dict.admin.terminal.recipe;
+  const [components, setComponents] = useState<ComponentRow[]>(
+    recipe?.components.length ? recipe.components : [{ name: "", quantity: "", unit: "G" }],
+  );
+  const message = error === "recipe" ? dict.admin.errors.recipe : error === "used" ? copy.used : null;
+
+  return (
+    <form action={action} className="grid max-w-3xl gap-6">
+      <input type="hidden" name="locale" value={locale} />
+      {recipe ? <input type="hidden" name="id" value={recipe.id} /> : null}
+      {message ? <p className="text-sm text-chili">{message}</p> : null}
+      {saved ? <p className="text-sm text-emerald-300">{dict.admin.saved}</p> : null}
+      <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
+        {copy.title}
+        <input name="title" required maxLength={160} defaultValue={recipe?.title ?? ""} className={fieldClass} />
+      </label>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
+          {copy.product}
+          <select name="productId" defaultValue={recipe?.productId ?? ""} className={fieldClass}>
+            <option value="">{copy.none}</option>
+            {products.map((product) => (
+              <option key={product.id} value={product.id}>
+                {product.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
+          {dict.admin.status}
+          <select name="status" defaultValue={recipe?.status ?? "DRAFT"} className={fieldClass}>
+            {(["DRAFT", "TESTING", "APPROVED", "ARCHIVED"] as const).map((status) => (
+              <option key={status} value={status}>
+                {dict.admin.terminal.recipeStatuses[status]}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+      {recipe ? <p className="text-sm text-[#9c9186]">{copy.version} {recipe.versionNumber}</p> : null}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
+          {copy.meat}
+          <select name="meatType" required defaultValue={recipe?.meatType ?? ""} className={fieldClass}>
+            <option value="">{copy.choose}</option>
+            {meatTypes.map((meat) => (
+              <option key={meat} value={meat}>
+                {copy.meats[meat]}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
+          {copy.hours}
+          <input name="marinadeHours" inputMode="decimal" defaultValue={recipe?.marinadeHours ?? ""} className={fieldClass} />
+        </label>
+      </div>
+
+      <fieldset className="grid gap-3">
+        <legend className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">{copy.marinade}</legend>
+        {components.map((row, index) => (
+          <div key={index} className="grid gap-2 sm:grid-cols-[minmax(0,1.4fr)_120px_110px_auto]">
+            <input
+              name="componentName"
+              aria-label={copy.ingredientName}
+              value={row.name}
+              maxLength={160}
+              onChange={(event) => setComponents((current) => current.map((item, itemIndex) => (itemIndex === index ? { ...item, name: event.target.value } : item)))}
+              className={fieldClass}
+            />
+            <input
+              name="componentQty"
+              aria-label={copy.quantity}
+              inputMode="decimal"
+              value={row.quantity}
+              onChange={(event) => setComponents((current) => current.map((item, itemIndex) => (itemIndex === index ? { ...item, quantity: event.target.value } : item)))}
+              className={fieldClass}
+            />
+            <select
+              name="componentUnit"
+              aria-label={copy.unit}
+              value={row.unit}
+              onChange={(event) => setComponents((current) => current.map((item, itemIndex) => (itemIndex === index ? { ...item, unit: event.target.value as RecipeUnit } : item)))}
+              className={fieldClass}
+            >
+              {recipeUnits.map((unit) => (
+                <option key={unit} value={unit}>
+                  {copy.units[unit]}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              onClick={() => setComponents((current) => (current.length === 1 ? [{ name: "", quantity: "", unit: "G" }] : current.filter((_, itemIndex) => itemIndex !== index)))}
+              className="self-end px-3 py-2 text-xs text-[#b7aa9d]"
+            >
+              {copy.removeLine}
+            </button>
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={() => setComponents((current) => [...current, { name: "", quantity: "", unit: "G" }])}
+          className="w-fit text-sm text-[#e7d3bc]"
+        >
+          {copy.addIngredient}
+        </button>
+      </fieldset>
+
+      <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
+        {copy.process}
+        <textarea name="processPlan" rows={4} defaultValue={recipe?.processPlan ?? ""} className={fieldClass} />
+      </label>
+
+      <div className="flex flex-wrap gap-3">
+        <button name="mode" value="save" className="rounded-lg bg-[#e7d3bc] px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-[#1a1612]">
+          {dict.admin.save}
+        </button>
+        {recipe ? (
+          <button name="mode" value="version" className="rounded-lg border border-white/15 px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em]">
+            {copy.saveVersion}
+          </button>
+        ) : null}
+      </div>
+    </form>
+  );
+}

@@ -7,6 +7,7 @@ export type CatalogImage = {
 export type CatalogProduct = {
   slug: string;
   name: string;
+  card: string | null;
   profile: string;
   netWeightG: number;
   priceMinor: number | null;

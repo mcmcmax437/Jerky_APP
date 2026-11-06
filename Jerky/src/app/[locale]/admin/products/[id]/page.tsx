@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { PageBody, PageIntro } from "@/components/layout/PageIntro";
+import { AdminPage } from "@/components/admin/AdminPage";
 import { ProductForm } from "@/components/admin/ProductForm";
 import { updateProduct } from "@/features/admin/actions";
 import { getAdminProduct } from "@/features/admin/queries";
+import { catalogPackshot } from "@/features/catalog/packshots";
 import { readLocale } from "@/lib/i18n/request";
 
 export async function generateMetadata({
@@ -28,19 +29,20 @@ export default async function EditProductPage({
   const product = await getAdminProduct(id);
   if (!product) notFound();
   const query = await searchParams;
+  const name = product.translations.find((item) => item.locale === locale)?.name ?? product.slug;
 
   return (
-    <>
-      <PageIntro eyebrow={dict.admin.overviewEyebrow} title={dict.admin.edit} lede={product.slug} />
-      <PageBody>
-        <ProductForm
-          locale={locale}
-          dict={dict}
-          action={updateProduct}
-          product={product}
-          error={query.saved ? "saved" : query.error}
-        />
-      </PageBody>
-    </>
+    <AdminPage title={name} lede={dict.admin.priceHint}>
+      <ProductForm
+        locale={locale}
+        dict={dict}
+        action={updateProduct}
+        product={{
+          ...product,
+          photo: product.media.find((item) => item.kind === "packshot")?.publicPath ?? product.media[0]?.publicPath ?? catalogPackshot(product.slug),
+        }}
+        error={query.saved ? "saved" : query.error}
+      />
+    </AdminPage>
   );
 }

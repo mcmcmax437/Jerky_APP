@@ -13,13 +13,11 @@ datasource db {
 
 enum OrderStatus {
   NEW
-  CONFIRMED
-  PREPARING
+  IN_PROCESS
+  CANCELLED
   READY
   SHIPPED
-  COMPLETED
-  CANCELLED
-  REFUNDED
+  DELIVERED
 }
 
 enum RecipeStatus {
@@ -27,6 +25,15 @@ enum RecipeStatus {
   TESTING
   APPROVED
   ARCHIVED
+}
+
+enum MeatType {
+  CHICKEN
+  BEEF
+  PORK
+  TURKEY
+  SALMON
+  SHRIMP
 }
 
 enum BatchDecision {
@@ -88,6 +95,8 @@ model User {
   name         String   @db.VarChar(160)
   passwordHash String   @db.VarChar(255)
   role         UserRole @default(CUSTOMER)
+  banned       Boolean  @default(false)
+  banReason    String?  @db.VarChar(500)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -138,6 +147,7 @@ model ProductTranslation {
   productId String
   locale    String  @db.VarChar(5)
   name      String  @db.VarChar(120)
+  card      String? @db.VarChar(400)
   profile   String  @db.Text
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
@@ -227,6 +237,19 @@ model OrderNote {
   @@index([orderId, createdAt])
 }
 
+model PurchasedProduct {
+  id            String   @id @default(cuid())
+  name          String   @db.VarChar(160)
+  recipeId      String
+  componentName String   @db.VarChar(160)
+  purchasedOn   DateTime
+  note          String?  @db.VarChar(500)
+  createdAt     DateTime @default(now())
+  recipe        Recipe   @relation(fields: [recipeId], references: [id], onDelete: Restrict)
+
+  @@index([recipeId, purchasedOn])
+}
+
 model Ingredient {
   id        String      @id @default(cuid())
   name      String      @db.VarChar(160)
@@ -261,6 +284,7 @@ model Recipe {
   updatedAt DateTime     @updatedAt
   product   Product?     @relation(fields: [productId], references: [id], onDelete: SetNull)
   versions  RecipeVersion[]
+  purchases PurchasedProduct[]
 
   @@index([productId, status])
 }
@@ -269,6 +293,7 @@ model RecipeVersion {
   id               String   @id @default(cuid())
   recipeId         String
   versionNumber    Int
+  meatType         MeatType?
   rawMeatWeightG   Int?
   cutName          String?  @db.VarChar(160)
   marinadeNotes    String?  @db.Text

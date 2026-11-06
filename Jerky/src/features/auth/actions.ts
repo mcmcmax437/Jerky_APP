@@ -23,7 +23,7 @@ const loginSchema = z.object({
   next: z.string().optional(),
 });
 
-export type AuthField = "name" | "email" | "password" | "confirm" | "credentials" | "taken" | "failed";
+export type AuthField = "name" | "email" | "password" | "confirm" | "credentials" | "taken" | "failed" | "banned";
 
 export type AuthResult = { ok: true; href: string } | { ok: false; field: AuthField };
 
@@ -63,6 +63,7 @@ export async function loginAccount(input: unknown): Promise<AuthResult> {
   if (!user || !(await verifyPassword(data.password, user.passwordHash))) {
     return { ok: false, field: "credentials" };
   }
+  if (user.banned) return { ok: false, field: "banned" };
   await createSession(user.id);
   const fallback = user.role === "ADMIN" ? `/${data.locale}/admin` : `/${data.locale}/account`;
   return { ok: true, href: safeNext(data.next, fallback) };

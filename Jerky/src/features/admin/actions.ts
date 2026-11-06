@@ -6,8 +6,9 @@ import { prisma } from "@/lib/db/prisma";
 import { isLocale, type Locale } from "@/lib/i18n/locales";
 import { getSession } from "@/features/auth/session";
 import { parsePriceMinor } from "./price";
+import { photoIsInvalid, removeUploadedPhoto, saveProductPhoto } from "./product-photo";
+import { isOrderStatus } from "./order-status";
 
-const statuses = ["NEW", "CONFIRMED", "PREPARING", "READY", "SHIPPED", "COMPLETED", "CANCELLED", "REFUNDED"] as const;
 const accents = ["bone", "teriyaki", "chili"] as const;
 const locales = ["pl", "uk", "en"] as const;
 
@@ -27,15 +28,15 @@ export async function setOrderStatus(formData: FormData) {
   const locale = localeFrom(formData);
   const id = String(formData.get("id") ?? "");
   const status = String(formData.get("status") ?? "");
-  if (!statuses.includes(status as (typeof statuses)[number])) redirect(`/${locale}/admin/orders`);
+  if (!isOrderStatus(status)) redirect(`/${locale}/admin/orders`);
   const order = await prisma.order.findUnique({ where: { id }, select: { status: true } });
   if (!order) redirect(`/${locale}/admin/orders`);
   if (order.status !== status) {
     await prisma.order.update({
       where: { id },
       data: {
-        status: status as (typeof statuses)[number],
-        events: { create: { fromStatus: order.status, toStatus: status as (typeof statuses)[number] } },
+        status,
+        events: { create: { fromStatus: order.status, toStatus: status } },
       },
     });
   }
@@ -56,6 +57,7 @@ export async function addOrderNote(formData: FormData) {
 
 const translationSchema = z.object({
   name: z.string().trim().min(1).max(120),
+  card: z.string().trim().max(400),
   profile: z.string().trim().min(1).max(2000),
 });
 
@@ -63,6 +65,7 @@ const productSchema = z.object({
   slug: z.string().trim().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(80),
   accent: z.enum(accents),
   sortOrder: z.number().int().min(0).max(999),
+  netWeightG: z.number().int().min(1).max(5000),
   published: z.boolean(),
   price: z.string(),
   pl: translationSchema,
@@ -75,12 +78,40 @@ function productInput(formData: FormData) {
     slug: String(formData.get("slug") ?? ""),
     accent: String(formData.get("accent") ?? ""),
     sortOrder: Number(formData.get("sortOrder") ?? 0),
+    netWeightG: Number(formData.get("netWeightG") ?? 100),
     published: formData.get("published") === "on",
     price: String(formData.get("price") ?? ""),
-    pl: { name: String(formData.get("name-pl") ?? ""), profile: String(formData.get("profile-pl") ?? "") },
-    uk: { name: String(formData.get("name-uk") ?? ""), profile: String(formData.get("profile-uk") ?? "") },
-    en: { name: String(formData.get("name-en") ?? ""), profile: String(formData.get("profile-en") ?? "") },
+    pl: { name: String(formData.get("name-pl") ?? ""), card: String(formData.get("card-pl") ?? ""), profile: String(formData.get("profile-pl") ?? "") },
+    uk: { name: String(formData.get("name-uk") ?? ""), card: String(formData.get("card-uk") ?? ""), profile: String(formData.get("profile-uk") ?? "") },
+    en: { name: String(formData.get("name-en") ?? ""), card: String(formData.get("card-en") ?? ""), profile: String(formData.get("profile-en") ?? "") },
   });
+}
+
+function translationData(copy: { name: string; card: string; profile: string }) {
+  return { name: copy.name, card: copy.card || null, profile: copy.profile };
+}
+
+async function storePackshot(productId: string, file: FormDataEntryValue | null) {
+  if (!(file instanceof File)) return null;
+  const saved = await saveProductPhoto(file);
+  if (saved === "invalid") return "invalid" as const;
+  if (!saved) return null;
+  const current = await prisma.productMedia.findFirst({
+    where: { productId, kind: "packshot" },
+    orderBy: { sortOrder: "asc" },
+  });
+  if (current) {
+    await prisma.productMedia.update({
+      where: { id: current.id },
+      data: { publicPath: saved, isPlaceholder: false },
+    });
+    await removeUploadedPhoto(current.publicPath);
+  } else {
+    await prisma.productMedia.create({
+      data: { productId, kind: "packshot", sortOrder: 0, publicPath: saved, isPlaceholder: false },
+    });
+  }
+  return saved;
 }
 
 export async function createProduct(formData: FormData) {
@@ -90,6 +121,7 @@ export async function createProduct(formData: FormData) {
   if (!parsed.success) redirect(`/${locale}/admin/products/new?error=fields`);
   const price = parsePriceMinor(parsed.data.price);
   if (price === "invalid") redirect(`/${locale}/admin/products/new?error=price`);
+  if (photoIsInvalid(formData.get("photo"))) redirect(`/${locale}/admin/products/new?error=photo`);
   try {
     const product = await prisma.product.create({
       data: {
@@ -98,13 +130,16 @@ export async function createProduct(formData: FormData) {
         sortOrder: parsed.data.sortOrder,
         published: parsed.data.published,
         priceMinor: price,
-        netWeightG: 100,
+        netWeightG: parsed.data.netWeightG,
         currency: "PLN",
         translations: {
-          create: locales.map((item) => ({ locale: item, ...parsed.data[item] })),
+          create: locales.map((item) => ({ locale: item, ...translationData(parsed.data[item]) })),
         },
       },
     });
+    if ((await storePackshot(product.id, formData.get("photo"))) === "invalid") {
+      redirect(`/${locale}/admin/products/${product.id}?error=photo`);
+    }
     redirect(`/${locale}/admin/products/${product.id}`);
   } catch (error) {
     unstable_rethrow(error);
@@ -120,22 +155,26 @@ export async function updateProduct(formData: FormData) {
   if (!parsed.success) redirect(`/${locale}/admin/products/${id}?error=fields`);
   const price = parsePriceMinor(parsed.data.price);
   if (price === "invalid") redirect(`/${locale}/admin/products/${id}?error=price`);
+  if (photoIsInvalid(formData.get("photo"))) redirect(`/${locale}/admin/products/${id}?error=photo`);
   const existing = await prisma.product.findUnique({ where: { id }, select: { id: true } });
   if (!existing) redirect(`/${locale}/admin/products`);
+  if ((await storePackshot(id, formData.get("photo"))) === "invalid") redirect(`/${locale}/admin/products/${id}?error=photo`);
   await prisma.product.update({
     where: { id },
     data: {
       accent: parsed.data.accent,
       sortOrder: parsed.data.sortOrder,
+      netWeightG: parsed.data.netWeightG,
       published: parsed.data.published,
       priceMinor: price,
     },
   });
   for (const item of locales) {
+    const copy = translationData(parsed.data[item]);
     await prisma.productTranslation.upsert({
       where: { productId_locale: { productId: id, locale: item } },
-      update: parsed.data[item],
-      create: { productId: id, locale: item, ...parsed.data[item] },
+      update: copy,
+      create: { productId: id, locale: item, ...copy },
     });
   }
   redirect(`/${locale}/admin/products/${id}?saved=1`);

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Icon } from "@/components/brand/Icon";
 import type { Locale } from "@/lib/i18n/locales";
 import type { Dictionary } from "@/lib/i18n/types";
 import { LanguageSwitcher } from "@/components/brand/LanguageSwitcher";
@@ -36,7 +36,7 @@ export function MobileNav({
         aria-controls="mobile-menu"
         onClick={() => setOpen((value) => !value)}
       >
-        {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+        {open ? <Icon name="cancel-01" size={18} /> : <Icon name="menu-01" size={18} />}
         <span className="sr-only">{open ? dict.nav.closeMenu : dict.nav.openMenu}</span>
       </button>
       {open ? (
