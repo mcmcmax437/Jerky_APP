@@ -26,7 +26,7 @@ export default async function HomePage({
   return (
     <>
       <section className="bg-ink-950 text-text-light">
-        <div className="grid lg:min-h-[560px] lg:grid-cols-[minmax(320px,0.9fr)_1.2fr]">
+        <div className="grid lg:grid-cols-[minmax(320px,0.9fr)_1.2fr]">
           <div className="flex items-center px-5 py-16 md:px-10 lg:px-16 lg:py-20">
             <div className="rise max-w-xl">
               <p className="flex items-center gap-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-copper">
@@ -43,7 +43,7 @@ export default async function HomePage({
           <img
             src="/home/hero-jerky.jpg"
             alt=""
-            className="h-72 w-full object-cover object-[70%_center] sm:h-96 lg:h-full lg:min-h-[560px]"
+            className="h-64 w-full object-cover object-right sm:h-80 lg:h-[520px]"
           />
         </div>
       </section>

@@ -50,8 +50,12 @@
   "shop": {
     "eyebrow": "Catalog",
     "title": "Shop",
-    "lede": "",
-    "view": "View"
+    "lede": "100 g packs. The price is not set yet.",
+    "view": "View",
+    "all": "All products",
+    "viewGrid": "Cards",
+    "viewList": "List",
+    "empty": "This group has no flavors yet."
   },
   "product": {
     "draft": "Working description",

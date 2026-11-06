@@ -57,6 +57,10 @@ export type Dictionary = {
     title: string;
     lede: string;
     view: string;
+    all: string;
+    viewGrid: string;
+    viewList: string;
+    empty: string;
   };
   product: {
     draft: string;

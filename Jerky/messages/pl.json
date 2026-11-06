@@ -50,8 +50,12 @@
   "shop": {
     "eyebrow": "Katalog",
     "title": "Sklep",
-    "lede": "",
-    "view": "Zobacz"
+    "lede": "Paczki po 100 g. Ceny jeszcze nie ustalono.",
+    "view": "Zobacz",
+    "all": "Wszystkie",
+    "viewGrid": "Karty",
+    "viewList": "Lista",
+    "empty": "W tej grupie nie ma jeszcze smaków."
   },
   "product": {
     "draft": "Opis roboczy",
