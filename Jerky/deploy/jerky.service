@@ -1,0 +1,15 @@
+[Unit]
+Description=Jerky storefront
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/usr/src/jerky
+Environment=NODE_ENV=production
+EnvironmentFile=/usr/src/jerky/.env
+ExecStart=/usr/bin/env npm run start:prod
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: jerky-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Jerky
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: Jerky/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run build
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish to the server
+        env:
+          SSH_HOST: ${{ secrets.VPS_HOST }}
+          SSH_USER: ${{ secrets.VPS_USER }}
+          SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+        run: |
+          if [ -z "$SSH_HOST" ] || [ -z "$SSH_USER" ] || [ -z "$SSH_PRIVATE_KEY" ]; then
+            echo "Add repository secrets VPS_HOST, VPS_USER, and VPS_SSH_PRIVATE_KEY."
+            exit 1
+          fi
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
+          ssh_opts="-i $HOME/.ssh/deploy_key -o IdentitiesOnly=yes"
+          ssh $ssh_opts "$SSH_USER@$SSH_HOST" "mkdir -p /usr/src/jerky"
+          tar -czf - \
+            --exclude .git \
+            --exclude node_modules \
+            --exclude .next \
+            --exclude .env \
+            --exclude '*.tsbuildinfo' \
+            -C Jerky . | ssh $ssh_opts "$SSH_USER@$SSH_HOST" "tar -xzf - -C /usr/src/jerky"
+          ssh $ssh_opts "$SSH_USER@$SSH_HOST" "bash /usr/src/jerky/deploy/remote-update.sh"
