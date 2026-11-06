@@ -307,16 +307,19 @@
     "save": "Save",
     "newTitle": "New product",
     "saved": "Saved.",
+    "formBack": "Back",
     "terminal": {
       "panel": "Admin panel",
       "recipes": "Recipes",
       "purchased": "Purchased",
       "purchase": {
-        "lede": "Enter the price paid for each ingredient. The recipe cost is the recipe quantity times that price.",
+        "lede": "Record how much was bought and the price per unit. The recipe cost is calculated separately: the recipe quantity times that price.",
         "name": "What was bought",
         "recipe": "Recipe",
         "component": "Recipe component",
         "quantity": "Amount",
+        "amount": "Amount bought",
+        "unit": "Unit",
         "unitPrice": "Price per unit",
         "date": "Date",
         "note": "Note",
@@ -334,6 +337,7 @@
         "many": "That component is in more than one recipe. Choose the recipe in the form.",
         "example": {
           "name": "Salt, 1 kg bag",
+          "amount": "1",
           "price": "4.50",
           "note": "Bought at the shop by the warehouse"
         }
@@ -341,6 +345,8 @@
       "batches": "Production batches",
       "warehouse": "Warehouse",
       "costs": "Costs and margin",
+      "costsLede": "Only money already spent on purchases is listed here. Saving a recipe does not add an expense.",
+      "costsEmpty": "There are no expenses yet. They appear when a purchase is saved with an amount and a price.",
       "reviews": "Customer reviews",
       "users": "Users",
       "settings": "Settings",

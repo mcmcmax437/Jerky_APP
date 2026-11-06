@@ -307,16 +307,19 @@
     "save": "Zapisz",
     "newTitle": "Nowy produkt",
     "saved": "Zapisano.",
+    "formBack": "Wstecz",
     "terminal": {
       "panel": "Admin panel",
       "recipes": "Receptury",
       "purchased": "Zakupione",
       "purchase": {
-        "lede": "Podaj cenę zakupu każdego składnika. Koszt receptury liczy się sam: ilość w recepturze razy ta cena.",
+        "lede": "Zapisz, ile towaru kupiono i za jaką cenę za jednostkę. Koszt receptury liczy się osobno: ilość w recepturze razy ta cena.",
         "name": "Co kupiono",
         "recipe": "Receptura",
         "component": "Składnik receptury",
         "quantity": "Ilość",
+        "amount": "Ilość zakupu",
+        "unit": "Jednostka",
         "unitPrice": "Cena za jednostkę",
         "date": "Data",
         "note": "Notatka",
@@ -334,6 +337,7 @@
         "many": "Ten składnik jest w kilku recepturach. Wybierz recepturę w formularzu.",
         "example": {
           "name": "Sól, worek 1 kg",
+          "amount": "1",
           "price": "4.50",
           "note": "Kupione w sklepie przy magazynie"
         }
@@ -341,6 +345,8 @@
       "batches": "Partie produkcyjne",
       "warehouse": "Magazyn",
       "costs": "Koszty i rentowność",
+      "costsLede": "Tu są tylko pieniądze już wydane na zakupy. Zapis receptury tu nie trafia.",
+      "costsEmpty": "Nie ma jeszcze kosztów. Pojawią się, gdy zapiszesz zakup z ilością i ceną.",
       "reviews": "Opinie klientów",
       "users": "Użytkownicy",
       "settings": "Ustawienia",

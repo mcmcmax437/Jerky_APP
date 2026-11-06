@@ -35,7 +35,7 @@ export default async function AdminOrderPage({
   const lines = await orderLines(order.items);
 
   return (
-    <AdminPage title={order.number} lede={dict.admin.testBanner}>
+    <AdminPage title={order.number} lede={dict.admin.testBanner} back={{ href: `/${locale}/admin/orders`, label: dict.admin.formBack }}>
       <form action={setOrderStatus} className="flex flex-wrap gap-2">
         <input type="hidden" name="locale" value={locale} />
         <input type="hidden" name="id" value={order.id} />

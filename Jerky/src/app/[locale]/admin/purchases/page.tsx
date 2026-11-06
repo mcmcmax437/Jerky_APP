@@ -65,26 +65,26 @@ export default async function AdminPurchasesPage({
                 <th className="py-2 pr-4 font-medium">{copy.name}</th>
                 <th className="py-2 pr-4 font-medium">{copy.recipe}</th>
                 <th className="py-2 pr-4 font-medium">{copy.component}</th>
-                <th className="py-2 pr-4 font-medium">{copy.quantity}</th>
+                <th className="py-2 pr-4 font-medium">{copy.amount}</th>
                 <th className="py-2 pr-4 font-medium">{copy.unitPrice}</th>
-                <th className="py-2 pr-4 font-medium">{dict.admin.terminal.recipe.recipeCost}</th>
+                <th className="py-2 pr-4 font-medium">{dict.admin.terminal.sum}</th>
                 <th className="py-2 pr-4 font-medium">{copy.date}</th>
                 <th className="py-2 font-medium">{copy.note}</th>
               </tr>
             </thead>
             <tbody className="rise-rows">
               {purchases.map((purchase) => {
-                const line = purchase.recipe.versions[0]?.ingredients.find(
-                  (item) => item.name.trim().toLowerCase() === purchase.componentName.trim().toLowerCase(),
-                );
                 const unitPrice = purchase.unitPrice == null ? null : Number(purchase.unitPrice);
-                const cost = line && unitPrice != null ? lineCost(Number(line.quantity), unitPrice) : null;
+                const bought = purchase.quantity == null ? null : Number(purchase.quantity);
+                const cost = bought != null && unitPrice != null ? lineCost(bought, unitPrice) : null;
                 return (
                   <tr key={purchase.id} className="border-t border-white/10 align-top">
                     <td className="py-3 pr-4">{purchase.name}</td>
                     <td className="py-3 pr-4">{purchase.recipe.title}</td>
                     <td className="py-3 pr-4">{purchase.componentName}</td>
-                    <td className="py-3 pr-4">{line ? `${amount(line.quantity)} ${units[line.unit]}` : copy.missing}</td>
+                    <td className="py-3 pr-4">
+                      {bought == null || purchase.quantity == null || purchase.unit == null ? copy.missing : `${amount(purchase.quantity)} ${units[purchase.unit]}`}
+                    </td>
                     <td className="py-3 pr-4">{unitPrice == null ? copy.missing : formatAmount(unitPrice, locale)}</td>
                     <td className="py-3 pr-4">{cost == null ? copy.missing : formatAmount(cost, locale)}</td>
                     <td className="py-3 pr-4">{purchase.purchasedOn.toLocaleDateString(localeTag(locale))}</td>

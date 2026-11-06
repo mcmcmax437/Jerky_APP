@@ -24,7 +24,7 @@ export default async function NewProductPage({
   const query = await searchParams;
 
   return (
-    <AdminPage title={dict.admin.newTitle} lede={dict.admin.priceHint}>
+    <AdminPage title={dict.admin.newTitle} lede={dict.admin.priceHint} back={{ href: `/${locale}/admin/products`, label: dict.admin.formBack }}>
       <ProductForm locale={locale} dict={dict} action={createProduct} error={query.error} />
     </AdminPage>
   );

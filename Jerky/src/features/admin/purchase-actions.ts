@@ -33,7 +33,24 @@ export async function createPurchase(formData: FormData) {
   const note = String(formData.get("note") ?? "").trim().slice(0, 500);
   const priceText = String(formData.get("unitPrice") ?? "").trim().replace(",", ".");
   const unitPrice = /^\d+(\.\d+)?$/.test(priceText) ? Number(priceText) : Number.NaN;
-  if (name.length < 1 || name.length > 160 || !recipeId || !componentName || !purchasedOn || !Number.isFinite(unitPrice) || unitPrice < 0) {
+  const quantityText = String(formData.get("quantity") ?? "").trim().replace(",", ".");
+  const quantity = /^\d+(\.\d+)?$/.test(quantityText) ? Number(quantityText) : Number.NaN;
+  const unit = String(formData.get("unit") ?? "");
+  const units = ["G", "KG", "ML", "L", "PCS"] as const;
+  const measure = units.find((item) => item === unit);
+  if (
+    name.length < 1 ||
+    name.length > 160 ||
+    !recipeId ||
+    !componentName ||
+    !purchasedOn ||
+    !Number.isFinite(unitPrice) ||
+    unitPrice < 0 ||
+    !Number.isFinite(quantity) ||
+    quantity <= 0 ||
+    quantity > 1_000_000 ||
+    !measure
+  ) {
     redirect(`/${locale}/admin/purchases?error=fields`);
   }
 
@@ -52,8 +69,9 @@ export async function createPurchase(formData: FormData) {
   if (matches.length === 0) redirect(`/${locale}/admin/purchases?error=fields`);
 
   const price = Math.round(unitPrice * 10000) / 10000;
+  const bought = Math.round(quantity * 1000) / 1000;
   await prisma.purchasedProduct.create({
-    data: { name, recipeId, componentName, unitPrice: price, purchasedOn, note: note || null },
+    data: { name, recipeId, componentName, unitPrice: price, quantity: bought, unit: measure, purchasedOn, note: note || null },
   });
   await prisma.recipeIngredient.updateMany({
     where: { id: { in: matches.map((item) => item.id) } },

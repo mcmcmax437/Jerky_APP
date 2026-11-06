@@ -261,6 +261,7 @@ export type Dictionary = {
     save: string;
     newTitle: string;
     saved: string;
+    formBack: string;
     terminal: {
       panel: string;
       recipes: string;
@@ -271,6 +272,8 @@ export type Dictionary = {
         recipe: string;
         component: string;
         quantity: string;
+        amount: string;
+        unit: string;
         unitPrice: string;
         date: string;
         note: string;
@@ -286,11 +289,13 @@ export type Dictionary = {
         camera: string;
         unknown: string;
         many: string;
-        example: { name: string; price: string; note: string };
+        example: { name: string; amount: string; price: string; note: string };
       };
       batches: string;
       warehouse: string;
       costs: string;
+      costsLede: string;
+      costsEmpty: string;
       reviews: string;
       users: string;
       settings: string;

@@ -29,7 +29,7 @@ export default async function AccountPage({
   const orders = await listAccountOrders(session.id, session.email);
 
   return (
-    <>
+    <div className="page-enter">
       <PageIntro eyebrow={dict.account.eyebrow} title={session.name} lede={dict.account.lede} />
       <PageBody>
         <p>
@@ -60,6 +60,6 @@ export default async function AccountPage({
           ))}
         </ul>
       </PageBody>
-    </>
+    </div>
   );
 }

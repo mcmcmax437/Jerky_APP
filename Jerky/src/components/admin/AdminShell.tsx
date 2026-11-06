@@ -82,7 +82,9 @@ export function AdminShell({
           </form>
         </div>
       </aside>
-      <div className="min-w-0">{children}</div>
+      <div key={pathname} className={pathname === `/${locale}/admin` ? "page-enter min-w-0" : "min-w-0"}>
+        {children}
+      </div>
     </div>
   );
 }

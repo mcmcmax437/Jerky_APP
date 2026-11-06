@@ -22,7 +22,7 @@ export default async function NewRecipePage({
   const products = await listAdminProducts();
 
   return (
-    <AdminPage title={dict.admin.terminal.recipe.newTitle} lede={dict.admin.terminal.recipe.private}>
+    <AdminPage title={dict.admin.terminal.recipe.newTitle} lede={dict.admin.terminal.recipe.private} back={{ href: `/${locale}/admin/recipes`, label: dict.admin.formBack }}>
       <RecipeForm
         locale={locale}
         dict={dict}

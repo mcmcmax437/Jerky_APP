@@ -37,6 +37,7 @@ export default async function EditRecipePage({
     <AdminPage
       title={recipe.title}
       lede={copy.private}
+      back={{ href: `/${locale}/admin/recipes`, label: dict.admin.formBack }}
       action={
         <DeleteRecipeButton action={deleteRecipe} id={recipe.id} locale={locale} label={copy.remove} confirmLabel={copy.removeConfirm} />
       }

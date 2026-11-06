@@ -32,7 +32,7 @@ export default async function EditProductPage({
   const name = product.translations.find((item) => item.locale === locale)?.name ?? product.slug;
 
   return (
-    <AdminPage title={name} lede={dict.admin.priceHint}>
+    <AdminPage title={name} lede={dict.admin.priceHint} back={{ href: `/${locale}/admin/products`, label: dict.admin.formBack }}>
       <ProductForm
         locale={locale}
         dict={dict}
