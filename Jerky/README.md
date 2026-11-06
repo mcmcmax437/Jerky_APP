@@ -4,7 +4,7 @@
 
 Локально сайт открывается на `http://127.0.0.1:3000`. Публикация на `jerky.tereshkovych.com.ua` идёт через GitHub Actions: пуш в `main` проверяет тесты и сборку, затем по SSH обновляет `/usr/src/Jerky_web/Jerky_APP/Jerky` на сервере `173.242.52.16`. Приложение слушает только `127.0.0.1:3010`, снаружи его открывает nginx.
 
-В репозитории GitHub нужны секреты `VPS_HOST`, `VPS_USER` и `VPS_SSH_PRIVATE_KEY`. Настройки берутся из `/usr/src/Jerky_web/Jerky_APP/Jerky/.env`. Деплой этот файл не перезаписывает. Перед этим на сервере должны быть Node.js 22, nginx и MySQL. HTTPS ставится отдельно: `certbot --nginx -d jerky.tereshkovych.com.ua`.
+В репозитории GitHub нужны секреты `VPS_HOST`, `VPS_USER` и `VPS_SSH_PRIVATE_KEY`. Настройки берутся из `/usr/src/Jerky_web/Jerky_APP/Jerky/.env`. Деплой не придумывает новый пароль: он выставляет пользователю MySQL `jerky` пароль из этого файла. Перед этим на сервере должны быть Node.js 22, nginx и MySQL. HTTPS ставится отдельно: `certbot --nginx -d jerky.tereshkovych.com.ua`.
 
 Бриф: [`../PLAN.md`](../PLAN.md), [`../VISUAL_REFERENCES.md`](../VISUAL_REFERENCES.md), [`../NEXT_STAGE.md`](../NEXT_STAGE.md).
 

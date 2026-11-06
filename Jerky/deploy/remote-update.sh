@@ -46,6 +46,7 @@ EOF
   echo "Created /usr/src/Jerky_web/Jerky_APP/Jerky/.env and the MySQL database jerky. Passwords stay in that file."
 fi
 
+node deploy/ensure-database.mjs
 npm ci
 npx prisma migrate deploy --config prisma7.config.ts
 if [ "$fresh_env" = "1" ]; then
