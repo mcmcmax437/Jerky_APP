@@ -1,11 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import { lineCost, recipeCost } from "@/features/costing/calculate";
 import { meatTypes, recipeUnits, type MeatTypeName, type RecipeUnit } from "@/features/admin/recipe";
+import { formatAmount } from "@/lib/format";
 import type { Locale } from "@/lib/i18n/locales";
 import type { Dictionary } from "@/lib/i18n/types";
 
-type ComponentRow = { name: string; quantity: string; unit: RecipeUnit };
+type ComponentRow = { name: string; quantity: string; unit: RecipeUnit; unitPrice: string };
+
+function parseAmount(value: string) {
+  const text = value.trim().replace(",", ".");
+  if (!text) return null;
+  const number = Number(text);
+  return Number.isFinite(number) ? number : null;
+}
 
 const fieldClass =
   "mt-2 w-full rounded-lg border border-white/10 bg-[#100e0c] px-3 py-2 text-sm text-[#f3efe6] outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper";
@@ -39,7 +48,15 @@ export function RecipeForm({
 }) {
   const copy = dict.admin.terminal.recipe;
   const [components, setComponents] = useState<ComponentRow[]>(
-    recipe?.components.length ? recipe.components : [{ name: "", quantity: "", unit: "G" }],
+    recipe?.components.length ? recipe.components : [{ name: "", quantity: "", unit: "G", unitPrice: "" }],
+  );
+  const cost = recipeCost(
+    components
+      .filter((row) => row.name.trim() || row.quantity.trim())
+      .map((row) => ({
+        quantity: parseAmount(row.quantity) ?? 0,
+        unitPrice: parseAmount(row.unitPrice),
+      })),
   );
   const message = error === "recipe" ? dict.admin.errors.recipe : error === "used" ? copy.used : null;
 
@@ -97,53 +114,72 @@ export function RecipeForm({
 
       <fieldset className="grid gap-3">
         <legend className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">{copy.marinade}</legend>
-        {components.map((row, index) => (
-          <div key={index} className="grid gap-2 sm:grid-cols-[minmax(0,1.4fr)_120px_110px_auto]">
-            <input
-              name="componentName"
-              aria-label={copy.ingredientName}
-              value={row.name}
-              maxLength={160}
-              onChange={(event) => setComponents((current) => current.map((item, itemIndex) => (itemIndex === index ? { ...item, name: event.target.value } : item)))}
-              className={fieldClass}
-            />
-            <input
-              name="componentQty"
-              aria-label={copy.quantity}
-              inputMode="decimal"
-              value={row.quantity}
-              onChange={(event) => setComponents((current) => current.map((item, itemIndex) => (itemIndex === index ? { ...item, quantity: event.target.value } : item)))}
-              className={fieldClass}
-            />
-            <select
-              name="componentUnit"
-              aria-label={copy.unit}
-              value={row.unit}
-              onChange={(event) => setComponents((current) => current.map((item, itemIndex) => (itemIndex === index ? { ...item, unit: event.target.value as RecipeUnit } : item)))}
-              className={fieldClass}
-            >
-              {recipeUnits.map((unit) => (
-                <option key={unit} value={unit}>
-                  {copy.units[unit]}
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              onClick={() => setComponents((current) => (current.length === 1 ? [{ name: "", quantity: "", unit: "G" }] : current.filter((_, itemIndex) => itemIndex !== index)))}
-              className="self-end px-3 py-2 text-xs text-[#b7aa9d]"
-            >
-              {copy.removeLine}
-            </button>
-          </div>
-        ))}
+        <p className="text-sm normal-case tracking-normal text-[#9c9186]">{copy.costHint}</p>
+        {components.map((row, index) => {
+          const amount = lineCost(parseAmount(row.quantity) ?? Number.NaN, parseAmount(row.unitPrice));
+          return (
+            <div key={index} className="grid gap-2 sm:grid-cols-[minmax(0,1.4fr)_110px_100px_140px_120px_auto]">
+              <input
+                name="componentName"
+                aria-label={copy.ingredientName}
+                value={row.name}
+                maxLength={160}
+                onChange={(event) => setComponents((current) => current.map((item, itemIndex) => (itemIndex === index ? { ...item, name: event.target.value } : item)))}
+                className={fieldClass}
+              />
+              <input
+                name="componentQty"
+                aria-label={copy.quantity}
+                inputMode="decimal"
+                value={row.quantity}
+                onChange={(event) => setComponents((current) => current.map((item, itemIndex) => (itemIndex === index ? { ...item, quantity: event.target.value } : item)))}
+                className={fieldClass}
+              />
+              <select
+                name="componentUnit"
+                aria-label={copy.unit}
+                value={row.unit}
+                onChange={(event) => setComponents((current) => current.map((item, itemIndex) => (itemIndex === index ? { ...item, unit: event.target.value as RecipeUnit } : item)))}
+                className={fieldClass}
+              >
+                {recipeUnits.map((unit) => (
+                  <option key={unit} value={unit}>
+                    {copy.units[unit]}
+                  </option>
+                ))}
+              </select>
+              <input
+                name="componentPrice"
+                aria-label={copy.unitPrice}
+                inputMode="decimal"
+                value={row.unitPrice}
+                onChange={(event) => setComponents((current) => current.map((item, itemIndex) => (itemIndex === index ? { ...item, unitPrice: event.target.value } : item)))}
+                className={fieldClass}
+              />
+              <span className="self-end px-1 py-2 text-sm text-[#e7d3bc]">
+                {amount == null ? copy.costMissing : formatAmount(amount, locale)}
+              </span>
+              <button
+                type="button"
+                onClick={() => setComponents((current) => (current.length === 1 ? [{ name: "", quantity: "", unit: "G", unitPrice: "" }] : current.filter((_, itemIndex) => itemIndex !== index)))}
+                className="self-end px-3 py-2 text-xs text-[#b7aa9d]"
+              >
+                {copy.removeLine}
+              </button>
+            </div>
+          );
+        })}
         <button
           type="button"
-          onClick={() => setComponents((current) => [...current, { name: "", quantity: "", unit: "G" }])}
+          onClick={() => setComponents((current) => [...current, { name: "", quantity: "", unit: "G", unitPrice: "" }])}
           className="w-fit text-sm text-[#e7d3bc]"
         >
           {copy.addIngredient}
         </button>
+        <p className="text-sm text-[#f3efe6]">
+          {copy.recipeCost}: {formatAmount(cost.total, locale)}
+          {cost.missing > 0 ? <span className="ml-3 text-[#9c9186]">{copy.costMissing}</span> : null}
+        </p>
       </fieldset>
 
       <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">

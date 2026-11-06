@@ -65,6 +65,7 @@ export default async function EditRecipePage({
               name: item.name,
               quantity: decimal(item.quantity),
               unit: item.unit,
+              unitPrice: decimal(item.plannedUnitPrice),
             })) ?? [],
         }}
       />

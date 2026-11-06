@@ -247,6 +247,7 @@ export type Dictionary = {
         recipe: string;
         component: string;
         quantity: string;
+        unitPrice: string;
         date: string;
         note: string;
         add: string;
@@ -327,6 +328,11 @@ export type Dictionary = {
         ingredientName: string;
         quantity: string;
         unit: string;
+        unitPrice: string;
+        lineCost: string;
+        recipeCost: string;
+        costMissing: string;
+        costHint: string;
         addIngredient: string;
         removeLine: string;
         steps: string;

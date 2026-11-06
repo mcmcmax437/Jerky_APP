@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AdminPage } from "@/components/admin/AdminPage";
+import { recipeCost } from "@/features/costing/calculate";
 import { listAdminRecipes } from "@/features/admin/queries";
+import { formatAmount } from "@/lib/format";
 import { readLocale } from "@/lib/i18n/request";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -28,13 +30,19 @@ export default async function AdminRecipesPage({ params }: { params: Promise<{ l
       <ul className="grid gap-2">
         {recipes.map((recipe) => {
           const product = recipe.product?.translations.find((item) => item.locale === locale)?.name;
-          const version = recipe.versions[0]?.versionNumber;
+          const version = recipe.versions[0];
+          const cost = recipeCost(
+            (version?.ingredients ?? []).map((item) => ({
+              quantity: Number(item.quantity),
+              unitPrice: item.plannedUnitPrice == null ? null : Number(item.plannedUnitPrice),
+            })),
+          );
           return (
             <li key={recipe.id}>
               <Link href={`/${locale}/admin/recipes/${recipe.id}`} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 px-4 py-3">
                 <span>
                   <span className="block">{recipe.title}</span>
-                  <span className="text-xs text-[#9c9186]">{[product, version ? `${copy.version} ${version}` : null].filter(Boolean).join(" · ")}</span>
+                  <span className="text-xs text-[#9c9186]">{[product, version ? `${copy.version} ${version.versionNumber}` : null, `${copy.recipeCost} ${formatAmount(cost.total, locale)}`].filter(Boolean).join(" · ")}</span>
                 </span>
                 <span className="rounded-full bg-[#3c2e24] px-2.5 py-1 text-[11px] text-[#efd3b6]">{dict.admin.terminal.recipeStatuses[recipe.status]}</span>
               </Link>

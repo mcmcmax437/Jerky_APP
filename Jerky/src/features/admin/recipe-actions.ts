@@ -34,6 +34,7 @@ function versionData(data: RecipeDraft) {
         name: item.name,
         quantity: item.quantity,
         unit: item.unit,
+        plannedUnitPrice: item.unitPrice,
         sortOrder: index,
       })),
     },

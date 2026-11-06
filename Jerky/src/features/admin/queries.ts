@@ -238,7 +238,17 @@ export async function listAdminRecipes() {
     orderBy: { updatedAt: "desc" },
     include: {
       product: { select: { translations: { select: { locale: true, name: true } } } },
-      versions: { orderBy: { versionNumber: "desc" }, take: 1, select: { versionNumber: true } },
+      versions: {
+        orderBy: { versionNumber: "desc" },
+        take: 1,
+        select: {
+          versionNumber: true,
+          ingredients: {
+            orderBy: { sortOrder: "asc" },
+            select: { name: true, quantity: true, unit: true, plannedUnitPrice: true },
+          },
+        },
+      },
     },
   });
 }

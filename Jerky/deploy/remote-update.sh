@@ -60,6 +60,7 @@ if [ "$migrate_status" != "0" ]; then
   fi
 fi
 npx tsx deploy/ensure-admin.ts
+npx tsx deploy/ensure-catalog.ts
 npm run build
 
 echo "=== listening sockets ==="
@@ -130,11 +131,27 @@ systemctl enable jerky
 systemctl restart jerky
 
 if command -v nginx >/dev/null 2>&1; then
-  if [ -d /etc/nginx/sites-available ]; then
-    sed "s/__PORT__/${port}/g" deploy/nginx-jerky.conf > /etc/nginx/sites-available/jerky.conf
-    ln -sfn /etc/nginx/sites-available/jerky.conf /etc/nginx/sites-enabled/jerky.conf
-  elif [ -d /etc/nginx/conf.d ]; then
-    sed "s/__PORT__/${port}/g" deploy/nginx-jerky.conf > /etc/nginx/conf.d/jerky.conf
+  site=/etc/nginx/sites-available/jerky.conf
+  if [ ! -d /etc/nginx/sites-available ] && [ -d /etc/nginx/conf.d ]; then
+    site=/etc/nginx/conf.d/jerky.conf
+  fi
+  cert=/etc/letsencrypt/live/jerky.tereshkovych.com.ua/fullchain.pem
+  if [ -f "$site" ] && [ -f "$cert" ] && grep -q "ssl_certificate" "$site"; then
+    sed -i "s|proxy_pass http://127.0.0.1:[0-9][0-9]*;|proxy_pass http://127.0.0.1:${port};|" "$site"
+  else
+    if [ -d /etc/nginx/sites-available ]; then
+      sed "s/__PORT__/${port}/g" deploy/nginx-jerky.conf > /etc/nginx/sites-available/jerky.conf
+      ln -sfn /etc/nginx/sites-available/jerky.conf /etc/nginx/sites-enabled/jerky.conf
+    elif [ -d /etc/nginx/conf.d ]; then
+      sed "s/__PORT__/${port}/g" deploy/nginx-jerky.conf > /etc/nginx/conf.d/jerky.conf
+    fi
+    nginx -t
+    systemctl reload nginx
+    if [ -f "$cert" ]; then
+      certbot install --nginx --cert-name jerky.tereshkovych.com.ua --redirect --non-interactive
+    else
+      certbot --nginx -d jerky.tereshkovych.com.ua --non-interactive --agree-tos --redirect
+    fi
   fi
   nginx -t
   systemctl reload nginx

@@ -66,6 +66,10 @@ export function PurchaseForm({
         </label>
       </div>
       <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
+        {copy.unitPrice}
+        <input name="unitPrice" required inputMode="decimal" className={fieldClass} />
+      </label>
+      <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
         {copy.note}
         <input name="note" maxLength={500} className={fieldClass} />
       </label>

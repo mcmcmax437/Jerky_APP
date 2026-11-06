@@ -31,3 +31,23 @@ export function costPer100gPack(totalBatchCost: number, packs: number): number |
   if (packs <= 0) return null;
   return totalBatchCost / packs;
 }
+
+export function lineCost(quantity: number, unitPrice: number | null): number | null {
+  if (unitPrice == null) return null;
+  if (!Number.isFinite(quantity) || !Number.isFinite(unitPrice) || quantity < 0 || unitPrice < 0) return null;
+  return Math.round(quantity * unitPrice * 100) / 100;
+}
+
+export function recipeCost(lines: { quantity: number; unitPrice: number | null }[]) {
+  let total = 0;
+  let missing = 0;
+  for (const line of lines) {
+    const cost = lineCost(line.quantity, line.unitPrice);
+    if (cost == null) {
+      missing += 1;
+      continue;
+    }
+    total += cost;
+  }
+  return { total: Math.round(total * 100) / 100, missing };
+}

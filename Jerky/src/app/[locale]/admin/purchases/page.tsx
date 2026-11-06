@@ -4,6 +4,8 @@ import { PurchaseForm } from "@/components/admin/PurchaseForm";
 import { QrScanner } from "@/components/admin/QrScanner";
 import { addPurchaseFromQr, createPurchase, deletePurchase } from "@/features/admin/purchase-actions";
 import { listPurchaseRecipes, listPurchases } from "@/features/admin/queries";
+import { lineCost } from "@/features/costing/calculate";
+import { formatAmount } from "@/lib/format";
 import { localeTag } from "@/lib/i18n/locales";
 import { readLocale } from "@/lib/i18n/request";
 
@@ -64,6 +66,8 @@ export default async function AdminPurchasesPage({
                 <th className="py-2 pr-4 font-medium">{copy.recipe}</th>
                 <th className="py-2 pr-4 font-medium">{copy.component}</th>
                 <th className="py-2 pr-4 font-medium">{copy.quantity}</th>
+                <th className="py-2 pr-4 font-medium">{copy.unitPrice}</th>
+                <th className="py-2 pr-4 font-medium">{dict.admin.terminal.recipe.recipeCost}</th>
                 <th className="py-2 pr-4 font-medium">{copy.date}</th>
                 <th className="py-2 font-medium">{copy.note}</th>
               </tr>
@@ -73,12 +77,16 @@ export default async function AdminPurchasesPage({
                 const line = purchase.recipe.versions[0]?.ingredients.find(
                   (item) => item.name.trim().toLowerCase() === purchase.componentName.trim().toLowerCase(),
                 );
+                const unitPrice = purchase.unitPrice == null ? null : Number(purchase.unitPrice);
+                const cost = line && unitPrice != null ? lineCost(Number(line.quantity), unitPrice) : null;
                 return (
                   <tr key={purchase.id} className="border-t border-white/10 align-top">
                     <td className="py-3 pr-4">{purchase.name}</td>
                     <td className="py-3 pr-4">{purchase.recipe.title}</td>
                     <td className="py-3 pr-4">{purchase.componentName}</td>
                     <td className="py-3 pr-4">{line ? `${amount(line.quantity)} ${units[line.unit]}` : copy.missing}</td>
+                    <td className="py-3 pr-4">{unitPrice == null ? copy.missing : formatAmount(unitPrice, locale)}</td>
+                    <td className="py-3 pr-4">{cost == null ? copy.missing : formatAmount(cost, locale)}</td>
                     <td className="py-3 pr-4">{purchase.purchasedOn.toLocaleDateString(localeTag(locale))}</td>
                     <td className="py-3">
                       <div className="flex items-start justify-between gap-3">

@@ -1,7 +1,7 @@
 {
   "meta": {
     "siteName": "JERKY",
-    "description": "A local beef jerky brand prototype. Working name, three flavors at 100 g, no payments and no unconfirmed ingredients."
+    "description": "A local beef jerky brand prototype. Working name, 100 g packs, no payments and no unconfirmed ingredients."
   },
   "nav": {
     "shop": "Shop",
@@ -28,7 +28,7 @@
   "home": {
     "eyebrow": "Craft beef jerky",
     "title": "Choose your flavor",
-    "lede": "Three finished recipes. 100 g in every pack.",
+    "lede": "100 g in every pack.",
     "filtersLabel": "Flavors",
     "all": "All",
     "classic": "Classic",
@@ -50,7 +50,7 @@
   "shop": {
     "eyebrow": "Catalog",
     "title": "Shop",
-    "lede": "Three working flavors. Each one is a planned 100 g pack. The price is not set.",
+    "lede": "",
     "view": "View"
   },
   "product": {
@@ -272,11 +272,12 @@
       "recipes": "Recipes",
       "purchased": "Purchased",
       "purchase": {
-        "lede": "Purchased products used for a recipe. The amount comes from the recipe and is not typed here.",
+        "lede": "Enter the price paid for each ingredient. The recipe cost is the recipe quantity times that price.",
         "name": "What was bought",
         "recipe": "Recipe",
         "component": "Recipe component",
         "quantity": "Amount",
+        "unitPrice": "Price per unit",
         "date": "Date",
         "note": "Note",
         "add": "Add",
@@ -364,6 +365,11 @@
         "ingredientName": "Name",
         "quantity": "Quantity",
         "unit": "Unit",
+        "unitPrice": "Purchase price per unit",
+        "lineCost": "Amount",
+        "recipeCost": "Cost",
+        "costMissing": "no price",
+        "costHint": "Each ingredient quantity multiplied by the price paid for that ingredient.",
         "addIngredient": "Add a marinade component",
         "removeLine": "Remove",
         "steps": "Steps",

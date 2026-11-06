@@ -13,7 +13,7 @@ export type RecipeDraft = {
   meatType: MeatTypeName;
   marinadeHours: number | null;
   processPlan: string | null;
-  components: { name: string; quantity: number; unit: RecipeUnit }[];
+  components: { name: string; quantity: number; unit: RecipeUnit; unitPrice: number | null }[];
   mode: "save" | "version";
 };
 
@@ -52,17 +52,20 @@ export function parseRecipeForm(formData: FormData): { ok: true; data: RecipeDra
   const names = formData.getAll("componentName").map((item) => String(item));
   const quantities = formData.getAll("componentQty").map((item) => String(item));
   const units = formData.getAll("componentUnit").map((item) => String(item));
-  if (names.length !== quantities.length || names.length !== units.length) return { ok: false };
+  const prices = formData.getAll("componentPrice").map((item) => String(item));
+  if (names.length !== quantities.length || names.length !== units.length || names.length !== prices.length) return { ok: false };
   const components: RecipeDraft["components"] = [];
   for (let index = 0; index < names.length; index += 1) {
     const name = names[index].trim();
     const quantityText = quantities[index].trim();
     const unit = units[index];
-    if (!name && !quantityText) continue;
+    if (!name && !quantityText && !prices[index].trim()) continue;
     const quantity = optionalNumber(quantityText, 3);
+    const unitPrice = optionalNumber(prices[index], 4);
     if (!name || name.length > 160 || quantity == null || quantity === "invalid" || quantity <= 0) return { ok: false };
+    if (unitPrice === "invalid") return { ok: false };
     if (!recipeUnits.includes(unit as RecipeUnit)) return { ok: false };
-    components.push({ name, quantity, unit: unit as RecipeUnit });
+    components.push({ name, quantity, unit: unit as RecipeUnit, unitPrice });
   }
 
   return {

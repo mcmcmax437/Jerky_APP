@@ -1,7 +1,7 @@
 {
   "meta": {
     "siteName": "JERKY",
-    "description": "Lokalny prototyp marki beef jerky. Robocza nazwa, trzy smaki po 100 g, bez płatności i bez niepotwierdzonego składu."
+    "description": "Lokalny prototyp marki beef jerky. Robocza nazwa, paczki po 100 g, bez płatności i bez niepotwierdzonego składu."
   },
   "nav": {
     "shop": "Sklep",
@@ -28,7 +28,7 @@
   "home": {
     "eyebrow": "Rzemieślnicze beef jerky",
     "title": "Wybierz swój smak",
-    "lede": "Trzy dopracowane receptury. 100 g w każdej paczce.",
+    "lede": "100 g w każdej paczce.",
     "filtersLabel": "Smaki",
     "all": "Wszystkie",
     "classic": "Klasyczne",
@@ -50,7 +50,7 @@
   "shop": {
     "eyebrow": "Katalog",
     "title": "Sklep",
-    "lede": "Trzy robocze smaki. Każdy w planowanej paczce 100 g. Cena nie jest jeszcze ustalona.",
+    "lede": "",
     "view": "Zobacz"
   },
   "product": {
@@ -272,11 +272,12 @@
       "recipes": "Receptury",
       "purchased": "Zakupione",
       "purchase": {
-        "lede": "Kupione produkty zużyte do receptury. Ilość pochodzi z receptury i nie wpisuje się jej ręcznie.",
+        "lede": "Podaj cenę zakupu każdego składnika. Koszt receptury liczy się sam: ilość w recepturze razy ta cena.",
         "name": "Co kupiono",
         "recipe": "Receptura",
         "component": "Składnik receptury",
         "quantity": "Ilość",
+        "unitPrice": "Cena za jednostkę",
         "date": "Data",
         "note": "Notatka",
         "add": "Dodaj",
@@ -364,6 +365,11 @@
         "ingredientName": "Nazwa",
         "quantity": "Ilość",
         "unit": "Jednostka",
+        "unitPrice": "Cena zakupu za jednostkę",
+        "lineCost": "Suma",
+        "recipeCost": "Koszt",
+        "costMissing": "brak ceny",
+        "costHint": "Suma ilości każdego składnika pomnożonej przez cenę, za którą go kupiono.",
         "addIngredient": "Dodaj składnik marynaty",
         "removeLine": "Usuń",
         "steps": "Kroki",

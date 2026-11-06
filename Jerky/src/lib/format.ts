@@ -12,6 +12,13 @@ export function formatPrice(
   }).format(amountMinor / 100);
 }
 
+export function formatAmount(amount: number, locale: Locale): string {
+  return new Intl.NumberFormat(localeTag(locale), {
+    style: "currency",
+    currency: "PLN",
+  }).format(amount);
+}
+
 export function formatWeight(grams: number, locale: Locale): string {
   return `${new Intl.NumberFormat(localeTag(locale)).format(grams)}\u00a0g`;
 }
