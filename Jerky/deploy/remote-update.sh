@@ -8,7 +8,6 @@ if ! command -v node >/dev/null 2>&1 || ! command -v npm >/dev/null 2>&1; then
   exit 1
 fi
 
-fresh_env=0
 if [ ! -f .env ]; then
   if ! command -v mysql >/dev/null 2>&1; then
     echo "MySQL client is not installed, so the first database could not be created."
@@ -42,16 +41,25 @@ ADMIN_EMAIL="admin@jerky.tereshkovych.com.ua"
 ADMIN_PASSWORD="${admin_pass}"
 EOF
   unset db_pass admin_pass
-  fresh_env=1
   echo "Created /usr/src/Jerky_web/Jerky_APP/Jerky/.env and the MySQL database jerky. Passwords stay in that file."
 fi
 
 node deploy/ensure-database.mjs
 npm ci
-npx prisma migrate deploy --config prisma7.config.ts
-if [ "$fresh_env" = "1" ]; then
-  npx tsx prisma/seed.ts
+set +e
+migrate_log=$(npx prisma migrate deploy --config prisma7.config.ts 2>&1)
+migrate_status=$?
+set -e
+printf '%s\n' "$migrate_log"
+if [ "$migrate_status" != "0" ]; then
+  if printf '%s\n' "$migrate_log" | grep -q "20261105163851_order_prices_optional"; then
+    npx prisma migrate resolve --rolled-back 20261105163851_order_prices_optional --config prisma7.config.ts
+    npx prisma migrate deploy --config prisma7.config.ts
+  else
+    exit "$migrate_status"
+  fi
 fi
+npx tsx deploy/ensure-admin.ts
 npm run build
 
 install -m 644 deploy/jerky.service /etc/systemd/system/jerky.service

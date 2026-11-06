@@ -1,5 +1,5 @@
 -- AlterTable
-ALTER TABLE `order` ADD COLUMN `userId` VARCHAR(191) NULL;
+ALTER TABLE `Order` ADD COLUMN `userId` VARCHAR(191) NULL;
 
 -- CreateTable
 CREATE TABLE `User` (
