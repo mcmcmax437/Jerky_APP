@@ -25,6 +25,7 @@ export default async function AccountPage({
   const { locale, dict } = await readLocale(params);
   const session = await getSession();
   if (!session) redirect(`/${locale}/login?next=/${locale}/account`);
+  if (session.role === "ADMIN") redirect(`/${locale}/admin`);
   const orders = await listAccountOrders(session.id, session.email);
 
   return (
@@ -38,11 +39,6 @@ export default async function AccountPage({
           </span>
         </p>
         <div className="flex flex-wrap gap-4">
-          {session.role === "ADMIN" ? (
-            <Link href={`/${locale}/admin`} className="bg-ink-950 px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-text-light">
-              {dict.account.panel}
-            </Link>
-          ) : null}
           <form action={logoutAccount}>
             <input type="hidden" name="locale" value={locale} />
             <button type="submit" className="border border-ink-800/30 px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em]">

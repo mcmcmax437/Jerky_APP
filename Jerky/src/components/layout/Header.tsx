@@ -37,8 +37,8 @@ export function Header({
           </div>
           <span className="hidden h-5 w-px bg-white/15 lg:block" aria-hidden="true" />
           <Link
-            href={`/${locale}/account`}
-            aria-label={dict.nav.account}
+            href={role === "ADMIN" ? `/${locale}/admin` : `/${locale}/account`}
+            aria-label={role === "ADMIN" ? dict.nav.admin : dict.nav.account}
             className="inline-flex h-11 w-11 items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
           >
             <Icon name="user" size={18} />

@@ -56,21 +56,12 @@ export function MobileNav({
               <LanguageSwitcher locale={locale} label={dict.nav.language} />
             </div>
             <Link
-              href={`/${locale}/account`}
+              href={role === "ADMIN" ? `/${locale}/admin` : `/${locale}/account`}
               className="border-b border-white/10 py-4 text-sm uppercase tracking-[0.18em]"
               onClick={() => setOpen(false)}
             >
-              {dict.nav.account}
+              {role === "ADMIN" ? dict.nav.admin : dict.nav.account}
             </Link>
-            {role === "ADMIN" ? (
-              <Link
-                href={`/${locale}/admin`}
-                className="border-b border-white/10 py-4 text-sm uppercase tracking-[0.18em]"
-                onClick={() => setOpen(false)}
-              >
-                {dict.nav.admin}
-              </Link>
-            ) : null}
             <Link
               href={`/${locale}/cart`}
               className="py-4 text-sm uppercase tracking-[0.18em]"
