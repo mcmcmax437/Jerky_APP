@@ -9,7 +9,7 @@
     "start:prod": "next start --hostname 127.0.0.1 --port 3030",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test src/features/costing/calculate.test.ts src/features/cart/quote.test.ts src/features/auth/password.test.ts src/features/admin/price.test.ts src/features/admin/purchase-qr.test.ts",
+    "test": "tsx --test src/features/costing/calculate.test.ts src/features/cart/quote.test.ts src/features/auth/password.test.ts src/features/admin/price.test.ts src/features/admin/purchase-qr.test.ts src/features/admin/slots.test.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",

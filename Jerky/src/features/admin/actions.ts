@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect, unstable_rethrow } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/db/prisma";
@@ -8,6 +9,7 @@ import { getSession } from "@/features/auth/session";
 import { parsePriceMinor } from "./price";
 import { photoIsInvalid, removeUploadedPhoto, saveProductPhoto } from "./product-photo";
 import { isOrderStatus } from "./order-status";
+import { slotAssignments } from "./slots";
 
 const accents = ["bone", "teriyaki", "chili"] as const;
 const locales = ["pl", "uk", "en"] as const;
@@ -21,6 +23,24 @@ async function requireAdmin() {
 function localeFrom(formData: FormData): Locale {
   const value = String(formData.get("locale") ?? "pl");
   return isLocale(value) ? value : "pl";
+}
+
+export async function reorderProducts(ids: string[]) {
+  await requireAdmin();
+  if (!Array.isArray(ids) || ids.length > 999 || ids.some((id) => typeof id !== "string" || id.length < 1 || id.length > 80)) return;
+  if (new Set(ids).size !== ids.length) return;
+  const products = await prisma.product.findMany({
+    select: { id: true, published: true },
+    orderBy: [{ sortOrder: "asc" }, { slug: "asc" }],
+  });
+  const published = products.filter((item) => item.published).map((item) => item.id);
+  if (ids.length !== published.length || ids.some((id) => !published.includes(id))) return;
+  const rest = products.filter((item) => !item.published).map((item) => item.id);
+  const assignments = slotAssignments(ids, rest);
+  await prisma.$transaction(
+    assignments.map((item) => prisma.product.update({ where: { id: item.id }, data: { sortOrder: item.sortOrder } })),
+  );
+  revalidatePath("/", "layout");
 }
 
 export async function setOrderStatus(formData: FormData) {

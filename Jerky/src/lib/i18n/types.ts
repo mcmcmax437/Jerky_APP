@@ -223,6 +223,10 @@ export type Dictionary = {
     price: string;
     priceHint: string;
     sort: string;
+    viewRows: string;
+    viewCards: string;
+    dragHint: string;
+    notInShop: string;
     slug: string;
     accent: string;
     profile: string;
