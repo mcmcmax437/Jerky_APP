@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { HomeCatalog } from "@/components/home/HomeCatalog";
+import { CatalogHero } from "@/components/shop/CatalogHero";
+import { ShopCatalog } from "@/components/shop/ShopCatalog";
 import { listProducts } from "@/features/catalog/queries";
 import { readLocale } from "@/lib/i18n/request";
 
@@ -25,41 +26,8 @@ export default async function HomePage({
 
   return (
     <>
-      <section className="bg-ink-950 text-text-light">
-        <div className="grid lg:grid-cols-[minmax(320px,0.9fr)_1.2fr]">
-          <div className="flex items-center px-5 py-16 md:px-10 lg:px-16 lg:py-20">
-            <div className="rise max-w-xl">
-              <p className="flex items-center gap-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-copper">
-                {dict.home.eyebrow}
-                <span className="h-px w-12 bg-copper" aria-hidden="true" />
-              </p>
-              <h1 className="mt-6 font-display text-6xl leading-[0.95] font-medium md:text-7xl lg:text-[5.4rem]">
-                {dict.home.title}
-              </h1>
-              <p className="mt-6 max-w-md text-base leading-relaxed text-text-light/75">{dict.home.lede}</p>
-            </div>
-          </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/home/hero-jerky.jpg"
-            alt=""
-            className="h-64 w-full object-cover object-right sm:h-80 lg:h-[520px]"
-          />
-        </div>
-      </section>
-      <HomeCatalog
-        locale={locale}
-        dict={dict}
-        products={products.map((product) => ({
-          slug: product.slug,
-          name: product.name,
-          card: product.card,
-          image: product.images.find((item) => item.kind === "packshot")?.src ?? product.images[0]?.src ?? null,
-          netWeightG: product.netWeightG,
-          priceMinor: product.priceMinor,
-          accent: product.accent,
-        }))}
-      />
+      <CatalogHero eyebrow={dict.home.eyebrow} title={dict.home.title} lede={dict.home.lede} />
+      <ShopCatalog locale={locale} dict={dict} products={products} />
     </>
   );
 }
