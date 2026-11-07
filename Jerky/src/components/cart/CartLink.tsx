@@ -176,9 +176,8 @@ export function CartLink({
             <>
               <ul className="mt-3 max-h-[min(22rem,calc(100vh-12rem))] divide-y divide-ink-800/10 overflow-y-auto">
                 {lines.map((line) => {
-                  const size = line.size ?? "M";
                   const priced =
-                    quote?.lines.find((item) => item.slug === line.slug && (item.size ?? size) === size) ??
+                    quote?.lines.find((item) => item.slug === line.slug && item.size === line.size) ??
                     quote?.lines.find((item) => item.slug === line.slug);
                   const image = priced?.image || catalogPackshot(line.slug);
                   const lineTotal =
@@ -186,14 +185,14 @@ export function CartLink({
                       ? null
                       : priced.unitPriceMinor * line.quantity;
                   return (
-                    <li key={`${line.slug}-${size}`} className="flex items-center gap-3 py-3">
+                    <li key={`${line.slug}-${line.size ?? "plain"}`} className="flex items-center gap-3 py-3">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={image} alt="" className="h-16 w-14 shrink-0 rounded-lg bg-ink-950 object-cover" />
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-display text-[22px] leading-none font-medium">
                           {priced?.name ?? line.slug}
                         </p>
-                        <p className="mt-1 text-[13px] font-semibold tracking-[1.5px]">{size}</p>
+                        {line.size ? <p className="mt-1 text-[13px] font-semibold tracking-[1.5px]">{line.size}</p> : null}
                         {priced ? (
                           <Price
                             amountMinor={lineTotal}
@@ -207,7 +206,7 @@ export function CartLink({
                         <button
                           type="button"
                           aria-label={removeLabel}
-                          onClick={() => remove(line.slug, size)}
+                          onClick={() => remove(line.slug, line.size)}
                           className="grid h-5 w-5 place-items-center text-sm leading-none text-text-dark/55"
                         >
                           ×
@@ -216,7 +215,7 @@ export function CartLink({
                           <button
                             type="button"
                             aria-label={`${quantityLabel} −`}
-                            onClick={() => setQuantity(line.slug, line.quantity - 1, size)}
+                            onClick={() => setQuantity(line.slug, line.quantity - 1, line.size)}
                             disabled={line.quantity <= 1}
                             className="grid h-9 w-8 place-items-center text-lg disabled:opacity-40"
                           >
@@ -226,7 +225,7 @@ export function CartLink({
                           <button
                             type="button"
                             aria-label={`${quantityLabel} +`}
-                            onClick={() => setQuantity(line.slug, Math.min(MAX_QUANTITY, line.quantity + 1), size)}
+                            onClick={() => setQuantity(line.slug, Math.min(MAX_QUANTITY, line.quantity + 1), line.size)}
                             disabled={line.quantity >= MAX_QUANTITY}
                             className="grid h-9 w-8 place-items-center text-lg disabled:opacity-40"
                           >

@@ -3,12 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/brand/Icon";
-import { PackSizePicker } from "@/components/product/PackSize";
 import { Price } from "@/components/product/Price";
 import { useCart } from "@/features/cart/cart-context";
 import { catalogPackshot } from "@/features/catalog/packshots";
 import type { CatalogProduct } from "@/features/catalog/types";
-import { packSizes, type PackSize } from "@/features/cart/quote";
 import type { Locale } from "@/lib/i18n/locales";
 import type { Dictionary } from "@/lib/i18n/types";
 
@@ -17,24 +15,16 @@ export function ShopCard({
   locale,
   dict,
   view,
-  allowedSizes = packSizes,
 }: {
   product: CatalogProduct;
   locale: Locale;
   dict: Dictionary;
   view: "grid" | "list";
-  allowedSizes?: readonly PackSize[];
 }) {
   const { add } = useCart();
-  const choices = allowedSizes.length > 0 ? allowedSizes : packSizes;
   const [quantity, setQuantity] = useState(1);
-  const [size, setSize] = useState<PackSize>(choices.includes("M") ? "M" : choices[0]);
   const [addedTick, setAddedTick] = useState(0);
   const [showAdded, setShowAdded] = useState(false);
-
-  useEffect(() => {
-    if (!choices.includes(size)) setSize(choices[0]);
-  }, [choices, size]);
 
   useEffect(() => {
     if (addedTick === 0) return;
@@ -59,7 +49,6 @@ export function ShopCard({
       <div className="flex flex-col gap-3 p-4 md:p-5">
         <h2 className="font-display text-[28px] leading-none font-medium md:text-[34px]">{product.name}</h2>
         <p className="line-clamp-3 text-base leading-relaxed text-[#f6f1ea]/70">{product.card || product.profile}</p>
-        <PackSizePicker value={size} onChange={setSize} label={dict.product.size} tone="light" choices={choices} />
         <Price amountMinor={product.priceMinor} locale={locale} comingSoon={dict.price.comingSoon} className="text-[#f3e2cc]" />
         <div className="mt-auto flex items-center gap-2 pt-1">
           <div className="flex h-11 flex-1 items-center justify-between rounded-full bg-black/35 px-2">
@@ -75,7 +64,7 @@ export function ShopCard({
             type="button"
             aria-label={showAdded ? dict.product.added : dict.product.add}
             onClick={() => {
-              add(product.slug, quantity, { name: product.name, image: src, priceMinor: product.priceMinor }, size);
+              add(product.slug, quantity, { name: product.name, image: src, priceMinor: product.priceMinor });
               setAddedTick((current) => current + 1);
             }}
             className={`press relative grid h-11 w-11 place-items-center rounded-xl text-[#1b1714] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper ${showAdded ? "bg-[#efe2cf]" : "bg-[#c4a574]"}`}

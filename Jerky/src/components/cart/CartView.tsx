@@ -42,14 +42,13 @@ export function CartView({ locale, dict }: { locale: Locale; dict: Dictionary })
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_280px]">
       <ul className="rise divide-y divide-ink-800/10 border-y border-ink-800/10">
         {lines.map((line) => {
-          const size = line.size ?? "M";
           const priced =
-            quote?.lines.find((item) => item.slug === line.slug && (item.size ?? size) === size) ??
+            quote?.lines.find((item) => item.slug === line.slug && item.size === line.size) ??
             quote?.lines.find((item) => item.slug === line.slug);
           const lineTotal =
             priced == null || priced.unitPriceMinor == null ? null : priced.unitPriceMinor * line.quantity;
           return (
-            <li key={`${line.slug}-${line.size ?? "M"}`} className="grid gap-4 py-6 sm:grid-cols-[96px_minmax(0,1fr)_auto] sm:items-center">
+            <li key={`${line.slug}-${line.size ?? "plain"}`} className="grid gap-4 py-6 sm:grid-cols-[96px_minmax(0,1fr)_auto] sm:items-center">
               {priced?.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={priced.image} alt="" className="h-24 w-24 bg-ink-950 object-cover" />
@@ -59,7 +58,9 @@ export function CartView({ locale, dict }: { locale: Locale; dict: Dictionary })
               <div>
                 <h2 className="font-display text-[28px] leading-none font-medium md:text-[34px]">
                   {priced?.name ?? line.slug}
-                  <span className="ml-3 align-middle font-sans text-[13px] font-semibold tracking-[1.5px]">{line.size ?? "M"}</span>
+                  {line.size ? (
+                    <span className="ml-3 align-middle font-sans text-[13px] font-semibold tracking-[1.5px]">{line.size}</span>
+                  ) : null}
                 </h2>
                 <p className="mt-1 text-sm text-text-dark/70">
                   {formatWeight(priced?.netWeightG ?? 100, locale)}

@@ -6,6 +6,7 @@ import { Price } from "@/components/product/Price";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { ShopCard } from "@/components/shop/ShopCard";
 import { AddToCart } from "@/components/cart/AddToCart";
+import { ProductPurchase, ProductSizeChoice } from "@/components/product/ProductPurchase";
 import { getProductBySlug, listProducts } from "@/features/catalog/queries";
 import { catalogPackshot } from "@/features/catalog/packshots";
 import { formatWeight } from "@/lib/format";
@@ -36,7 +37,7 @@ export default async function ProductPage({
   const others = (await listProducts(locale)).filter((item) => item.slug !== product.slug);
 
   return (
-    <>
+    <ProductPurchase>
       <section className="bg-ink-950 text-text-light">
         <Container className="grid gap-10 py-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:py-16">
           <ProductGallery images={product.images} name={product.name} caption={dict.product.placeholder} />
@@ -50,8 +51,9 @@ export default async function ProductPage({
               amountMinor={product.priceMinor}
               locale={locale}
               comingSoon={dict.price.comingSoon}
-              className="mt-4"
+              className="mt-4 text-text-light"
             />
+            <ProductSizeChoice label={dict.product.size} tone="light" />
           </div>
         </Container>
       </section>
@@ -88,7 +90,6 @@ export default async function ProductPage({
               label={dict.product.add}
               addedLabel={dict.product.added}
               note={dict.product.addNote}
-              sizeLabel={dict.product.size}
             />
             <Link href={`/${locale}/shop`} className="mt-6 inline-block text-[13px] font-semibold uppercase tracking-[1.5px]">
               {dict.product.back}
@@ -109,6 +110,6 @@ export default async function ProductPage({
           </div>
         </section>
       ) : null}
-    </>
+    </ProductPurchase>
   );
 }

@@ -36,7 +36,7 @@ function parseCart(raw: string): CartLine[] {
       const safe = Math.floor(quantity);
       if (safe < 1) return [];
       const rawSize = "size" in item ? item.size : undefined;
-      return [{ slug, quantity: Math.min(safe, MAX_QUANTITY), size: isPackSize(rawSize) ? rawSize : "M" }];
+      return [{ slug, quantity: Math.min(safe, MAX_QUANTITY), ...(isPackSize(rawSize) ? { size: rawSize } : {}) }];
     });
   } catch {
     return [];
@@ -77,32 +77,28 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return {
       lines,
       count: lines.reduce((sum, line) => sum + line.quantity, 0),
-      add(slug, quantity = 1, preview, size = "M") {
+      add(slug, quantity = 1, preview, size) {
         const amount = Math.min(Math.max(Math.floor(quantity) || 1, 1), MAX_QUANTITY);
-        const current = lines.find((line) => line.slug === slug && (line.size ?? "M") === size);
+        const current = lines.find((line) => line.slug === slug && line.size === size);
         const nextQuantity = Math.min((current?.quantity ?? 0) + amount, MAX_QUANTITY);
         const added = nextQuantity - (current?.quantity ?? 0);
         commit(
           current
-            ? lines.map((line) =>
-                line.slug === slug && (line.size ?? "M") === size ? { ...line, size, quantity: nextQuantity } : line,
-              )
-            : [...lines, { slug, quantity: nextQuantity, size }],
+            ? lines.map((line) => (line.slug === slug && line.size === size ? { ...line, quantity: nextQuantity } : line))
+            : [...lines, { slug, quantity: nextQuantity, ...(size ? { size } : {}) }],
         );
         if (added > 0 && preview) {
           window.dispatchEvent(new CustomEvent(addedEvent, { detail: { ...preview, quantity: added } }));
         }
       },
-      setQuantity(slug, quantity, size = "M") {
+      setQuantity(slug, quantity, size) {
         const safe = Math.min(MAX_QUANTITY, Math.max(1, Math.floor(quantity) || 1));
         commit(
-          lines.map((line) =>
-            line.slug === slug && (line.size ?? "M") === size ? { ...line, size, quantity: safe } : line,
-          ),
+          lines.map((line) => (line.slug === slug && line.size === size ? { ...line, quantity: safe } : line)),
         );
       },
-      remove(slug, size = "M") {
-        commit(lines.filter((line) => !(line.slug === slug && (line.size ?? "M") === size)));
+      remove(slug, size) {
+        commit(lines.filter((line) => !(line.slug === slug && line.size === size)));
       },
       clear() {
         commit([]);

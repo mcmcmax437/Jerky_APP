@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { PackSizeButton } from "@/components/product/PackSize";
 import { ShopCard } from "@/components/shop/ShopCard";
 import type { CatalogProduct } from "@/features/catalog/types";
-import { packSizes, type PackSize } from "@/features/cart/quote";
 import type { Locale } from "@/lib/i18n/locales";
 import type { Dictionary } from "@/lib/i18n/types";
 
@@ -32,7 +30,6 @@ export function ShopCatalog({
   criteria?: boolean;
 }) {
   const [flavors, setFlavors] = useState<FlavorName[]>([]);
-  const [sizes, setSizes] = useState<PackSize[]>([]);
   const [priced, setPriced] = useState<PriceFilter>("any");
   const [query, setQuery] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -62,7 +59,7 @@ export function ShopCatalog({
     if (sort === "name") return [...filtered].sort((a, b) => a.name.localeCompare(b.name, locale));
     return filtered;
   }, [flavors, locale, priced, products, query, sort]);
-  const filtersActive = (query.trim() ? 1 : 0) + (flavors.length > 0 ? 1 : 0) + (sizes.length > 0 ? 1 : 0) + (priced !== "any" ? 1 : 0);
+  const filtersActive = (query.trim() ? 1 : 0) + (flavors.length > 0 ? 1 : 0) + (priced !== "any" ? 1 : 0);
 
   useEffect(() => {
     if (!filterOpen) return;
@@ -182,30 +179,11 @@ export function ShopCatalog({
                         ))}
                       </div>
                     </fieldset>
-                    <fieldset className="mt-4">
-                      <legend className="text-[13px] font-semibold uppercase tracking-[1.5px]">{dict.shop.size}</legend>
-                      <div className="mt-2 flex flex-wrap gap-1.5">
-                        {packSizes.map((size) => (
-                          <PackSizeButton
-                            key={size}
-                            size={size}
-                            tone="dark"
-                            pressed={sizes.includes(size)}
-                            onClick={() =>
-                              setSizes((current) =>
-                                current.includes(size) ? current.filter((item) => item !== size) : [...current, size],
-                              )
-                            }
-                          />
-                        ))}
-                      </div>
-                    </fieldset>
                     <button
                       type="button"
                       onClick={() => {
                         setQuery("");
                         setFlavors([]);
-                        setSizes([]);
                         setPriced("any");
                       }}
                       className="mt-4 text-[13px] font-semibold uppercase tracking-[1.5px] text-text-dark/70"
@@ -250,9 +228,9 @@ export function ShopCatalog({
           </div>
         </div>
         {visible.length === 0 ? <p className="mt-8 text-base text-muted">{dict.shop.empty}</p> : null}
-        <div key={`${flavors.join()}-${sizes.join()}-${priced}-${sort}-${view}`} className={view === "grid" ? "rise mt-8 grid gap-6 md:grid-cols-3" : "rise mt-8 grid gap-4"}>
+        <div key={`${flavors.join()}-${priced}-${sort}-${view}`} className={view === "grid" ? "rise mt-8 grid gap-6 md:grid-cols-3" : "rise mt-8 grid gap-4"}>
           {visible.map((product) => (
-            <ShopCard key={product.slug} product={product} locale={locale} dict={dict} view={view} allowedSizes={sizes} />
+            <ShopCard key={product.slug} product={product} locale={locale} dict={dict} view={view} />
           ))}
         </div>
       </div>
