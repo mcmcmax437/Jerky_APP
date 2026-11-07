@@ -42,9 +42,14 @@ export function CartView({ locale, dict }: { locale: Locale; dict: Dictionary })
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_280px]">
       <ul className="rise divide-y divide-ink-800/10 border-y border-ink-800/10">
         {lines.map((line) => {
-          const priced = quote?.lines.find((item) => item.slug === line.slug);
+          const size = line.size ?? "M";
+          const priced =
+            quote?.lines.find((item) => item.slug === line.slug && (item.size ?? size) === size) ??
+            quote?.lines.find((item) => item.slug === line.slug);
+          const lineTotal =
+            priced == null || priced.unitPriceMinor == null ? null : priced.unitPriceMinor * line.quantity;
           return (
-            <li key={line.slug} className="grid gap-4 py-6 sm:grid-cols-[96px_minmax(0,1fr)_auto] sm:items-center">
+            <li key={`${line.slug}-${line.size ?? "M"}`} className="grid gap-4 py-6 sm:grid-cols-[96px_minmax(0,1fr)_auto] sm:items-center">
               {priced?.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={priced.image} alt="" className="h-24 w-24 bg-ink-950 object-cover" />
@@ -52,7 +57,10 @@ export function CartView({ locale, dict }: { locale: Locale; dict: Dictionary })
                 <div className="h-24 w-24 bg-ink-800" />
               )}
               <div>
-                <h2 className="font-display text-[28px] leading-none font-medium md:text-[34px]">{priced?.name ?? line.slug}</h2>
+                <h2 className="font-display text-[28px] leading-none font-medium md:text-[34px]">
+                  {priced?.name ?? line.slug}
+                  <span className="ml-3 align-middle font-sans text-[13px] font-semibold tracking-[1.5px]">{line.size ?? "M"}</span>
+                </h2>
                 <p className="mt-1 text-sm text-text-dark/70">
                   {formatWeight(priced?.netWeightG ?? 100, locale)}
                 </p>
@@ -63,20 +71,20 @@ export function CartView({ locale, dict }: { locale: Locale; dict: Dictionary })
                     min={1}
                     max={20}
                     value={line.quantity}
-                    onChange={(event) => setQuantity(line.slug, Number(event.target.value))}
+                    onChange={(event) => setQuantity(line.slug, Number(event.target.value), line.size)}
                     className="w-20 border border-ink-800/20 bg-ivory-100 px-3 py-2 tabular-nums outline-none focus-visible:border-ink-800"
                   />
                 </label>
               </div>
               <div className="flex items-center justify-between gap-6 sm:flex-col sm:items-end">
                 <Price
-                  amountMinor={priced?.lineTotalMinor ?? null}
+                  amountMinor={priced ? lineTotal : null}
                   locale={locale}
                   comingSoon={dict.price.comingSoon}
                 />
                 <button
                   type="button"
-                  onClick={() => remove(line.slug)}
+                  onClick={() => remove(line.slug, line.size)}
                   className="text-[13px] font-semibold uppercase tracking-[1.5px] text-text-dark/70 hover:text-text-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
                 >
                   {dict.cart.remove}

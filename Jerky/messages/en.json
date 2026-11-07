@@ -55,7 +55,17 @@
     "all": "All products",
     "viewGrid": "Cards",
     "viewList": "List",
-    "empty": "This group has no flavors yet."
+    "empty": "This group has no flavors yet.",
+    "filter": "Filter",
+    "search": "Search",
+    "searchPlaceholder": "Flavor name",
+    "flavor": "Flavor",
+    "size": "Size",
+    "price": "Price",
+    "priceAny": "Any",
+    "priceSet": "Has a price",
+    "pricePending": "No price yet",
+    "reset": "Reset"
   },
   "product": {
     "draft": "Working description",
@@ -70,6 +80,7 @@
     "reviewsTitle": "Reviews",
     "reviewsEmpty": "There are no approved reviews yet.",
     "related": "Other flavors",
+    "size": "Size",
     "placeholder": "Concept sketch. This is not a product photograph or finished packaging.",
     "back": "Back to the shop"
   },

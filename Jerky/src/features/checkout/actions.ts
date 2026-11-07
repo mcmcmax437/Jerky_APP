@@ -9,6 +9,7 @@ import { z } from "zod";
 const itemSchema = z.object({
   slug: z.string().trim().min(1).max(80),
   quantity: z.number().int().min(1).max(20),
+  size: z.enum(["S", "M", "L", "XL"]).optional(),
 });
 
 const checkoutSchema = z.object({
@@ -125,7 +126,7 @@ export async function placeTestOrder(input: unknown): Promise<CheckoutResult> {
           create: quote.lines.map((line) => ({
             productId: line.productId,
             slug: line.slug,
-            name: line.name,
+            name: line.size ? `${line.name} · ${line.size}` : line.name,
             netWeightG: line.netWeightG,
             unitPriceMinor: line.unitPriceMinor,
             quantity: line.quantity,

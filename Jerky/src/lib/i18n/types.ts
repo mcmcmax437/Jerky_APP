@@ -61,6 +61,16 @@ export type Dictionary = {
     viewGrid: string;
     viewList: string;
     empty: string;
+    filter: string;
+    search: string;
+    searchPlaceholder: string;
+    flavor: string;
+    size: string;
+    price: string;
+    priceAny: string;
+    priceSet: string;
+    pricePending: string;
+    reset: string;
   };
   product: {
     draft: string;
@@ -75,6 +85,7 @@ export type Dictionary = {
     reviewsTitle: string;
     reviewsEmpty: string;
     related: string;
+    size: string;
     placeholder: string;
     back: string;
   };

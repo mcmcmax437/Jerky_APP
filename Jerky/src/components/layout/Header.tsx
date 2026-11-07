@@ -55,6 +55,7 @@ export function Header({
             viewLabel={dict.cart.view}
             toShopLabel={dict.cart.toShop}
             closeLabel={dict.cart.close}
+            removeLabel={dict.cart.remove}
           />
           <MobileNav locale={locale} dict={dict} role={role} />
         </div>

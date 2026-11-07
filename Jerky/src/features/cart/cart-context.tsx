@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useMemo, useSyncExternalStore, type ReactNode } from "react";
-import { MAX_QUANTITY, type CartLine } from "@/features/cart/quote";
+import { isPackSize, MAX_QUANTITY, type CartLine, type PackSize } from "@/features/cart/quote";
 
 const storageKey = "jerky-cart-v1";
 const changeEvent = "jerky-cart-change";
@@ -16,9 +16,9 @@ export type CartAddedPreview = {
 type CartContextValue = {
   lines: CartLine[];
   count: number;
-  add: (slug: string, quantity?: number, preview?: CartAddedPreview) => void;
-  setQuantity: (slug: string, quantity: number) => void;
-  remove: (slug: string) => void;
+  add: (slug: string, quantity?: number, preview?: CartAddedPreview, size?: PackSize) => void;
+  setQuantity: (slug: string, quantity: number, size?: PackSize) => void;
+  remove: (slug: string, size?: PackSize) => void;
   clear: () => void;
 };
 
@@ -35,7 +35,8 @@ function parseCart(raw: string): CartLine[] {
       if (typeof slug !== "string" || typeof quantity !== "number") return [];
       const safe = Math.floor(quantity);
       if (safe < 1) return [];
-      return [{ slug, quantity: Math.min(safe, MAX_QUANTITY) }];
+      const rawSize = "size" in item ? item.size : undefined;
+      return [{ slug, quantity: Math.min(safe, MAX_QUANTITY), size: isPackSize(rawSize) ? rawSize : "M" }];
     });
   } catch {
     return [];
@@ -76,34 +77,32 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return {
       lines,
       count: lines.reduce((sum, line) => sum + line.quantity, 0),
-      add(slug, quantity = 1, preview) {
+      add(slug, quantity = 1, preview, size = "M") {
         const amount = Math.min(Math.max(Math.floor(quantity) || 1, 1), MAX_QUANTITY);
-        const current = lines.find((line) => line.slug === slug);
+        const current = lines.find((line) => line.slug === slug && (line.size ?? "M") === size);
         const nextQuantity = Math.min((current?.quantity ?? 0) + amount, MAX_QUANTITY);
         const added = nextQuantity - (current?.quantity ?? 0);
         commit(
           current
-            ? lines.map((line) => (line.slug === slug ? { ...line, quantity: nextQuantity } : line))
-            : [...lines, { slug, quantity: nextQuantity }],
+            ? lines.map((line) =>
+                line.slug === slug && (line.size ?? "M") === size ? { ...line, size, quantity: nextQuantity } : line,
+              )
+            : [...lines, { slug, quantity: nextQuantity, size }],
         );
         if (added > 0 && preview) {
           window.dispatchEvent(new CustomEvent(addedEvent, { detail: { ...preview, quantity: added } }));
         }
       },
-      setQuantity(slug, quantity) {
-        const safe = Math.floor(quantity);
-        if (safe < 1) {
-          commit(lines.filter((line) => line.slug !== slug));
-          return;
-        }
+      setQuantity(slug, quantity, size = "M") {
+        const safe = Math.min(MAX_QUANTITY, Math.max(1, Math.floor(quantity) || 1));
         commit(
           lines.map((line) =>
-            line.slug === slug ? { ...line, quantity: Math.min(safe, MAX_QUANTITY) } : line,
+            line.slug === slug && (line.size ?? "M") === size ? { ...line, size, quantity: safe } : line,
           ),
         );
       },
-      remove(slug) {
-        commit(lines.filter((line) => line.slug !== slug));
+      remove(slug, size = "M") {
+        commit(lines.filter((line) => !(line.slug === slug && (line.size ?? "M") === size)));
       },
       clear() {
         commit([]);

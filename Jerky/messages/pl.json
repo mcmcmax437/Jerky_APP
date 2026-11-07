@@ -55,7 +55,17 @@
     "all": "Wszystkie",
     "viewGrid": "Karty",
     "viewList": "Lista",
-    "empty": "W tej grupie nie ma jeszcze smaków."
+    "empty": "W tej grupie nie ma jeszcze smaków.",
+    "filter": "Filtr",
+    "search": "Szukaj",
+    "searchPlaceholder": "Nazwa smaku",
+    "flavor": "Smak",
+    "size": "Rozmiar",
+    "price": "Cena",
+    "priceAny": "Dowolna",
+    "priceSet": "Z ceną",
+    "pricePending": "Bez ceny",
+    "reset": "Wyczyść"
   },
   "product": {
     "draft": "Opis roboczy",
@@ -70,6 +80,7 @@
     "reviewsTitle": "Opinie",
     "reviewsEmpty": "Nie ma jeszcze zatwierdzonych opinii.",
     "related": "Pozostałe smaki",
+    "size": "Rozmiar",
     "placeholder": "Szkic koncepcyjny. To nie jest zdjęcie produktu ani gotowe opakowanie.",
     "back": "Wróć do sklepu"
   },

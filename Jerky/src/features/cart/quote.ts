@@ -1,8 +1,16 @@
 export const MAX_QUANTITY = 20;
 
+export const packSizes = ["S", "M", "L", "XL"] as const;
+export type PackSize = (typeof packSizes)[number];
+
+export function isPackSize(value: unknown): value is PackSize {
+  return typeof value === "string" && (packSizes as readonly string[]).includes(value);
+}
+
 export type CartLine = {
   slug: string;
   quantity: number;
+  size?: PackSize;
 };
 
 export type QuoteProduct = {
@@ -25,6 +33,7 @@ export type QuoteLine = {
   lineTotalMinor: number | null;
   currency: string;
   image: string | null;
+  size?: PackSize;
 };
 
 export type Quote = {
@@ -58,6 +67,7 @@ export function buildQuote(requests: CartLine[], products: QuoteProduct[]): Quot
       lineTotalMinor,
       currency: product.currency,
       image: product.image,
+      size: request.size,
     });
   }
 

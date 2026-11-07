@@ -3,8 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { Price } from "@/components/product/Price";
-import { ProductCard } from "@/components/product/ProductCard";
 import { ProductGallery } from "@/components/product/ProductGallery";
+import { ShopCard } from "@/components/shop/ShopCard";
 import { AddToCart } from "@/components/cart/AddToCart";
 import { getProductBySlug, listProducts } from "@/features/catalog/queries";
 import { catalogPackshot } from "@/features/catalog/packshots";
@@ -88,6 +88,7 @@ export default async function ProductPage({
               label={dict.product.add}
               addedLabel={dict.product.added}
               note={dict.product.addNote}
+              sizeLabel={dict.product.size}
             />
             <Link href={`/${locale}/shop`} className="mt-6 inline-block text-[13px] font-semibold uppercase tracking-[1.5px]">
               {dict.product.back}
@@ -97,15 +98,15 @@ export default async function ProductPage({
       </section>
 
       {others.length > 0 ? (
-        <section className="bg-ivory-200">
-          <Container className="py-16">
-            <h2 className="font-display text-[42px] leading-[1.05] font-medium md:text-[48px]">{dict.product.related}</h2>
-            <div className="mt-8 grid gap-5 md:grid-cols-2">
+        <section className="bg-[#f3efe8] text-text-dark">
+          <div className="mx-auto max-w-[83rem] px-5 py-16 md:px-8">
+            <h2 className="font-display text-[42px] leading-[1.05] font-medium text-text-dark md:text-[48px]">{dict.product.related}</h2>
+            <div className="mt-8 grid gap-6 md:grid-cols-3">
               {others.map((item) => (
-                <ProductCard key={item.slug} product={item} locale={locale} dict={dict} />
+                <ShopCard key={item.slug} product={item} locale={locale} dict={dict} view="grid" />
               ))}
             </div>
-          </Container>
+          </div>
         </section>
       ) : null}
     </>

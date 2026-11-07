@@ -24,7 +24,7 @@ export default async function ShopPage({
   return (
     <>
       <CatalogHero eyebrow={dict.shop.eyebrow} title={dict.shop.title} lede={dict.shop.lede} />
-      <ShopCatalog locale={locale} dict={dict} products={products} />
+      <ShopCatalog locale={locale} dict={dict} products={products} criteria />
     </>
   );
 }

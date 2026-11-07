@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { PackSizePicker } from "@/components/product/PackSize";
 import { Button } from "@/components/ui/Button";
 import { useCart } from "@/features/cart/cart-context";
+import type { PackSize } from "@/features/cart/quote";
 
 export function AddToCart({
   slug,
@@ -12,6 +14,7 @@ export function AddToCart({
   label,
   addedLabel,
   note,
+  sizeLabel,
 }: {
   slug: string;
   name: string;
@@ -20,18 +23,21 @@ export function AddToCart({
   label: string;
   addedLabel: string;
   note: string;
+  sizeLabel: string;
 }) {
   const { add } = useCart();
   const [added, setAdded] = useState(0);
+  const [size, setSize] = useState<PackSize>("M");
 
   return (
     <>
+      <PackSizePicker value={size} onChange={setSize} label={sizeLabel} tone="dark" />
       <Button
         tone="light"
-        className="w-full"
+        className="mt-4 w-full"
         aria-describedby="cart-note"
         onClick={() => {
-          add(slug, 1, { name, image, priceMinor });
+          add(slug, 1, { name, image, priceMinor }, size);
           setAdded((current) => current + 1);
         }}
       >

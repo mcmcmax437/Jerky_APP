@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-import { Icon } from "@/components/brand/Icon";
-import { Price } from "@/components/product/Price";
-import { useCart } from "@/features/cart/cart-context";
-import { catalogPackshot } from "@/features/catalog/packshots";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { PackSizeButton } from "@/components/product/PackSize";
+import { ShopCard } from "@/components/shop/ShopCard";
 import type { CatalogProduct } from "@/features/catalog/types";
+import { packSizes, type PackSize } from "@/features/cart/quote";
 import type { Locale } from "@/lib/i18n/locales";
 import type { Dictionary } from "@/lib/i18n/types";
 
-type Flavor = "all" | "classic" | "sweet" | "hot";
+type FlavorName = "classic" | "sweet" | "hot";
+type Flavor = "all" | FlavorName;
+type PriceFilter = "any" | "set" | "pending";
 type Sort = "recommended" | "name";
 type View = "grid" | "list";
 
@@ -24,14 +24,21 @@ export function ShopCatalog({
   locale,
   dict,
   products,
+  criteria = false,
 }: {
   locale: Locale;
   dict: Dictionary;
   products: CatalogProduct[];
+  criteria?: boolean;
 }) {
-  const [flavor, setFlavor] = useState<Flavor>("all");
+  const [flavors, setFlavors] = useState<FlavorName[]>([]);
+  const [sizes, setSizes] = useState<PackSize[]>([]);
+  const [priced, setPriced] = useState<PriceFilter>("any");
+  const [query, setQuery] = useState("");
+  const [filterOpen, setFilterOpen] = useState(false);
   const [sort, setSort] = useState<Sort>("recommended");
   const [view, setView] = useState<View>("grid");
+  const filterRef = useRef<HTMLDivElement>(null);
   const counts = {
     all: products.length,
     classic: products.filter((product) => flavorOf[product.accent] === "classic").length,
@@ -45,10 +52,33 @@ export function ShopCatalog({
     { id: "hot", label: dict.home.hot, icon: "hot" },
   ];
   const visible = useMemo(() => {
-    const filtered = products.filter((product) => flavor === "all" || flavorOf[product.accent] === flavor);
+    const needle = query.trim().toLocaleLowerCase(locale);
+    const filtered = products.filter((product) => {
+      const flavorOk = flavors.length === 0 || flavors.includes(flavorOf[product.accent]);
+      const nameOk = needle.length === 0 || product.name.toLocaleLowerCase(locale).includes(needle);
+      const priceOk = priced === "any" || (priced === "set" ? product.priceMinor != null : product.priceMinor == null);
+      return flavorOk && nameOk && priceOk;
+    });
     if (sort === "name") return [...filtered].sort((a, b) => a.name.localeCompare(b.name, locale));
     return filtered;
-  }, [flavor, locale, products, sort]);
+  }, [flavors, locale, priced, products, query, sort]);
+  const filtersActive = (query.trim() ? 1 : 0) + (flavors.length > 0 ? 1 : 0) + (sizes.length > 0 ? 1 : 0) + (priced !== "any" ? 1 : 0);
+
+  useEffect(() => {
+    if (!filterOpen) return;
+    const onPointer = (event: PointerEvent) => {
+      if (!filterRef.current?.contains(event.target as Node)) setFilterOpen(false);
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setFilterOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [filterOpen]);
 
   return (
     <section className="bg-[#f3efe8] text-text-dark">
@@ -56,13 +86,20 @@ export function ShopCatalog({
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div role="group" aria-label={dict.home.filtersLabel} className="flex flex-wrap gap-2">
             {filters.map((item) => {
-              const active = flavor === item.id;
+              const active = item.id === "all" ? flavors.length === 0 : flavors.length === 1 && flavors[0] === item.id;
               return (
                 <button
                   key={item.id}
                   type="button"
                   aria-pressed={active}
-                  onClick={() => setFlavor(item.id)}
+                  onClick={() => {
+                    if (item.id === "all") {
+                      setFlavors([]);
+                      return;
+                    }
+                    const next = item.id;
+                    setFlavors((current) => (current.length === 1 && current[0] === next ? [] : [next]));
+                  }}
                   className={`press inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-[13px] font-semibold uppercase tracking-[1.5px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper ${
                     active ? "bg-[#2a241f] text-[#f6f1ea]" : "border border-ink-800/10 bg-white/40 text-text-dark hover:border-ink-800/30"
                   }`}
@@ -75,6 +112,110 @@ export function ShopCatalog({
             })}
           </div>
           <div className="flex items-center gap-2">
+            {criteria ? (
+              <div ref={filterRef} className="relative">
+                <button
+                  type="button"
+                  aria-expanded={filterOpen}
+                  aria-controls="shop-filter"
+                  onClick={() => setFilterOpen((current) => !current)}
+                  className={`press inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-[13px] font-semibold uppercase tracking-[1.5px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper ${
+                    filtersActive > 0 || filterOpen ? "bg-[#2a241f] text-[#f6f1ea]" : "border border-ink-800/10 bg-white/50 text-text-dark"
+                  }`}
+                >
+                  {dict.shop.filter}
+                  {filtersActive > 0 ? <span className="rounded-full bg-white/15 px-1.5 text-[10px]">{filtersActive}</span> : null}
+                </button>
+                {filterOpen ? (
+                  <div id="shop-filter" className="absolute right-0 z-30 mt-2 w-[min(20rem,calc(100vw-2.5rem))] rounded-2xl border border-ink-800/10 bg-ivory-100 p-4 text-text-dark shadow-[0_24px_50px_rgba(0,0,0,0.18)]">
+                    <label className="block text-[13px] font-semibold uppercase tracking-[1.5px]">
+                      {dict.shop.search}
+                      <input
+                        value={query}
+                        onChange={(event) => setQuery(event.target.value)}
+                        placeholder={dict.shop.searchPlaceholder}
+                        className="mt-2 w-full rounded-xl border border-ink-800/15 bg-white px-3 py-2 text-base font-normal tracking-normal normal-case outline-none focus-visible:border-ink-800"
+                      />
+                    </label>
+                    <fieldset className="mt-4">
+                      <legend className="text-[13px] font-semibold uppercase tracking-[1.5px]">{dict.shop.flavor}</legend>
+                      <div className="mt-2 grid gap-2">
+                        {filters.filter((item) => item.id !== "all").map((item) => (
+                          <label key={item.id} className="flex items-center gap-2 text-base font-normal tracking-normal normal-case">
+                            <input
+                              type="checkbox"
+                              checked={flavors.includes(item.id as FlavorName)}
+                              onChange={() =>
+                                setFlavors((current) =>
+                                  current.includes(item.id as FlavorName)
+                                    ? current.filter((flavor) => flavor !== item.id)
+                                    : [...current, item.id as FlavorName],
+                                )
+                              }
+                              className="h-4 w-4 accent-[#2a241f]"
+                            />
+                            {item.label}
+                          </label>
+                        ))}
+                      </div>
+                    </fieldset>
+                    <fieldset className="mt-4">
+                      <legend className="text-[13px] font-semibold uppercase tracking-[1.5px]">{dict.shop.price}</legend>
+                      <div className="mt-2 grid gap-2">
+                        {(
+                          [
+                            ["any", dict.shop.priceAny],
+                            ["set", dict.shop.priceSet],
+                            ["pending", dict.shop.pricePending],
+                          ] as const
+                        ).map(([id, label]) => (
+                          <label key={id} className="flex items-center gap-2 text-base font-normal tracking-normal normal-case">
+                            <input
+                              type="radio"
+                              name="shop-price"
+                              checked={priced === id}
+                              onChange={() => setPriced(id)}
+                              className="h-4 w-4 accent-[#2a241f]"
+                            />
+                            {label}
+                          </label>
+                        ))}
+                      </div>
+                    </fieldset>
+                    <fieldset className="mt-4">
+                      <legend className="text-[13px] font-semibold uppercase tracking-[1.5px]">{dict.shop.size}</legend>
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {packSizes.map((size) => (
+                          <PackSizeButton
+                            key={size}
+                            size={size}
+                            tone="dark"
+                            pressed={sizes.includes(size)}
+                            onClick={() =>
+                              setSizes((current) =>
+                                current.includes(size) ? current.filter((item) => item !== size) : [...current, size],
+                              )
+                            }
+                          />
+                        ))}
+                      </div>
+                    </fieldset>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setQuery("");
+                        setFlavors([]);
+                        setSizes([]);
+                        setPriced("any");
+                      }}
+                      className="mt-4 text-[13px] font-semibold uppercase tracking-[1.5px] text-text-dark/70"
+                    >
+                      {dict.shop.reset}
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
             <label className="inline-flex items-center gap-2 rounded-full border border-ink-800/10 bg-white/50 px-3 py-2 text-[13px] font-semibold uppercase tracking-[1.5px] text-muted">
               <span>{dict.home.sortLabel}:</span>
               <select
@@ -109,95 +250,13 @@ export function ShopCatalog({
           </div>
         </div>
         {visible.length === 0 ? <p className="mt-8 text-base text-muted">{dict.shop.empty}</p> : null}
-        <div key={`${flavor}-${sort}-${view}`} className={view === "grid" ? "rise mt-8 grid gap-6 md:grid-cols-3" : "rise mt-8 grid gap-4"}>
+        <div key={`${flavors.join()}-${sizes.join()}-${priced}-${sort}-${view}`} className={view === "grid" ? "rise mt-8 grid gap-6 md:grid-cols-3" : "rise mt-8 grid gap-4"}>
           {visible.map((product) => (
-            <ShopCard key={product.slug} product={product} locale={locale} dict={dict} view={view} />
+            <ShopCard key={product.slug} product={product} locale={locale} dict={dict} view={view} allowedSizes={sizes} />
           ))}
         </div>
       </div>
     </section>
-  );
-}
-
-function ShopCard({
-  product,
-  locale,
-  dict,
-  view,
-}: {
-  product: CatalogProduct;
-  locale: Locale;
-  dict: Dictionary;
-  view: View;
-}) {
-  const { add } = useCart();
-  const [quantity, setQuantity] = useState(1);
-  const [addedTick, setAddedTick] = useState(0);
-  const [showAdded, setShowAdded] = useState(false);
-
-  useEffect(() => {
-    if (addedTick === 0) return;
-    setShowAdded(true);
-    const timer = window.setTimeout(() => setShowAdded(false), 1100);
-    return () => window.clearTimeout(timer);
-  }, [addedTick]);
-  const src = product.images[0]?.src ?? catalogPackshot(product.slug);
-  const badge = product.accent === "bone" ? dict.home.classic : product.accent === "teriyaki" ? dict.home.sweet : dict.home.hot;
-  const list = view === "list";
-
-  return (
-    <article className={`group overflow-hidden rounded-2xl bg-[#1b1714] text-[#f6f1ea] transition duration-500 ease-out hover:-translate-y-1.5 hover:shadow-[0_28px_54px_rgba(20,12,8,0.28)] ${list ? "md:grid md:grid-cols-[252px_minmax(0,1fr)]" : ""}`}>
-      <Link href={`/${locale}/product/${product.slug}`} aria-label={product.name} className="relative block overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={src} alt="" className={`w-full object-cover transition duration-700 ease-out group-hover:scale-[1.06] ${list ? "aspect-[4/3] md:aspect-[9/8] md:h-full" : "aspect-[9/8]"}`} />
-        <span className="absolute top-3 right-3 rounded-full bg-black/55 px-2.5 py-1 text-xs font-semibold uppercase tracking-[1.5px] text-[#f6f1ea]">
-          {badge}
-        </span>
-      </Link>
-      <div className="flex flex-col gap-3 p-4 md:p-5">
-        <h2 className="font-display text-[28px] leading-none font-medium md:text-[34px]">{product.name}</h2>
-        <p className="line-clamp-3 text-base leading-relaxed text-[#f6f1ea]/70">{product.card || product.profile}</p>
-        <Price amountMinor={product.priceMinor} locale={locale} comingSoon={dict.price.comingSoon} className="text-[#f3e2cc]" />
-        <div className="mt-auto flex items-center gap-2 pt-1">
-          <div className="flex h-11 flex-1 items-center justify-between rounded-full bg-black/35 px-2">
-            <button type="button" aria-label={`${dict.cart.quantity} −`} onClick={() => setQuantity((current) => Math.max(1, current - 1))} className="grid h-8 w-8 place-items-center text-lg">
-              −
-            </button>
-            <span className="text-sm tabular-nums">{quantity}</span>
-            <button type="button" aria-label={`${dict.cart.quantity} +`} onClick={() => setQuantity((current) => Math.min(20, current + 1))} className="grid h-8 w-8 place-items-center text-lg">
-              +
-            </button>
-          </div>
-          <button
-            type="button"
-            aria-label={showAdded ? dict.product.added : dict.product.add}
-            onClick={() => {
-              add(product.slug, quantity, { name: product.name, image: src, priceMinor: product.priceMinor });
-              setAddedTick((current) => current + 1);
-            }}
-            className={`press relative grid h-11 w-11 place-items-center rounded-xl text-[#1b1714] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper ${showAdded ? "bg-[#efe2cf]" : "bg-[#c4a574]"}`}
-          >
-            {showAdded ? <AddedMark /> : <Icon name="shopping-bag-01" />}
-            {showAdded ? (
-              <span key={addedTick} className="cart-float pointer-events-none absolute top-0 left-1/2 rounded-full bg-[#2a241f] px-2.5 py-1 text-[12px] font-semibold whitespace-nowrap text-[#f6f1ea]">
-                +{quantity}
-              </span>
-            ) : null}
-          </button>
-          <p className="sr-only" role="status">
-            {showAdded ? dict.product.added : ""}
-          </p>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function AddedMark() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
-      <path d="M5 12.5 9.2 17 19 7" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
   );
 }
 

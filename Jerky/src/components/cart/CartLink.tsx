@@ -37,6 +37,7 @@ export function CartLink({
   viewLabel,
   toShopLabel,
   closeLabel,
+  removeLabel,
 }: {
   locale: Locale;
   label: string;
@@ -49,28 +50,34 @@ export function CartLink({
   viewLabel: string;
   toShopLabel: string;
   closeLabel: string;
+  removeLabel: string;
 }) {
-  const { lines, count, setQuantity } = useCart();
+  const { lines, count, setQuantity, remove } = useCart();
   const [pulse, setPulse] = useState(0);
-  const [open, setOpen] = useState(false);
+  const [phase, setPhase] = useState<"closed" | "open" | "closing">("closed");
   const [justAdded, setJustAdded] = useState(false);
   const [quote, setQuote] = useState<Quote | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const shown = phase !== "closed";
+
+  function closePanel() {
+    setPhase((current) => (current === "open" ? "closing" : current));
+  }
 
   useEffect(() => {
-    setOpen(false);
+    setPhase("closed");
   }, [pathname]);
 
   useEffect(() => {
     const onAdded = () => {
       setPulse((current) => current + 1);
       setJustAdded(true);
-      setOpen(true);
+      setPhase("open");
     };
     const onOpen = () => {
       setJustAdded(false);
-      setOpen(true);
+      setPhase("open");
     };
     window.addEventListener("jerky-cart-added", onAdded);
     window.addEventListener(openEvent, onOpen);
@@ -81,12 +88,12 @@ export function CartLink({
   }, []);
 
   useEffect(() => {
-    if (!open) return;
+    if (phase !== "open") return;
     const onPointer = (event: PointerEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+      if (!rootRef.current?.contains(event.target as Node)) closePanel();
     };
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") closePanel();
     };
     document.addEventListener("pointerdown", onPointer);
     document.addEventListener("keydown", onKey);
@@ -94,10 +101,10 @@ export function CartLink({
       document.removeEventListener("pointerdown", onPointer);
       document.removeEventListener("keydown", onKey);
     };
-  }, [open]);
+  }, [phase]);
 
   useEffect(() => {
-    if (!open) return;
+    if (phase !== "open") return;
     let active = true;
     void quoteCart(locale, lines).then((next) => {
       if (active) setQuote(next);
@@ -105,18 +112,18 @@ export function CartLink({
     return () => {
       active = false;
     };
-  }, [open, locale, lines]);
+  }, [phase, locale, lines]);
 
   return (
     <div ref={rootRef} className="relative">
       <button
         type="button"
-        aria-expanded={open}
+        aria-expanded={phase === "open"}
         aria-controls="cart-pop"
         aria-label={count > 0 ? `${label}: ${count}` : label}
         onClick={() => {
           setJustAdded(false);
-          setOpen((current) => !current);
+          setPhase((current) => (current === "open" ? "closing" : "open"));
         }}
         className="press relative inline-flex h-11 w-11 items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
       >
@@ -130,12 +137,17 @@ export function CartLink({
           {count}
         </span>
       </button>
-      {open ? (
+      {shown ? (
         <div
           id="cart-pop"
           role="dialog"
           aria-label={justAdded ? addedLabel : title}
-          className="cart-pop-in absolute right-0 top-[calc(100%+0.75rem)] z-50 w-[min(22rem,calc(100vw-1.5rem))] rounded-2xl border border-ink-800/10 bg-ivory-100 p-4 text-text-dark shadow-[0_24px_50px_rgba(0,0,0,0.35)]"
+          onAnimationEnd={(event) => {
+            if (event.target !== event.currentTarget) return;
+            if (!event.animationName.includes("cart-pop-out")) return;
+            setPhase((current) => (current === "closing" ? "closed" : current));
+          }}
+          className={`${phase === "closing" ? "cart-pop-out" : "cart-pop-in"} absolute right-0 top-[calc(100%+0.75rem)] z-50 w-[min(22rem,calc(100vw-1.5rem))] rounded-2xl border border-ink-800/10 bg-ivory-100 p-4 text-text-dark shadow-[0_24px_50px_rgba(0,0,0,0.35)]`}
         >
           <div className="flex items-start justify-between gap-3">
             <p className="text-[13px] font-semibold uppercase tracking-[1.5px] text-copper">
@@ -144,7 +156,7 @@ export function CartLink({
             <button
               type="button"
               aria-label={closeLabel}
-              onClick={() => setOpen(false)}
+              onClick={closePanel}
               className="grid h-7 w-7 place-items-center text-lg leading-none text-text-dark/60"
             >
               ×
@@ -164,20 +176,24 @@ export function CartLink({
             <>
               <ul className="mt-3 max-h-[min(22rem,calc(100vh-12rem))] divide-y divide-ink-800/10 overflow-y-auto">
                 {lines.map((line) => {
-                  const priced = quote?.lines.find((item) => item.slug === line.slug);
+                  const size = line.size ?? "M";
+                  const priced =
+                    quote?.lines.find((item) => item.slug === line.slug && (item.size ?? size) === size) ??
+                    quote?.lines.find((item) => item.slug === line.slug);
                   const image = priced?.image || catalogPackshot(line.slug);
                   const lineTotal =
                     priced == null || priced.unitPriceMinor == null
                       ? null
                       : priced.unitPriceMinor * line.quantity;
                   return (
-                    <li key={line.slug} className="flex items-center gap-3 py-3">
+                    <li key={`${line.slug}-${size}`} className="flex items-center gap-3 py-3">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={image} alt="" className="h-16 w-14 shrink-0 rounded-lg bg-ink-950 object-cover" />
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-display text-[22px] leading-none font-medium">
                           {priced?.name ?? line.slug}
                         </p>
+                        <p className="mt-1 text-[13px] font-semibold tracking-[1.5px]">{size}</p>
                         {priced ? (
                           <Price
                             amountMinor={lineTotal}
@@ -187,25 +203,36 @@ export function CartLink({
                           />
                         ) : null}
                       </div>
-                      <div className="flex h-9 shrink-0 items-center rounded-lg border border-ink-800/15">
+                      <div className="flex shrink-0 flex-col items-end gap-1">
                         <button
                           type="button"
-                          aria-label={`${quantityLabel} −`}
-                          onClick={() => setQuantity(line.slug, line.quantity - 1)}
-                          className="grid h-9 w-8 place-items-center text-lg"
+                          aria-label={removeLabel}
+                          onClick={() => remove(line.slug, size)}
+                          className="grid h-5 w-5 place-items-center text-sm leading-none text-text-dark/55"
                         >
-                          −
+                          ×
                         </button>
-                        <span className="w-6 text-center text-sm tabular-nums">{line.quantity}</span>
-                        <button
-                          type="button"
-                          aria-label={`${quantityLabel} +`}
-                          onClick={() => setQuantity(line.slug, Math.min(MAX_QUANTITY, line.quantity + 1))}
-                          disabled={line.quantity >= MAX_QUANTITY}
-                          className="grid h-9 w-8 place-items-center text-lg disabled:opacity-40"
-                        >
-                          +
-                        </button>
+                        <div className="flex h-9 items-center rounded-lg border border-ink-800/15">
+                          <button
+                            type="button"
+                            aria-label={`${quantityLabel} −`}
+                            onClick={() => setQuantity(line.slug, line.quantity - 1, size)}
+                            disabled={line.quantity <= 1}
+                            className="grid h-9 w-8 place-items-center text-lg disabled:opacity-40"
+                          >
+                            −
+                          </button>
+                          <span className="w-6 text-center text-sm tabular-nums">{line.quantity}</span>
+                          <button
+                            type="button"
+                            aria-label={`${quantityLabel} +`}
+                            onClick={() => setQuantity(line.slug, Math.min(MAX_QUANTITY, line.quantity + 1), size)}
+                            disabled={line.quantity >= MAX_QUANTITY}
+                            className="grid h-9 w-8 place-items-center text-lg disabled:opacity-40"
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
                     </li>
                   );
