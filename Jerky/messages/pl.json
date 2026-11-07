@@ -154,7 +154,9 @@
     "total": "Razem",
     "pricePending": "Cena sprzedaży nie jest ustalona, więc kwota nie jest liczona. Zapisujemy ilość.",
     "checkout": "Złóż zamówienie testowe",
-    "note": "To nie jest sprzedaż. Nic nie jest opłacane ani wysyłane."
+    "note": "To nie jest sprzedaż. Nic nie jest opłacane ani wysyłane.",
+    "view": "Do koszyka",
+    "close": "Zamknij"
   },
   "checkout": {
     "eyebrow": "Zamówienie testowe",

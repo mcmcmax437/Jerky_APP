@@ -19,7 +19,7 @@ export function Header({
   role: "CUSTOMER" | "ADMIN" | null;
 }) {
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-ink-950 text-text-light">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-ink-950 text-text-light">
       <Container className="relative flex h-16 items-center justify-between gap-4 lg:h-[4.75rem]">
         <Link
           href={`/${locale}`}
@@ -43,7 +43,15 @@ export function Header({
           >
             <Icon name="user" size={18} />
           </Link>
-          <CartLink locale={locale} label={dict.nav.cart} />
+          <CartLink
+            locale={locale}
+            label={dict.nav.cart}
+            addedLabel={dict.product.added}
+            quantityLabel={dict.cart.quantity}
+            comingSoon={dict.price.comingSoon}
+            viewLabel={dict.cart.view}
+            closeLabel={dict.cart.close}
+          />
           <MobileNav locale={locale} dict={dict} role={role} />
         </div>
       </Container>

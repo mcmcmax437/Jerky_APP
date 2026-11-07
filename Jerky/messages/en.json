@@ -154,7 +154,9 @@
     "total": "Total",
     "pricePending": "The retail price is not set, so no amount is calculated. The quantity is saved.",
     "checkout": "Place a test order",
-    "note": "This is not a sale. Nothing is paid or shipped."
+    "note": "This is not a sale. Nothing is paid or shipped.",
+    "view": "View cart",
+    "close": "Close"
   },
   "checkout": {
     "eyebrow": "Test order",

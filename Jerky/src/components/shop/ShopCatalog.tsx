@@ -172,7 +172,7 @@ function ShopCard({
             type="button"
             aria-label={showAdded ? dict.product.added : dict.product.add}
             onClick={() => {
-              add(product.slug, quantity);
+              add(product.slug, quantity, { name: product.name, image: src, priceMinor: product.priceMinor });
               setAddedTick((current) => current + 1);
             }}
             className={`press relative grid h-11 w-11 place-items-center rounded-xl text-[#1b1714] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper ${showAdded ? "bg-[#efe2cf]" : "bg-[#c4a574]"}`}

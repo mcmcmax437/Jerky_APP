@@ -7,10 +7,16 @@ const storageKey = "jerky-cart-v1";
 const changeEvent = "jerky-cart-change";
 const addedEvent = "jerky-cart-added";
 
+export type CartAddedPreview = {
+  name: string;
+  image: string;
+  priceMinor: number | null;
+};
+
 type CartContextValue = {
   lines: CartLine[];
   count: number;
-  add: (slug: string, quantity?: number) => void;
+  add: (slug: string, quantity?: number, preview?: CartAddedPreview) => void;
   setQuantity: (slug: string, quantity: number) => void;
   remove: (slug: string) => void;
   clear: () => void;
@@ -70,7 +76,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return {
       lines,
       count: lines.reduce((sum, line) => sum + line.quantity, 0),
-      add(slug, quantity = 1) {
+      add(slug, quantity = 1, preview) {
         const amount = Math.min(Math.max(Math.floor(quantity) || 1, 1), MAX_QUANTITY);
         const current = lines.find((line) => line.slug === slug);
         const nextQuantity = Math.min((current?.quantity ?? 0) + amount, MAX_QUANTITY);
@@ -80,7 +86,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
             ? lines.map((line) => (line.slug === slug ? { ...line, quantity: nextQuantity } : line))
             : [...lines, { slug, quantity: nextQuantity }],
         );
-        if (added > 0) window.dispatchEvent(new CustomEvent(addedEvent, { detail: { quantity: added } }));
+        if (added > 0 && preview) {
+          window.dispatchEvent(new CustomEvent(addedEvent, { detail: { ...preview, quantity: added } }));
+        }
       },
       setQuantity(slug, quantity) {
         const safe = Math.floor(quantity);

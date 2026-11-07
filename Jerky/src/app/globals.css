@@ -143,6 +143,20 @@ body {
   animation: cart-float 1100ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+@keyframes cart-pop-in {
+  from {
+    transform: translateY(-10px);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+.cart-pop-in {
+  animation: cart-pop-in 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;

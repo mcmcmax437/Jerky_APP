@@ -121,6 +121,8 @@ export type Dictionary = {
     pricePending: string;
     checkout: string;
     note: string;
+    view: string;
+    close: string;
   };
   checkout: {
     eyebrow: string;

@@ -7,6 +7,7 @@ import { ProductCard } from "@/components/product/ProductCard";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { AddToCart } from "@/components/cart/AddToCart";
 import { getProductBySlug, listProducts } from "@/features/catalog/queries";
+import { catalogPackshot } from "@/features/catalog/packshots";
 import { formatWeight } from "@/lib/format";
 import { readLocale } from "@/lib/i18n/request";
 
@@ -81,6 +82,9 @@ export default async function ProductPage({
           <aside className="h-fit border border-ink-800/10 bg-ivory-200 p-5">
             <AddToCart
               slug={product.slug}
+              name={product.name}
+              image={product.images[0]?.src ?? catalogPackshot(product.slug)}
+              priceMinor={product.priceMinor}
               label={dict.product.add}
               addedLabel={dict.product.added}
               note={dict.product.addNote}

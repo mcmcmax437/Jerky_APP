@@ -6,11 +6,17 @@ import { useCart } from "@/features/cart/cart-context";
 
 export function AddToCart({
   slug,
+  name,
+  image,
+  priceMinor,
   label,
   addedLabel,
   note,
 }: {
   slug: string;
+  name: string;
+  image: string;
+  priceMinor: number | null;
   label: string;
   addedLabel: string;
   note: string;
@@ -25,7 +31,7 @@ export function AddToCart({
         className="w-full"
         aria-describedby="cart-note"
         onClick={() => {
-          add(slug, 1);
+          add(slug, 1, { name, image, priceMinor });
           setAdded((current) => current + 1);
         }}
       >
