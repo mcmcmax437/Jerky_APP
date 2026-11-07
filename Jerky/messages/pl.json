@@ -60,6 +60,7 @@
     "search": "Szukaj",
     "searchPlaceholder": "Nazwa smaku",
     "flavor": "Smak",
+    "meat": "Rodzaj mięsa",
     "size": "Rozmiar",
     "price": "Cena",
     "priceAny": "Dowolna",
@@ -205,7 +206,8 @@
       "city": "Podaj miasto.",
       "postalCode": "Podaj kod pocztowy.",
       "addressLine": "Podaj adres.",
-      "items": "Koszyk jest pusty albo produkt nie jest dostępny."
+      "items": "Koszyk jest pusty albo produkt nie jest dostępny.",
+      "limited": "Zbyt wiele zamówień z tego adresu. Odczekaj i spróbuj ponownie."
     }
   },
   "order": {
@@ -247,7 +249,8 @@
       "credentials": "E-mail albo hasło jest niepoprawne.",
       "taken": "To konto już istnieje.",
       "failed": "Nie udało się zapisać. Spróbuj jeszcze raz.",
-      "banned": "To konto jest zablokowane."
+      "banned": "To konto jest zablokowane.",
+      "locked": "Zbyt wiele prób. Odczekaj i spróbuj ponownie."
     }
   },
   "account": {
@@ -293,7 +296,8 @@
       "current": "Obecne hasło jest nieprawidłowe.",
       "taken": "Taki e-mail jest już na innym koncie.",
       "message": "Napisz wiadomość.",
-      "failed": "Nie udało się zapisać. Spróbuj ponownie."
+      "failed": "Nie udało się zapisać. Spróbuj ponownie.",
+      "locked": "Zbyt wiele prób. Odczekaj i spróbuj ponownie."
     },
     "customer": "Klient",
     "admin": "Administrator",

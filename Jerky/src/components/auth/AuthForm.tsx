@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Honeypot } from "@/components/security/Honeypot";
 import { Button } from "@/components/ui/Button";
 import { loginAccount, registerAccount, type AuthField } from "@/features/auth/actions";
 import type { Locale } from "@/lib/i18n/locales";
@@ -22,13 +23,13 @@ export function AuthForm({
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [field, setField] = useState<AuthField | null>(null);
-  const [values, setValues] = useState({ name: "", email: "", password: "", confirm: "" });
+  const [values, setValues] = useState({ name: "", email: "", password: "", confirm: "", company: "" });
 
   const error = (key: AuthField) => (field === key ? dict.auth.errors[key] : null);
 
   return (
     <form
-      className="grid max-w-xl gap-5"
+      className="relative grid max-w-xl gap-5"
       onSubmit={(event) => {
         event.preventDefault();
         setPending(true);
@@ -94,7 +95,8 @@ export function AuthForm({
           onChange={(confirm) => setValues((current) => ({ ...current, confirm }))}
         />
       ) : null}
-      {field === "credentials" || field === "failed" || field === "banned" ? (
+      <Honeypot id="auth-company" value={values.company} onChange={(company) => setValues((current) => ({ ...current, company }))} />
+      {field === "credentials" || field === "failed" || field === "banned" || field === "locked" ? (
         <p className="text-sm text-chili">{dict.auth.errors[field]}</p>
       ) : null}
       <Button type="submit" tone="light" disabled={pending}>

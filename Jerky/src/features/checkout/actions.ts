@@ -2,6 +2,7 @@
 
 import { getSession } from "@/features/auth/session";
 import { prisma } from "@/lib/db/prisma";
+import { buckets, clientAddress, isSpamTrap, take } from "@/lib/security/limit";
 import { buildQuote, type CartLine, type Quote } from "@/features/cart/quote";
 import { isLocale, type Locale } from "@/lib/i18n/locales";
 import { z } from "zod";
@@ -22,6 +23,7 @@ const checkoutSchema = z.object({
   postalCode: z.string().trim().min(2).max(20),
   addressLine: z.string().trim().min(3).max(255),
   items: z.array(itemSchema).min(1).max(20),
+  company: z.string().max(200).optional(),
 });
 
 export type CheckoutField =
@@ -30,7 +32,8 @@ export type CheckoutField =
   | "city"
   | "postalCode"
   | "addressLine"
-  | "items";
+  | "items"
+  | "limited";
 
 export type CheckoutResult =
   | { ok: true; id: string; number: string }
@@ -98,6 +101,9 @@ export async function placeTestOrder(input: unknown): Promise<CheckoutResult> {
   }
 
   const data = parsed.data;
+  const allowed = await take("checkout-ip", await clientAddress(), buckets.checkoutIp);
+  if (!allowed) return { ok: false, field: "limited" };
+  if (isSpamTrap(data.company)) return { ok: false, field: "items" };
   const session = await getSession();
   const quote = await loadQuote(data.locale, data.items);
   if (quote.lines.length === 0) return { ok: false, field: "items" };

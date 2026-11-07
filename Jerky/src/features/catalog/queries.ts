@@ -1,3 +1,4 @@
+import { meatTypes } from "@/features/admin/recipe";
 import { prisma } from "@/lib/db/prisma";
 import type { Locale } from "@/lib/i18n/locales";
 import type { CatalogProduct } from "./types";
@@ -10,6 +11,8 @@ type ProductRecord = {
   priceMinor: number | null;
   currency: string;
   accent: string;
+  meatType: string | null;
+  recipes: { versions: { meatType: string | null }[] }[];
   translations: { locale: string; name: string; card: string | null; profile: string }[];
   media: { publicPath: string; kind: string; isPlaceholder: boolean; sortOrder: number }[];
   reviews: { rating: number }[];
@@ -30,6 +33,8 @@ export function toCatalogProduct(product: ProductRecord, locale: Locale): Catalo
   const translation = pickTranslation(product.translations, locale);
   if (!translation) return null;
 
+  const recorded = product.recipes[0]?.versions[0]?.meatType ?? product.meatType;
+  const meat = meatTypes.find((item) => item === recorded) ?? null;
   const approved = product.reviews;
   const average =
     approved.length > 0
@@ -45,6 +50,7 @@ export function toCatalogProduct(product: ProductRecord, locale: Locale): Catalo
     priceMinor: product.priceMinor,
     currency: product.currency,
     accent: accents.has(product.accent) ? (product.accent as CatalogProduct["accent"]) : "bone",
+    meat,
     images: [...product.media]
       .sort((a, b) => a.sortOrder - b.sortOrder)
       .map((item) => ({
@@ -63,6 +69,17 @@ const productInclude = {
   reviews: {
     where: { status: "APPROVED" as const },
     select: { rating: true },
+  },
+  recipes: {
+    orderBy: { updatedAt: "desc" as const },
+    take: 1,
+    select: {
+      versions: {
+        orderBy: { versionNumber: "desc" as const },
+        take: 1,
+        select: { meatType: true },
+      },
+    },
   },
 };
 

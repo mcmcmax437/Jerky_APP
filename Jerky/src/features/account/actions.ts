@@ -4,8 +4,9 @@ import { z } from "zod";
 import { prisma } from "@/lib/db/prisma";
 import { hashPassword, verifyPassword } from "@/features/auth/password";
 import { getSession } from "@/features/auth/session";
+import { buckets, clearLimit, clientAddress, isLocked, isSpamTrap, take } from "@/lib/security/limit";
 
-export type AccountField = "name" | "email" | "password" | "confirm" | "current" | "message" | "taken" | "failed";
+export type AccountField = "name" | "email" | "password" | "confirm" | "current" | "message" | "taken" | "failed" | "locked";
 
 export type AccountResult = { ok: true } | { ok: false; field: AccountField };
 
@@ -26,6 +27,7 @@ const passwordSchema = z.object({
 
 const messageSchema = z.object({
   message: z.string().trim().min(2).max(2000),
+  company: z.string().max(200).optional(),
 });
 
 async function currentUser() {
@@ -47,7 +49,14 @@ export async function updateAccountEmail(input: unknown): Promise<AccountResult>
   const parsed = emailSchema.safeParse(input);
   if (!parsed.success) return { ok: false, field: parsed.error.issues[0]?.path[0] === "current" ? "current" : "email" };
   const user = await currentUser();
-  if (!user || !(await verifyPassword(parsed.data.current, user.passwordHash))) return { ok: false, field: "current" };
+  if (!user) return { ok: false, field: "failed" };
+  if (await isLocked("password-user", user.id)) return { ok: false, field: "locked" };
+  const passwordMatches = await verifyPassword(parsed.data.current, user.passwordHash);
+  if (!passwordMatches) {
+    const allowed = await take("password-user", user.id, buckets.passwordUser);
+    return { ok: false, field: allowed ? "current" : "locked" };
+  }
+  await clearLimit("password-user", user.id);
   const email = parsed.data.email.toLowerCase();
   if (email === user.email) return { ok: true };
   const existing = await prisma.user.findUnique({ where: { email } });
@@ -65,7 +74,14 @@ export async function updateAccountPassword(input: unknown): Promise<AccountResu
   }
   if (parsed.data.password !== parsed.data.confirm) return { ok: false, field: "confirm" };
   const user = await currentUser();
-  if (!user || !(await verifyPassword(parsed.data.current, user.passwordHash))) return { ok: false, field: "current" };
+  if (!user) return { ok: false, field: "failed" };
+  if (await isLocked("password-user", user.id)) return { ok: false, field: "locked" };
+  const passwordMatches = await verifyPassword(parsed.data.current, user.passwordHash);
+  if (!passwordMatches) {
+    const allowed = await take("password-user", user.id, buckets.passwordUser);
+    return { ok: false, field: allowed ? "current" : "locked" };
+  }
+  await clearLimit("password-user", user.id);
   await prisma.user.update({
     where: { id: user.id },
     data: { passwordHash: await hashPassword(parsed.data.password) },
@@ -78,6 +94,11 @@ export async function sendSupportMessage(input: unknown): Promise<AccountResult>
   if (!parsed.success) return { ok: false, field: "message" };
   const user = await currentUser();
   if (!user) return { ok: false, field: "failed" };
+  const allowed =
+    (await take("support-user", user.id, buckets.supportUser)) &&
+    (await take("support-ip", await clientAddress(), buckets.supportIp));
+  if (!allowed) return { ok: false, field: "locked" };
+  if (isSpamTrap(parsed.data.company)) return { ok: true };
   await prisma.supportMessage.create({
     data: {
       userId: user.id,

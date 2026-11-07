@@ -4,6 +4,10 @@ import { promisify } from "node:util";
 const scrypt = promisify(scryptCallback);
 const keyLength = 32;
 
+/** Used only when an email is not registered, so the check takes the same time as a wrong password. */
+export const unknownPasswordHash =
+  "scrypt$V-h0SHGhFgSaIKmDPuAVug$_S1FFhIvQsUBfOsMMjvFB5lKTrbnEof7WG52kLLxydA";
+
 export async function hashPassword(password: string): Promise<string> {
   const salt = randomBytes(16);
   const hash = (await scrypt(password, salt, keyLength)) as Buffer;

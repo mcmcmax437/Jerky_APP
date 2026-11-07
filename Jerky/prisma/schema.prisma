@@ -120,6 +120,18 @@ model SupportMessage {
   @@index([createdAt])
 }
 
+model RateLimit {
+  id          String    @id @default(cuid())
+  bucket      String    @db.VarChar(40)
+  key         String    @db.VarChar(190)
+  hits        Int       @default(0)
+  windowStart DateTime
+  lockedUntil DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([bucket, key])
+}
+
 model Session {
   id        String   @id @default(cuid())
   userId    String
@@ -139,6 +151,7 @@ model Product {
   currency             String   @default("PLN") @db.VarChar(3)
   published            Boolean  @default(false)
   accent               String   @db.VarChar(32)
+  meatType             MeatType?
   sortOrder            Int      @default(0)
   ingredientsConfirmed Boolean  @default(false)
   allergensConfirmed   Boolean  @default(false)

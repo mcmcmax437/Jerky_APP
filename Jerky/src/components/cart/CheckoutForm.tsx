@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Honeypot } from "@/components/security/Honeypot";
 import { Button } from "@/components/ui/Button";
 import { useCart } from "@/features/cart/cart-context";
 import { placeTestOrder, type CheckoutField } from "@/features/checkout/actions";
@@ -39,6 +40,7 @@ export function CheckoutForm({
     city: "",
     postalCode: "",
     addressLine: "",
+    company: "",
   });
 
   if (lines.length === 0) {
@@ -56,7 +58,7 @@ export function CheckoutForm({
 
   return (
     <form
-      className="grid max-w-xl gap-5"
+      className="relative grid max-w-xl gap-5"
       onSubmit={(event) => {
         event.preventDefault();
         setPending(true);
@@ -107,7 +109,8 @@ export function CheckoutForm({
           </div>
         );
       })}
-      {field === "items" ? <p className="text-sm text-chili">{dict.checkout.errors.items}</p> : null}
+      <Honeypot id="checkout-company" value={values.company} onChange={(company) => setValues((current) => ({ ...current, company }))} />
+      {field === "items" || field === "limited" ? <p className="text-sm text-chili">{dict.checkout.errors[field]}</p> : null}
       <p className="text-sm leading-relaxed text-text-dark/80">{dict.cart.note}</p>
       <Button type="submit" tone="light" disabled={pending}>
         {pending ? dict.checkout.pending : dict.checkout.submit}

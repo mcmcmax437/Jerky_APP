@@ -131,6 +131,11 @@ systemctl enable jerky
 systemctl restart jerky
 
 if command -v nginx >/dev/null 2>&1; then
+  mkdir -p /etc/nginx/conf.d
+  cat > /etc/nginx/conf.d/jerky-limits.conf <<'EOF'
+limit_req_zone $binary_remote_addr zone=jerky_req:10m rate=20r/s;
+limit_conn_zone $binary_remote_addr zone=jerky_conn:10m;
+EOF
   site=/etc/nginx/sites-available/jerky.conf
   if [ ! -d /etc/nginx/sites-available ] && [ -d /etc/nginx/conf.d ]; then
     site=/etc/nginx/conf.d/jerky.conf
@@ -151,6 +156,43 @@ if command -v nginx >/dev/null 2>&1; then
       certbot install --nginx --cert-name jerky.tereshkovych.com.ua --redirect --non-interactive
     else
       certbot --nginx -d jerky.tereshkovych.com.ua --non-interactive --agree-tos --redirect
+    fi
+  fi
+  if [ -f "$site" ]; then
+    cp "$site" "$site.jerky-bak"
+    if ! grep -q "limit_req zone=jerky_req" "$site"; then
+      awk '
+        /proxy_pass http:\/\/127\.0\.0\.1:/ && !limits {
+          print
+          print "        limit_req zone=jerky_req burst=80 nodelay;"
+          print "        limit_conn jerky_conn 40;"
+          print "        limit_req_status 429;"
+          limits = 1
+          next
+        }
+        { print }
+      ' "$site" > "$site.jerky-new"
+      mv "$site.jerky-new" "$site"
+    fi
+    if ! grep -q "X-Content-Type-Options" "$site"; then
+      awk '
+        /server_name/ {
+          print
+          print "    add_header X-Content-Type-Options \"nosniff\" always;"
+          print "    add_header X-Frame-Options \"SAMEORIGIN\" always;"
+          print "    add_header Referrer-Policy \"strict-origin-when-cross-origin\" always;"
+          print "    add_header Permissions-Policy \"camera=(self), microphone=(), geolocation=()\" always;"
+          next
+        }
+        { print }
+      ' "$site" > "$site.jerky-new"
+      mv "$site.jerky-new" "$site"
+    fi
+    if ! nginx -t; then
+      mv "$site.jerky-bak" "$site"
+      echo "Jerky rate limits were not applied because nginx rejected the config."
+    else
+      rm -f "$site.jerky-bak"
     fi
   fi
   nginx -t

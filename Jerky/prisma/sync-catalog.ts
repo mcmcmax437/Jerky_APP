@@ -20,6 +20,7 @@ export async function syncCatalog(prisma: PrismaClient) {
         published: true,
         priceMinor: null,
         currency: "PLN",
+        meatType: "BEEF",
       },
     });
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { Honeypot } from "@/components/security/Honeypot";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -45,6 +46,7 @@ export function AccountSettings({
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [message, setMessage] = useState("");
+  const [company, setCompany] = useState("");
 
   useEffect(() => {
     setNameValue(name);
@@ -105,7 +107,7 @@ export function AccountSettings({
           <Field id="account-email" label={copy.profileEmail} type="email" value={emailValue} autoComplete="email" error={error("email", "email") ?? error("taken", "email")} onChange={setEmailValue} />
           <Field id="account-email-current" label={copy.currentPassword} type="password" value={emailCurrent} autoComplete="current-password" error={error("current", "email")} onChange={setEmailCurrent} />
           <Save pending={busy === "email"} label={copy.save} pendingLabel={pendingLabel} />
-          <Status saved={saved === "email"} failed={error("failed", "email")} savedLabel={copy.savedNote} />
+          <Status saved={saved === "email"} failed={error("failed", "email") ?? error("locked", "email")} savedLabel={copy.savedNote} />
         </form>
 
         <form
@@ -124,14 +126,17 @@ export function AccountSettings({
           <Field id="account-password" label={copy.newPassword} type="password" value={password} autoComplete="new-password" error={error("password", "password")} onChange={setPassword} />
           <Field id="account-confirm" label={confirmLabel} type="password" value={confirm} autoComplete="new-password" error={error("confirm", "password")} onChange={setConfirm} />
           <Save pending={busy === "password"} label={copy.save} pendingLabel={pendingLabel} />
-          <Status saved={saved === "password"} failed={error("failed", "password")} savedLabel={copy.savedNote} />
+          <Status saved={saved === "password"} failed={error("failed", "password") ?? error("locked", "password")} savedLabel={copy.savedNote} />
         </form>
 
         <form
-          className="grid gap-4 rounded-2xl border border-ink-800/10 bg-white/70 p-5"
+          className="relative grid gap-4 rounded-2xl border border-ink-800/10 bg-white/70 p-5"
           onSubmit={(event) => {
             event.preventDefault();
-            run("support", sendSupportMessage({ message }), () => setMessage(""));
+            run("support", sendSupportMessage({ message, company }), () => {
+              setMessage("");
+              setCompany("");
+            });
           }}
         >
           <h3 className="font-display text-[28px] leading-none font-medium">{copy.support}</h3>
@@ -141,8 +146,9 @@ export function AccountSettings({
             <textarea id="account-support" value={message} rows={5} maxLength={2000} onChange={(event) => setMessage(event.target.value)} className={fieldClass} />
           </label>
           {error("message", "support") ? <p className="text-sm text-[#8a3b32]">{error("message", "support")}</p> : null}
+          <Honeypot id="support-company" value={company} onChange={setCompany} />
           <Save pending={busy === "support"} label={copy.send} pendingLabel={pendingLabel} />
-          <Status saved={saved === "support"} failed={error("failed", "support")} savedLabel={copy.sent} />
+          <Status saved={saved === "support"} failed={error("failed", "support") ?? error("locked", "support")} savedLabel={copy.sent} />
           {messages.length > 0 ? (
             <div>
               <h4 className="font-display text-[22px] leading-none font-medium">{copy.yourMessages}</h4>

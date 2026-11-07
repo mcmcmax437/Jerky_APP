@@ -4,7 +4,8 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/db/prisma";
 import { isLocale } from "@/lib/i18n/locales";
-import { hashPassword, verifyPassword } from "./password";
+import { buckets, clearLimit, clientAddress, isLocked, isSpamTrap, take } from "@/lib/security/limit";
+import { hashPassword, unknownPasswordHash, verifyPassword } from "./password";
 import { clearSession, createSession, safeNext } from "./session";
 
 const registerSchema = z.object({
@@ -14,6 +15,7 @@ const registerSchema = z.object({
   password: z.string().min(8).max(128),
   confirm: z.string(),
   next: z.string().optional(),
+  company: z.string().max(200).optional(),
 });
 
 const loginSchema = z.object({
@@ -21,9 +23,10 @@ const loginSchema = z.object({
   email: z.email().max(190),
   password: z.string().min(1).max(128),
   next: z.string().optional(),
+  company: z.string().max(200).optional(),
 });
 
-export type AuthField = "name" | "email" | "password" | "confirm" | "credentials" | "taken" | "failed" | "banned";
+export type AuthField = "name" | "email" | "password" | "confirm" | "credentials" | "taken" | "failed" | "banned" | "locked";
 
 export type AuthResult = { ok: true; href: string } | { ok: false; field: AuthField };
 
@@ -36,7 +39,10 @@ export async function registerAccount(input: unknown): Promise<AuthResult> {
   const parsed = registerSchema.safeParse(input);
   if (!parsed.success) return { ok: false, field: fieldFrom(parsed.error.issues[0]?.path[0]) };
   const data = parsed.data;
+  const allowed = await take("register-ip", await clientAddress(), buckets.registerIp);
+  if (!allowed) return { ok: false, field: "locked" };
   if (data.password !== data.confirm) return { ok: false, field: "confirm" };
+  if (isSpamTrap(data.company)) return { ok: false, field: "failed" };
 
   const email = data.email.toLowerCase();
   const existing = await prisma.user.findUnique({ where: { email } });
@@ -59,11 +65,20 @@ export async function loginAccount(input: unknown): Promise<AuthResult> {
   if (!parsed.success) return { ok: false, field: fieldFrom(parsed.error.issues[0]?.path[0]) };
   const data = parsed.data;
   const email = data.email.toLowerCase();
+  const ip = await clientAddress();
+  if ((await isLocked("login-email", email)) || (await isLocked("login-ip", ip))) {
+    return { ok: false, field: "locked" };
+  }
   const user = await prisma.user.findUnique({ where: { email } });
-  if (!user || !(await verifyPassword(data.password, user.passwordHash))) {
-    return { ok: false, field: "credentials" };
+  const passwordMatches = await verifyPassword(data.password, user?.passwordHash ?? unknownPasswordHash);
+  if (!user || !passwordMatches || isSpamTrap(data.company)) {
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    const emailAllowed = await take("login-email", email, buckets.loginEmail);
+    const ipAllowed = await take("login-ip", ip, buckets.loginIp);
+    return { ok: false, field: emailAllowed && ipAllowed ? "credentials" : "locked" };
   }
   if (user.banned) return { ok: false, field: "banned" };
+  await clearLimit("login-email", email);
   await createSession(user.id);
   const fallback = user.role === "ADMIN" ? `/${data.locale}/admin` : `/${data.locale}/account`;
   return { ok: true, href: safeNext(data.next, fallback) };

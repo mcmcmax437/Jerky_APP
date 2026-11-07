@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ShopCard } from "@/components/shop/ShopCard";
+import { meatTypes, type MeatTypeName } from "@/features/admin/recipe";
 import type { CatalogProduct } from "@/features/catalog/types";
 import type { Locale } from "@/lib/i18n/locales";
 import type { Dictionary } from "@/lib/i18n/types";
@@ -30,6 +31,7 @@ export function ShopCatalog({
   criteria?: boolean;
 }) {
   const [flavors, setFlavors] = useState<FlavorName[]>([]);
+  const [meats, setMeats] = useState<MeatTypeName[]>([]);
   const [priced, setPriced] = useState<PriceFilter>("any");
   const [query, setQuery] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -52,14 +54,15 @@ export function ShopCatalog({
     const needle = query.trim().toLocaleLowerCase(locale);
     const filtered = products.filter((product) => {
       const flavorOk = flavors.length === 0 || flavors.includes(flavorOf[product.accent]);
+      const meatOk = meats.length === 0 || (product.meat != null && meats.includes(product.meat));
       const nameOk = needle.length === 0 || product.name.toLocaleLowerCase(locale).includes(needle);
       const priceOk = priced === "any" || (priced === "set" ? product.priceMinor != null : product.priceMinor == null);
-      return flavorOk && nameOk && priceOk;
+      return flavorOk && meatOk && nameOk && priceOk;
     });
     if (sort === "name") return [...filtered].sort((a, b) => a.name.localeCompare(b.name, locale));
     return filtered;
-  }, [flavors, locale, priced, products, query, sort]);
-  const filtersActive = (query.trim() ? 1 : 0) + (flavors.length > 0 ? 1 : 0) + (priced !== "any" ? 1 : 0);
+  }, [flavors, locale, meats, priced, products, query, sort]);
+  const filtersActive = (query.trim() ? 1 : 0) + (flavors.length > 0 ? 1 : 0) + (meats.length > 0 ? 1 : 0) + (priced !== "any" ? 1 : 0);
 
   useEffect(() => {
     if (!filterOpen) return;
@@ -124,7 +127,7 @@ export function ShopCatalog({
                   {filtersActive > 0 ? <span className="rounded-full bg-white/15 px-1.5 text-[10px]">{filtersActive}</span> : null}
                 </button>
                 {filterOpen ? (
-                  <div id="shop-filter" className="absolute right-0 z-30 mt-2 w-[min(20rem,calc(100vw-2.5rem))] rounded-2xl border border-ink-800/10 bg-ivory-100 p-4 text-text-dark shadow-[0_24px_50px_rgba(0,0,0,0.18)]">
+                  <div id="shop-filter" className="absolute right-0 z-30 mt-2 max-h-[min(32rem,calc(100vh-8rem))] w-[min(20rem,calc(100vw-2.5rem))] overflow-y-auto rounded-2xl border border-ink-800/10 bg-ivory-100 p-4 text-text-dark shadow-[0_24px_50px_rgba(0,0,0,0.18)]">
                     <label className="block text-[13px] font-semibold uppercase tracking-[1.5px]">
                       {dict.shop.search}
                       <input
@@ -157,6 +160,24 @@ export function ShopCatalog({
                       </div>
                     </fieldset>
                     <fieldset className="mt-4">
+                      <legend className="text-[13px] font-semibold uppercase tracking-[1.5px]">{dict.shop.meat}</legend>
+                      <div className="mt-2 grid gap-2">
+                        {meatTypes.map((meat) => (
+                          <label key={meat} className="flex items-center gap-2 text-base font-normal tracking-normal normal-case">
+                            <input
+                              type="checkbox"
+                              checked={meats.includes(meat)}
+                              onChange={() =>
+                                setMeats((current) => (current.includes(meat) ? current.filter((item) => item !== meat) : [...current, meat]))
+                              }
+                              className="h-4 w-4 accent-[#2a241f]"
+                            />
+                            {dict.admin.terminal.recipe.meats[meat]}
+                          </label>
+                        ))}
+                      </div>
+                    </fieldset>
+                    <fieldset className="mt-4">
                       <legend className="text-[13px] font-semibold uppercase tracking-[1.5px]">{dict.shop.price}</legend>
                       <div className="mt-2 grid gap-2">
                         {(
@@ -184,6 +205,7 @@ export function ShopCatalog({
                       onClick={() => {
                         setQuery("");
                         setFlavors([]);
+                        setMeats([]);
                         setPriced("any");
                       }}
                       className="mt-4 text-[13px] font-semibold uppercase tracking-[1.5px] text-text-dark/70"
@@ -228,7 +250,7 @@ export function ShopCatalog({
           </div>
         </div>
         {visible.length === 0 ? <p className="mt-8 text-base text-muted">{dict.shop.empty}</p> : null}
-        <div key={`${flavors.join()}-${priced}-${sort}-${view}`} className={view === "grid" ? "rise mt-8 grid gap-6 md:grid-cols-3" : "rise mt-8 grid gap-4"}>
+        <div key={`${flavors.join()}-${meats.join()}-${priced}-${sort}-${view}`} className={view === "grid" ? "rise mt-8 grid gap-6 md:grid-cols-3" : "rise mt-8 grid gap-4"}>
           {visible.map((product) => (
             <ShopCard key={product.slug} product={product} locale={locale} dict={dict} view={view} />
           ))}

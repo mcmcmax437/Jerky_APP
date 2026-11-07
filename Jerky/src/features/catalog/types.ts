@@ -4,6 +4,8 @@ export type CatalogImage = {
   placeholder: boolean;
 };
 
+import type { MeatTypeName } from "@/features/admin/recipe";
+
 export type CatalogProduct = {
   slug: string;
   name: string;
@@ -13,6 +15,7 @@ export type CatalogProduct = {
   priceMinor: number | null;
   currency: string;
   accent: "bone" | "teriyaki" | "chili";
+  meat: MeatTypeName | null;
   images: CatalogImage[];
   approvedReviewCount: number;
   averageRating: number | null;

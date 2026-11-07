@@ -65,6 +65,7 @@ export type Dictionary = {
     search: string;
     searchPlaceholder: string;
     flavor: string;
+    meat: string;
     size: string;
     price: string;
     priceAny: string;
@@ -172,6 +173,7 @@ export type Dictionary = {
       postalCode: string;
       addressLine: string;
       items: string;
+      limited: string;
     };
   };
   order: {
@@ -210,6 +212,7 @@ export type Dictionary = {
       taken: string;
       failed: string;
       banned: string;
+      locked: string;
     };
   };
   account: {
@@ -256,6 +259,7 @@ export type Dictionary = {
       taken: string;
       message: string;
       failed: string;
+      locked: string;
     };
     customer: string;
     admin: string;

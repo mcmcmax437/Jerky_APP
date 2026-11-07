@@ -60,6 +60,7 @@
     "search": "Search",
     "searchPlaceholder": "Flavor name",
     "flavor": "Flavor",
+    "meat": "Meat",
     "size": "Size",
     "price": "Price",
     "priceAny": "Any",
@@ -205,7 +206,8 @@
       "city": "Enter a city.",
       "postalCode": "Enter a postal code.",
       "addressLine": "Enter an address.",
-      "items": "The cart is empty or the product is unavailable."
+      "items": "The cart is empty or the product is unavailable.",
+      "limited": "Too many orders from this address. Wait and try again."
     }
   },
   "order": {
@@ -247,7 +249,8 @@
       "credentials": "The email or password is wrong.",
       "taken": "This account already exists.",
       "failed": "Could not save. Try again.",
-      "banned": "This account is blocked."
+      "banned": "This account is blocked.",
+      "locked": "Too many attempts. Wait and try again."
     }
   },
   "account": {
@@ -293,7 +296,8 @@
       "current": "The current password is wrong.",
       "taken": "That email is already on another account.",
       "message": "Write a message.",
-      "failed": "Could not save. Try again."
+      "failed": "Could not save. Try again.",
+      "locked": "Too many attempts. Wait and try again."
     },
     "customer": "Customer",
     "admin": "Administrator",

@@ -1,6 +1,28 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+const floodWindowMs = 10_000;
+const floodMax = 120;
+const floods = new Map<string, { count: number; start: number }>();
+
+function flooded(request: NextRequest) {
+  const now = Date.now();
+  const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  const ip = forwarded && forwarded.length <= 80 ? forwarded : "local";
+  const current = floods.get(ip);
+  if (!current || now - current.start > floodWindowMs) {
+    floods.set(ip, { count: 1, start: now });
+    if (floods.size > 5000) {
+      for (const [key, value] of floods) {
+        if (now - value.start > floodWindowMs) floods.delete(key);
+      }
+    }
+    return false;
+  }
+  current.count += 1;
+  return current.count > floodMax;
+}
+
 const locales = ["pl", "uk", "en"] as const;
 type Locale = (typeof locales)[number];
 
@@ -11,6 +33,9 @@ function localeFromPath(pathname: string): Locale | undefined {
 }
 
 export function proxy(request: NextRequest) {
+  if (flooded(request)) {
+    return new NextResponse("Too many requests", { status: 429, headers: { "Retry-After": "10" } });
+  }
   const { pathname } = request.nextUrl;
   const existing = localeFromPath(pathname);
 
