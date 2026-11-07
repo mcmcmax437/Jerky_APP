@@ -16,7 +16,7 @@ export function AddToCart({
   note: string;
 }) {
   const { add } = useCart();
-  const [added, setAdded] = useState(false);
+  const [added, setAdded] = useState(0);
 
   return (
     <>
@@ -26,13 +26,15 @@ export function AddToCart({
         aria-describedby="cart-note"
         onClick={() => {
           add(slug, 1);
-          setAdded(true);
+          setAdded((current) => current + 1);
         }}
       >
-        {label}
+        <span key={added} className={added > 0 ? "cart-bag-pop inline-flex" : "inline-flex"}>
+          {added > 0 ? addedLabel : label}
+        </span>
       </Button>
       <p id="cart-note" className="mt-4 text-base leading-relaxed text-text-dark/80" role="status">
-        {added ? addedLabel : note}
+        {added > 0 ? addedLabel : note}
       </p>
     </>
   );

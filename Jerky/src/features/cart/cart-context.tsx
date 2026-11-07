@@ -5,6 +5,7 @@ import { MAX_QUANTITY, type CartLine } from "@/features/cart/quote";
 
 const storageKey = "jerky-cart-v1";
 const changeEvent = "jerky-cart-change";
+const addedEvent = "jerky-cart-added";
 
 type CartContextValue = {
   lines: CartLine[];
@@ -70,13 +71,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
       lines,
       count: lines.reduce((sum, line) => sum + line.quantity, 0),
       add(slug, quantity = 1) {
+        const amount = Math.min(Math.max(Math.floor(quantity) || 1, 1), MAX_QUANTITY);
         const current = lines.find((line) => line.slug === slug);
-        const nextQuantity = Math.min((current?.quantity ?? 0) + quantity, MAX_QUANTITY);
+        const nextQuantity = Math.min((current?.quantity ?? 0) + amount, MAX_QUANTITY);
+        const added = nextQuantity - (current?.quantity ?? 0);
         commit(
           current
             ? lines.map((line) => (line.slug === slug ? { ...line, quantity: nextQuantity } : line))
-            : [...lines, { slug, quantity: Math.min(Math.max(quantity, 1), MAX_QUANTITY) }],
+            : [...lines, { slug, quantity: nextQuantity }],
         );
+        if (added > 0) window.dispatchEvent(new CustomEvent(addedEvent, { detail: { quantity: added } }));
       },
       setQuantity(slug, quantity) {
         const safe = Math.floor(quantity);

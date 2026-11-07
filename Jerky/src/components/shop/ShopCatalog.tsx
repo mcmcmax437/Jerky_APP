@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/brand/Icon";
 import { Price } from "@/components/product/Price";
@@ -132,6 +132,15 @@ function ShopCard({
 }) {
   const { add } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const [addedTick, setAddedTick] = useState(0);
+  const [showAdded, setShowAdded] = useState(false);
+
+  useEffect(() => {
+    if (addedTick === 0) return;
+    setShowAdded(true);
+    const timer = window.setTimeout(() => setShowAdded(false), 1100);
+    return () => window.clearTimeout(timer);
+  }, [addedTick]);
   const src = product.images[0]?.src ?? catalogPackshot(product.slug);
   const badge = product.accent === "bone" ? dict.home.classic : product.accent === "teriyaki" ? dict.home.sweet : dict.home.hot;
   const list = view === "list";
@@ -161,15 +170,34 @@ function ShopCard({
           </div>
           <button
             type="button"
-            aria-label={dict.product.add}
-            onClick={() => add(product.slug, quantity)}
-            className="press grid h-11 w-11 place-items-center rounded-xl bg-[#c4a574] text-[#1b1714] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
+            aria-label={showAdded ? dict.product.added : dict.product.add}
+            onClick={() => {
+              add(product.slug, quantity);
+              setAddedTick((current) => current + 1);
+            }}
+            className={`press relative grid h-11 w-11 place-items-center rounded-xl text-[#1b1714] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper ${showAdded ? "bg-[#efe2cf]" : "bg-[#c4a574]"}`}
           >
-            <Icon name="shopping-bag-01" />
+            {showAdded ? <AddedMark /> : <Icon name="shopping-bag-01" />}
+            {showAdded ? (
+              <span key={addedTick} className="cart-float pointer-events-none absolute top-0 left-1/2 rounded-full bg-[#2a241f] px-2.5 py-1 text-[12px] font-semibold whitespace-nowrap text-[#f6f1ea]">
+                +{quantity}
+              </span>
+            ) : null}
           </button>
+          <p className="sr-only" role="status">
+            {showAdded ? dict.product.added : ""}
+          </p>
         </div>
       </div>
     </article>
+  );
+}
+
+function AddedMark() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
+      <path d="M5 12.5 9.2 17 19 7" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
