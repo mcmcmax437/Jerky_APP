@@ -63,7 +63,7 @@ export function ShopCatalog({
                   type="button"
                   aria-pressed={active}
                   onClick={() => setFlavor(item.id)}
-                  className={`press inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper ${
+                  className={`press inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-[13px] font-semibold uppercase tracking-[1.5px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper ${
                     active ? "bg-[#2a241f] text-[#f6f1ea]" : "border border-ink-800/10 bg-white/40 text-text-dark hover:border-ink-800/30"
                   }`}
                 >
@@ -75,7 +75,7 @@ export function ShopCatalog({
             })}
           </div>
           <div className="flex items-center gap-2">
-            <label className="inline-flex items-center gap-2 rounded-full border border-ink-800/10 bg-white/50 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
+            <label className="inline-flex items-center gap-2 rounded-full border border-ink-800/10 bg-white/50 px-3 py-2 text-[13px] font-semibold uppercase tracking-[1.5px] text-muted">
               <span>{dict.home.sortLabel}:</span>
               <select
                 value={sort}
@@ -108,7 +108,7 @@ export function ShopCatalog({
             </div>
           </div>
         </div>
-        {visible.length === 0 ? <p className="mt-8 text-sm text-muted">{dict.shop.empty}</p> : null}
+        {visible.length === 0 ? <p className="mt-8 text-base text-muted">{dict.shop.empty}</p> : null}
         <div key={`${flavor}-${sort}-${view}`} className={view === "grid" ? "rise mt-8 grid gap-6 md:grid-cols-3" : "rise mt-8 grid gap-4"}>
           {visible.map((product) => (
             <ShopCard key={product.slug} product={product} locale={locale} dict={dict} view={view} />
@@ -141,14 +141,14 @@ function ShopCard({
       <Link href={`/${locale}/product/${product.slug}`} aria-label={product.name} className="relative block overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={src} alt="" className={`w-full object-cover transition duration-700 ease-out group-hover:scale-[1.06] ${list ? "aspect-[4/3] md:aspect-[9/8] md:h-full" : "aspect-[9/8]"}`} />
-        <span className="absolute top-3 right-3 rounded-full bg-black/55 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#f6f1ea]">
+        <span className="absolute top-3 right-3 rounded-full bg-black/55 px-2.5 py-1 text-xs font-semibold uppercase tracking-[1.5px] text-[#f6f1ea]">
           {badge}
         </span>
       </Link>
       <div className="flex flex-col gap-3 p-4 md:p-5">
-        <h2 className="font-display text-4xl leading-none font-medium">{product.name}</h2>
-        <p className="line-clamp-3 text-sm leading-relaxed text-[#f6f1ea]/70">{product.card || product.profile}</p>
-        <Price amountMinor={product.priceMinor} locale={locale} comingSoon={dict.price.comingSoon} className="font-display text-3xl text-[#f3e2cc]" />
+        <h2 className="font-display text-[28px] leading-none font-medium md:text-[34px]">{product.name}</h2>
+        <p className="line-clamp-3 text-base leading-relaxed text-[#f6f1ea]/70">{product.card || product.profile}</p>
+        <Price amountMinor={product.priceMinor} locale={locale} comingSoon={dict.price.comingSoon} className="text-[#f3e2cc]" />
         <div className="mt-auto flex items-center gap-2 pt-1">
           <div className="flex h-11 flex-1 items-center justify-between rounded-full bg-black/35 px-2">
             <button type="button" aria-label={`${dict.cart.quantity} −`} onClick={() => setQuantity((current) => Math.max(1, current - 1))} className="grid h-8 w-8 place-items-center text-lg">

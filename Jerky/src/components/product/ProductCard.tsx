@@ -35,11 +35,11 @@ export function ProductCard({
         </div>
         <div className="flex flex-1 flex-col gap-4 p-5 md:p-6">
           <div className="flex items-start justify-between gap-4">
-            <h3 className="font-display text-4xl leading-none font-medium">{product.name}</h3>
+            <h3 className="font-display text-[28px] leading-none font-medium md:text-[34px]">{product.name}</h3>
             <Badge accent={product.accent} />
           </div>
           <p className="text-sm text-text-light/70">{formatWeight(product.netWeightG, locale)}</p>
-          <p className="line-clamp-4 text-sm leading-relaxed text-text-light/75">{product.card || product.profile}</p>
+          <p className="line-clamp-4 text-base leading-relaxed text-text-light/75">{product.card || product.profile}</p>
           <div className="mt-auto flex items-center justify-between pt-2 text-sm">
             <Price
               amountMinor={product.priceMinor}
@@ -47,7 +47,7 @@ export function ProductCard({
               comingSoon={dict.price.comingSoon}
               className="text-text-light"
             />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-copper">
+            <span className="text-[13px] font-semibold uppercase tracking-[1.5px] text-copper">
               {dict.shop.view}
             </span>
           </div>

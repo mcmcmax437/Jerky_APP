@@ -30,7 +30,7 @@ export function SiteNav({ locale, dict }: { locale: Locale; dict: Dictionary }) 
             key={item.href}
             href={target}
             aria-current={active ? "page" : undefined}
-            className={`press relative inline-block text-[11px] font-semibold uppercase tracking-[0.22em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-copper ${
+            className={`press relative inline-block text-[13px] font-semibold uppercase tracking-[1.5px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-copper ${
               active
                 ? "text-text-light after:absolute after:inset-x-0 after:-bottom-3 after:h-px after:bg-copper"
                 : "text-text-light/70 hover:text-text-light"

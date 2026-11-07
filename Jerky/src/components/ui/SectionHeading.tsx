@@ -15,12 +15,12 @@ export function SectionHeading({
   return (
     <div className="max-w-2xl">
       {eyebrow ? (
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-copper">{eyebrow}</p>
+        <p className="text-[13px] font-semibold uppercase tracking-[1.5px] text-copper">{eyebrow}</p>
       ) : null}
-      <h2 className={`mt-3 font-display text-4xl leading-[0.95] font-medium md:text-6xl ${titleColor}`}>
+      <h2 className={`mt-3 font-display text-[42px] leading-[1.05] font-medium md:text-[48px] ${titleColor}`}>
         {title}
       </h2>
-      {lede ? <p className={`mt-5 max-w-xl text-base leading-relaxed ${ledeColor}`}>{lede}</p> : null}
+      {lede ? <p className={`mt-5 max-w-xl text-lg leading-relaxed ${ledeColor}`}>{lede}</p> : null}
     </div>
   );
 }

@@ -48,7 +48,7 @@ export default async function OrderConfirmationPage({
           {order.items.map((item) => (
             <li key={item.id} className="flex items-start justify-between gap-6 py-4">
               <div>
-                <p className="font-display text-3xl">{item.name}</p>
+                <p className="font-display text-[28px] leading-none font-medium md:text-[34px]">{item.name}</p>
                 <p className="mt-1 text-sm text-text-dark/70">
                   {formatWeight(item.netWeightG, locale)} · {item.quantity}
                 </p>
@@ -62,7 +62,7 @@ export default async function OrderConfirmationPage({
           ))}
         </ul>
         <div className="flex max-w-xl items-center justify-between">
-          <span className="text-xs font-semibold uppercase tracking-[0.16em]">{dict.cart.total}</span>
+          <span className="text-[13px] font-semibold uppercase tracking-[1.5px]">{dict.cart.total}</span>
           <Price amountMinor={order.totalMinor} locale={locale} comingSoon={dict.price.comingSoon} />
         </div>
         <div>

@@ -18,12 +18,12 @@ export function CatalogHero({
       <div className="absolute inset-0 flex items-center">
         <div className="mx-auto w-full max-w-6xl px-5 md:px-10">
           <div className="rise max-w-md">
-            <p className="flex items-center gap-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-copper">
+            <p className="flex items-center gap-4 text-[13px] font-semibold uppercase tracking-[1.5px] text-copper">
               {eyebrow}
               <span className="h-px w-12 bg-copper" aria-hidden="true" />
             </p>
-            <h1 className="mt-5 font-display text-6xl leading-[0.92] font-medium md:text-7xl">{title}</h1>
-            {lede ? <p className="mt-5 max-w-sm text-base leading-relaxed text-text-light/75">{lede}</p> : null}
+            <h1 className="mt-5 font-display text-[64px] leading-[0.95] font-medium md:text-[76px]">{title}</h1>
+            {lede ? <p className="mt-5 max-w-sm text-lg leading-relaxed text-text-light/75">{lede}</p> : null}
           </div>
         </div>
       </div>

@@ -52,7 +52,7 @@ export function CartView({ locale, dict }: { locale: Locale; dict: Dictionary })
                 <div className="h-24 w-24 bg-ink-800" />
               )}
               <div>
-                <h2 className="font-display text-3xl">{priced?.name ?? line.slug}</h2>
+                <h2 className="font-display text-[28px] leading-none font-medium md:text-[34px]">{priced?.name ?? line.slug}</h2>
                 <p className="mt-1 text-sm text-text-dark/70">
                   {formatWeight(priced?.netWeightG ?? 100, locale)}
                 </p>
@@ -77,7 +77,7 @@ export function CartView({ locale, dict }: { locale: Locale; dict: Dictionary })
                 <button
                   type="button"
                   onClick={() => remove(line.slug)}
-                  className="text-xs font-semibold uppercase tracking-[0.16em] text-text-dark/70 hover:text-text-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
+                  className="text-[13px] font-semibold uppercase tracking-[1.5px] text-text-dark/70 hover:text-text-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
                 >
                   {dict.cart.remove}
                 </button>
@@ -88,7 +88,7 @@ export function CartView({ locale, dict }: { locale: Locale; dict: Dictionary })
       </ul>
       <aside className="h-fit border border-ink-800/10 bg-ivory-200 p-5">
         <div className="flex items-center justify-between gap-4">
-          <span className="text-xs font-semibold uppercase tracking-[0.16em]">{dict.cart.total}</span>
+          <span className="text-[13px] font-semibold uppercase tracking-[1.5px]">{dict.cart.total}</span>
           <Price
             amountMinor={quote?.totalMinor ?? null}
             locale={locale}
@@ -96,15 +96,15 @@ export function CartView({ locale, dict }: { locale: Locale; dict: Dictionary })
           />
         </div>
         {quote?.pricePending ? (
-          <p className="mt-4 text-sm leading-relaxed text-text-dark/80">{dict.cart.pricePending}</p>
+          <p className="mt-4 text-base leading-relaxed text-text-dark/80">{dict.cart.pricePending}</p>
         ) : null}
-        <p className="mt-4 text-sm leading-relaxed text-text-dark/80">{dict.cart.note}</p>
+        <p className="mt-4 text-base leading-relaxed text-text-dark/80">{dict.cart.note}</p>
         <div className="mt-6">
           <Button href={`/${locale}/checkout`} tone="light" className="w-full">
             {dict.cart.checkout}
           </Button>
         </div>
-        <Link href={`/${locale}/shop`} className="mt-4 inline-block text-xs font-semibold uppercase tracking-[0.16em]">
+        <Link href={`/${locale}/shop`} className="mt-4 inline-block text-[13px] font-semibold uppercase tracking-[1.5px]">
           {dict.cart.toShop}
         </Link>
       </aside>

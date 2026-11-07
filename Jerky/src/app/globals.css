@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-manrope), "Manrope", sans-serif;
-  --font-display: var(--font-cormorant), "Cormorant Garamond", serif;
+  --font-sans: var(--font-inter), "Inter", sans-serif;
+  --font-display: var(--font-playfair), "Playfair Display", serif;
   --color-ink-950: #101010;
   --color-ink-900: #171717;
   --color-ink-800: #242321;
@@ -25,7 +25,9 @@ html {
 body {
   background: #f2eee7;
   color: #242321;
-  font-family: var(--font-sans), "Manrope", sans-serif;
+  font-family: var(--font-sans), "Inter", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
   text-rendering: optimizeLegibility;
 }
 

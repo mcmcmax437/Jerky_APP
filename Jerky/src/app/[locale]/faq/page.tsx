@@ -25,10 +25,10 @@ export default async function FaqPage({
         <div className="max-w-3xl divide-y divide-ink-800/10 border-y border-ink-800/10">
           {dict.faq.items.map((item) => (
             <details key={item.q} className="group py-5">
-              <summary className="cursor-pointer list-none font-display text-3xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-copper">
+              <summary className="cursor-pointer list-none font-display text-[42px] leading-[1.05] font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-copper md:text-[48px]">
                 {item.q}
               </summary>
-              <p className="mt-3 max-w-2xl leading-relaxed text-text-dark/80">{item.a}</p>
+              <p className="mt-3 max-w-2xl text-lg leading-relaxed text-text-dark/80">{item.a}</p>
             </details>
           ))}
         </div>

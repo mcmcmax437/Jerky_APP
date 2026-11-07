@@ -13,8 +13,8 @@ export default function NotFound() {
       <ul className="mt-6 grid max-w-xl gap-4">
         {(Object.keys(copy) as Array<keyof typeof copy>).map((locale) => (
           <li key={locale}>
-            <p className="font-display text-4xl">{copy[locale].title}</p>
-            <Link href={`/${locale}`} className="mt-2 inline-block text-sm uppercase tracking-[0.16em] text-ivory-200">
+            <p className="font-display text-[42px] leading-[1.05] font-medium">{copy[locale].title}</p>
+            <Link href={`/${locale}`} className="mt-2 inline-block text-[13px] font-semibold uppercase tracking-[1.5px] text-ivory-200">
               {copy[locale].back}
             </Link>
           </li>

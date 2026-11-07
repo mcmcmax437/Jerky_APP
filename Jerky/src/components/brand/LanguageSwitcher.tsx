@@ -23,7 +23,7 @@ export function LanguageSwitcher({
   const rest = pathname.replace(/^\/(pl|uk|en)(?=\/|$)/, "") || "";
 
   return (
-    <nav aria-label={label} className="flex items-center gap-1 text-[11px] tracking-[0.18em]">
+    <nav aria-label={label} className="flex items-center gap-1 text-[13px] tracking-[1.5px]">
       {order.map((item) => {
         const active = item === locale;
         return (

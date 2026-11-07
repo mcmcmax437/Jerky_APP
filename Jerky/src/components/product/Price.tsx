@@ -13,7 +13,7 @@ export function Price({
   className?: string;
 }) {
   return (
-    <p className={`tabular-nums tracking-wide ${className}`}>
+    <p className={`font-sans text-lg font-semibold tabular-nums ${className}`}>
       {formatPrice(amountMinor, locale, comingSoon)}
     </p>
   );

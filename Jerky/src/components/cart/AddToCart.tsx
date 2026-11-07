@@ -31,7 +31,7 @@ export function AddToCart({
       >
         {label}
       </Button>
-      <p id="cart-note" className="mt-4 text-sm leading-relaxed text-text-dark/80" role="status">
+      <p id="cart-note" className="mt-4 text-base leading-relaxed text-text-dark/80" role="status">
         {added ? addedLabel : note}
       </p>
     </>

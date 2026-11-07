@@ -215,11 +215,11 @@ export function ProductBoard({
               </div>
               <div className="flex items-center gap-2 pt-4">
                 <SlotMark slot={slotOf(product.id)} />
-                <h2 className="truncate font-display text-3xl leading-none">{product.name}</h2>
+                <h2 className="truncate font-display text-[28px] leading-none font-medium md:text-[34px]">{product.name}</h2>
               </div>
               <div className="flex items-center justify-between gap-2 pt-3 text-sm">
                 <Price amountMinor={product.priceMinor} locale={locale} comingSoon={dict.price.comingSoon} />
-                <Link href={`/${locale}/admin/products/${product.id}`} className="press inline-block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e7d3bc]">
+                <Link href={`/${locale}/admin/products/${product.id}`} className="press inline-block text-[13px] font-semibold uppercase tracking-[1.5px] text-[#e7d3bc]">
                   {dict.admin.editAction}
                 </Link>
               </div>

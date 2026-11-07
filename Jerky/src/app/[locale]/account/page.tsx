@@ -41,12 +41,12 @@ export default async function AccountPage({
         <div className="flex flex-wrap gap-4">
           <form action={logoutAccount}>
             <input type="hidden" name="locale" value={locale} />
-            <button type="submit" className="border border-ink-800/30 px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em]">
+            <button type="submit" className="border border-ink-800/30 px-5 py-3 text-[13px] font-semibold uppercase tracking-[1.5px] md:text-[14px]">
               {dict.auth.logout}
             </button>
           </form>
         </div>
-        <h2 className="font-display text-4xl">{dict.account.orders}</h2>
+        <h2 className="font-display text-[42px] leading-[1.05] font-medium md:text-[48px]">{dict.account.orders}</h2>
         {orders.length === 0 ? <p>{dict.account.empty}</p> : null}
         <ul className="divide-y divide-ink-800/10 border-y border-ink-800/10">
           {orders.map((order) => (

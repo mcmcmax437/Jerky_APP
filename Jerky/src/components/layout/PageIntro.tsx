@@ -13,9 +13,9 @@ export function PageIntro({
   return (
     <section className="bg-ink-950 text-text-light">
       <Container className="rise py-16 md:py-24">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-copper">{eyebrow}</p>
-        <h1 className="mt-4 max-w-3xl font-display text-5xl leading-[0.95] font-medium md:text-7xl">{title}</h1>
-        {lede ? <p className="mt-6 max-w-xl text-base leading-relaxed text-text-light/75">{lede}</p> : null}
+        <p className="text-[13px] font-semibold uppercase tracking-[1.5px] text-copper">{eyebrow}</p>
+        <h1 className="mt-4 max-w-3xl font-display text-[64px] leading-[0.95] font-medium md:text-[76px]">{title}</h1>
+        {lede ? <p className="mt-6 max-w-xl text-lg leading-relaxed text-text-light/75">{lede}</p> : null}
       </Container>
     </section>
   );

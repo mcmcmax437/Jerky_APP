@@ -11,9 +11,9 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
         <div className="flex flex-wrap items-center justify-center gap-5">
           <LogoMark className="h-4 w-4" />
           <span className="hidden h-px w-10 bg-copper sm:block" aria-hidden="true" />
-          <p className="text-center text-[11px] font-semibold uppercase tracking-[0.28em]">{dict.footer.tagline}</p>
+          <p className="text-center text-[13px] font-semibold uppercase tracking-[1.5px]">{dict.footer.tagline}</p>
         </div>
-        <nav aria-label={dict.footer.privacy} className="flex gap-6 text-[11px] uppercase tracking-[0.16em] text-muted">
+        <nav aria-label={dict.footer.privacy} className="flex gap-6 text-[13px] uppercase tracking-[1.5px] text-muted">
           <Link href={`/${locale}/privacy`} className="hover:text-text-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-copper">
             {dict.footer.privacy}
           </Link>
