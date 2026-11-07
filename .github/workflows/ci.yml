@@ -52,7 +52,7 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
           ssh_opts="-i $HOME/.ssh/deploy_key -o IdentitiesOnly=yes"
-          ssh $ssh_opts "$SSH_USER@$SSH_HOST" "mkdir -p /usr/src/Jerky_web/Jerky_APP/Jerky"
+          ssh $ssh_opts "$SSH_USER@$SSH_HOST" "mkdir -p /usr/src/Jerky_web/Jerky_APP/Jerky && cd /usr/src/Jerky_web/Jerky_APP/Jerky && find . -mindepth 1 -maxdepth 1 ! -name .env ! -name node_modules ! -name .next ! -name storage ! -name .deploy-port -exec rm -rf {} +"
           tar -czf - \
             --exclude .git \
             --exclude node_modules \
