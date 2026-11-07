@@ -318,6 +318,6 @@ export async function listAccountOrders(userId: string, email: string) {
   return prisma.order.findMany({
     where: { OR: [{ userId }, { email }] },
     orderBy: { createdAt: "desc" },
-    include: { items: { select: { name: true, quantity: true } } },
+    include: { items: { select: { name: true, quantity: true, slug: true } } },
   });
 }

@@ -23,6 +23,10 @@ export function formatWeight(grams: number, locale: Locale): string {
   return `${new Intl.NumberFormat(localeTag(locale)).format(grams)}\u00a0g`;
 }
 
+export function formatDate(value: Date, locale: Locale): string {
+  return new Intl.DateTimeFormat(localeTag(locale), { dateStyle: "long" }).format(value);
+}
+
 export function formatDateTime(value: Date, locale: Locale): string {
   return new Intl.DateTimeFormat(localeTag(locale), {
     dateStyle: "medium",
