@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { AccountSettings } from "@/components/account/AccountSettings";
 import { logoutAccount } from "@/features/auth/actions";
 import { Icon } from "@/components/brand/Icon";
 import { Price } from "@/components/product/Price";
@@ -13,6 +14,12 @@ import type { Dictionary } from "@/lib/i18n/types";
 const sectionIds = ["overview", "orders", "saved", "addresses", "payments", "discounts", "settings"] as const;
 
 type SectionId = (typeof sectionIds)[number];
+
+type DeskMessage = {
+  id: string;
+  body: string;
+  dateLabel: string;
+};
 
 type DeskOrder = {
   id: string;
@@ -48,15 +55,23 @@ export function AccountDesk({
   copy,
   logoutLabel,
   comingSoon,
+  pendingLabel,
+  confirmLabel,
+  name,
   email,
   orders,
+  messages,
 }: {
   locale: Locale;
   copy: Dictionary["account"];
   logoutLabel: string;
   comingSoon: string;
+  pendingLabel: string;
+  confirmLabel: string;
+  name: string;
   email: string;
   orders: DeskOrder[];
+  messages: DeskMessage[];
 }) {
   const [section, setSection] = useState<SectionId>("overview");
   const sections: { id: SectionId; label: string; icon: string }[] = [
@@ -152,11 +167,7 @@ export function AccountDesk({
         {section === "discounts" ? <QuietCard title={copy.discounts} body={copy.discountsBody} icon="discount" /> : null}
 
         {section === "settings" ? (
-          <section className="rounded-2xl border border-ink-800/10 bg-white/70 p-5">
-            <h2 className="font-display text-[28px] leading-none font-medium">{copy.settings}</h2>
-            <p className="mt-3 text-base text-text-dark/75">{copy.settingsBody}</p>
-            <p className="mt-2 font-semibold">{email}</p>
-          </section>
+          <AccountSettings name={name} email={email} copy={copy} pendingLabel={pendingLabel} confirmLabel={confirmLabel} messages={messages} />
         ) : null}
       </div>
     </div>

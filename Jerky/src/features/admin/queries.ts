@@ -299,6 +299,14 @@ export async function listPurchases() {
   });
 }
 
+export function listSupportMessages() {
+  return prisma.supportMessage.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 100,
+    select: { id: true, name: true, email: true, body: true, createdAt: true },
+  });
+}
+
 export async function listAdminUsers() {
   return prisma.user.findMany({
     orderBy: { createdAt: "desc" },

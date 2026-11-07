@@ -27,12 +27,14 @@ export function AccountHome({
   name,
   email,
   orders,
+  messages,
 }: {
   locale: Locale;
   dict: Dictionary;
   name: string;
   email: string;
   orders: AccountOrder[];
+  messages: { id: string; body: string; createdAt: Date }[];
 }) {
   const copy = dict.account;
 
@@ -62,6 +64,9 @@ export function AccountHome({
         copy={copy}
         logoutLabel={dict.auth.logout}
         comingSoon={dict.price.comingSoon}
+        pendingLabel={dict.auth.pending}
+        confirmLabel={dict.auth.confirm}
+        name={name}
         email={email}
         orders={orders.map((order) => ({
           id: order.id,
@@ -72,6 +77,11 @@ export function AccountHome({
           dateLabel: formatDate(order.createdAt, locale),
           totalMinor: order.totalMinor,
           slug: order.items[0]?.slug ?? null,
+        }))}
+        messages={messages.map((item) => ({
+          id: item.id,
+          body: item.body,
+          dateLabel: formatDate(item.createdAt, locale),
         }))}
       />
     </div>

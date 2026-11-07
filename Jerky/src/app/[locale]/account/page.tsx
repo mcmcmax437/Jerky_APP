@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AccountHome } from "@/components/account/AccountHome";
 import { getSession } from "@/features/auth/session";
+import { listOwnSupportMessages } from "@/features/account/queries";
 import { listAccountOrders } from "@/features/admin/queries";
 import { readLocale } from "@/lib/i18n/request";
 
@@ -23,7 +24,10 @@ export default async function AccountPage({
   const session = await getSession();
   if (!session) redirect(`/${locale}/login?next=/${locale}/account`);
   if (session.role === "ADMIN") redirect(`/${locale}/admin`);
-  const orders = await listAccountOrders(session.id, session.email);
+  const [orders, messages] = await Promise.all([
+    listAccountOrders(session.id, session.email),
+    listOwnSupportMessages(session.id),
+  ]);
 
   return (
     <AccountHome
@@ -32,6 +36,7 @@ export default async function AccountPage({
       name={session.name}
       email={session.email}
       orders={orders}
+      messages={messages}
     />
   );
 }

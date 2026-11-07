@@ -35,6 +35,7 @@ export function AdminShell({
     { href: `/${locale}/admin/costs`, label: terminal.costs, icon: "pie-chart" },
     { href: `/${locale}/admin/reviews`, label: terminal.reviews, icon: "star" },
     { href: `/${locale}/admin/users`, label: terminal.users, icon: "user-group" },
+    { href: `/${locale}/admin/support`, label: terminal.support, icon: "message-01" },
     { href: `/${locale}/admin/settings`, label: terminal.settings, icon: "settings-01" },
   ];
 
