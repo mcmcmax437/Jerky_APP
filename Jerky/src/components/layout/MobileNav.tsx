@@ -62,14 +62,17 @@ export function MobileNav({
             >
               {role === "ADMIN" ? dict.nav.admin : dict.nav.account}
             </Link>
-            <Link
-              href={`/${locale}/cart`}
-              className="press py-4 text-sm font-semibold uppercase tracking-[1.5px]"
-              onClick={() => setOpen(false)}
+            <button
+              type="button"
+              className="press py-4 text-left text-sm font-semibold uppercase tracking-[1.5px]"
+              onClick={() => {
+                setOpen(false);
+                window.dispatchEvent(new Event("jerky-cart-open"));
+              }}
             >
               {dict.nav.cart}
               {count > 0 ? ` (${count})` : ""}
-            </Link>
+            </button>
           </nav>
         </div>
       ) : null}

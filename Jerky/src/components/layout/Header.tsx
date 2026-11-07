@@ -47,9 +47,13 @@ export function Header({
             locale={locale}
             label={dict.nav.cart}
             addedLabel={dict.product.added}
+            title={dict.cart.title}
+            emptyLabel={dict.cart.empty}
             quantityLabel={dict.cart.quantity}
             comingSoon={dict.price.comingSoon}
+            totalLabel={dict.cart.total}
             viewLabel={dict.cart.view}
+            toShopLabel={dict.cart.toShop}
             closeLabel={dict.cart.close}
           />
           <MobileNav locale={locale} dict={dict} role={role} />
