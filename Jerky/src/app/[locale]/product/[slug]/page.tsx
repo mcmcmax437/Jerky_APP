@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
-import { Price } from "@/components/product/Price";
+import { ProductBuy } from "@/components/product/ProductBuy";
 import { ProductGallery } from "@/components/product/ProductGallery";
+import { ProductTabs } from "@/components/product/ProductTabs";
 import { ShopCard } from "@/components/shop/ShopCard";
-import { AddToCart } from "@/components/cart/AddToCart";
-import { ProductPurchase, ProductSizeChoice } from "@/components/product/ProductPurchase";
 import { getProductBySlug, listProducts } from "@/features/catalog/queries";
 import { catalogPackshot } from "@/features/catalog/packshots";
-import { formatWeight } from "@/lib/format";
 import { readLocale } from "@/lib/i18n/request";
 
 export async function generateMetadata({
@@ -35,66 +32,47 @@ export default async function ProductPage({
   if (!product) notFound();
 
   const others = (await listProducts(locale)).filter((item) => item.slug !== product.slug);
+  const photos = product.images.filter((item) => !item.placeholder);
+  const gallery = photos.length > 0 ? photos : product.images;
+  const image = gallery[0]?.src ?? catalogPackshot(product.slug);
+  const frames = gallery.length > 0 ? gallery : [{ src: image, kind: "packshot" }];
 
   return (
-    <ProductPurchase>
+    <>
       <section className="bg-ink-950 text-text-light">
-        <Container className="grid gap-10 py-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:py-16">
-          <ProductGallery images={product.images} name={product.name} caption={dict.product.placeholder} />
-          <div className="flex flex-col justify-end pb-2">
-            <p className="text-[13px] font-semibold uppercase tracking-[1.5px] text-copper">{dict.product.draft}</p>
-            <h1 className="mt-4 font-display text-[64px] leading-[0.95] font-medium md:text-[76px]">{product.name}</h1>
-            <p className="mt-6 text-sm uppercase tracking-[0.16em] text-text-light/70">
-              {dict.product.weight}: {formatWeight(product.netWeightG, locale)}
-            </p>
-            <Price
-              amountMinor={product.priceMinor}
+        <div className="mx-auto grid max-w-[83rem] items-center gap-8 px-5 py-10 md:px-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14 lg:py-14">
+          <ProductGallery images={frames} name={product.name} caption={dict.product.placeholder} zoomLabel={dict.product.zoom} />
+          <div>
+            <p className="text-[13px] font-semibold uppercase tracking-[1.5px] text-copper">{dict.product.kind}</p>
+            <h1 className="mt-3 font-display text-[64px] leading-[0.95] font-medium md:text-[76px]">{product.name}</h1>
+            <p className="mt-4 max-w-xl text-lg leading-relaxed text-text-light/75">{product.card || product.profile}</p>
+            {product.approvedReviewCount > 0 ? (
+              <p className="mt-4 text-sm tabular-nums text-text-light/80">
+                {product.averageRating?.toFixed(1)} / 5 · {product.approvedReviewCount}
+              </p>
+            ) : null}
+            <ProductBuy
               locale={locale}
-              comingSoon={dict.price.comingSoon}
-              className="mt-4 text-text-light"
+              dict={dict}
+              slug={product.slug}
+              name={product.name}
+              image={image}
+              priceMinor={product.priceMinor}
             />
-            <ProductSizeChoice label={dict.product.size} tone="light" />
           </div>
-        </Container>
+        </div>
       </section>
 
       <section className="bg-ivory-100 text-text-dark">
-        <Container className="grid gap-12 py-16 lg:grid-cols-[minmax(0,1fr)_280px]">
-          <div className="grid gap-10">
-            <p className="max-w-2xl text-lg leading-relaxed">{product.profile}</p>
-            <div>
-              <h2 className="font-display text-[42px] leading-[1.05] font-medium md:text-[48px]">{dict.product.ingredientsTitle}</h2>
-              <p className="mt-3 max-w-2xl text-lg leading-relaxed text-text-dark/80">{dict.product.ingredientsBody}</p>
-            </div>
-            <div>
-              <h2 className="font-display text-[42px] leading-[1.05] font-medium md:text-[48px]">{dict.product.storageTitle}</h2>
-              <p className="mt-3 max-w-2xl text-lg leading-relaxed text-text-dark/80">{dict.product.storageBody}</p>
-            </div>
-            <div>
-              <h2 className="font-display text-[42px] leading-[1.05] font-medium md:text-[48px]">{dict.product.reviewsTitle}</h2>
-              {product.approvedReviewCount === 0 ? (
-                <p className="mt-3 text-text-dark/80">{dict.product.reviewsEmpty}</p>
-              ) : (
-                <p className="mt-3 tabular-nums">
-                  {product.averageRating?.toFixed(1)} / 5 · {product.approvedReviewCount}
-                </p>
-              )}
-            </div>
-          </div>
-          <aside className="h-fit border border-ink-800/10 bg-ivory-200 p-5">
-            <AddToCart
-              slug={product.slug}
-              name={product.name}
-              image={product.images[0]?.src ?? catalogPackshot(product.slug)}
-              priceMinor={product.priceMinor}
-              label={dict.product.add}
-              addedLabel={dict.product.added}
-              note={dict.product.addNote}
-            />
-            <Link href={`/${locale}/shop`} className="mt-6 inline-block text-[13px] font-semibold uppercase tracking-[1.5px]">
-              {dict.product.back}
-            </Link>
-          </aside>
+        <Container className="py-12 md:py-16">
+          <ProductTabs
+            dict={dict}
+            profile={product.profile}
+            image={image}
+            name={product.name}
+            reviewCount={product.approvedReviewCount}
+            averageRating={product.averageRating}
+          />
         </Container>
       </section>
 
@@ -110,6 +88,6 @@ export default async function ProductPage({
           </div>
         </section>
       ) : null}
-    </ProductPurchase>
+    </>
   );
 }

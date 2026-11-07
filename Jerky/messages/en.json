@@ -81,6 +81,13 @@
     "reviewsEmpty": "There are no approved reviews yet.",
     "related": "Other flavors",
     "size": "Size",
+    "packSize": "Pack size",
+    "kind": "Beef jerky",
+    "tabDescription": "Description",
+    "tabIngredients": "Ingredients",
+    "tabNutrition": "Nutrition",
+    "nutritionBody": "Nutrition will be published only after the calculations are confirmed. It is not invented ahead of that.",
+    "zoom": "Enlarge photo",
     "placeholder": "Concept sketch. This is not a product photograph or finished packaging.",
     "back": "Back to the shop"
   },

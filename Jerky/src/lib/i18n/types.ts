@@ -86,6 +86,13 @@ export type Dictionary = {
     reviewsEmpty: string;
     related: string;
     size: string;
+    packSize: string;
+    kind: string;
+    tabDescription: string;
+    tabIngredients: string;
+    tabNutrition: string;
+    nutritionBody: string;
+    zoom: string;
     placeholder: string;
     back: string;
   };

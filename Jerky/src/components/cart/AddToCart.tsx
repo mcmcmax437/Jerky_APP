@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useProductSize } from "@/components/product/ProductPurchase";
 import { Button } from "@/components/ui/Button";
 import { useCart } from "@/features/cart/cart-context";
+import type { PackSize } from "@/features/cart/quote";
 
 export function AddToCart({
   slug,
@@ -13,6 +13,8 @@ export function AddToCart({
   label,
   addedLabel,
   note,
+  size,
+  quantity = 1,
 }: {
   slug: string;
   name: string;
@@ -21,9 +23,10 @@ export function AddToCart({
   label: string;
   addedLabel: string;
   note: string;
+  size?: PackSize;
+  quantity?: number;
 }) {
   const { add } = useCart();
-  const chosen = useProductSize();
   const [added, setAdded] = useState(0);
 
   return (
@@ -33,7 +36,7 @@ export function AddToCart({
         className="w-full"
         aria-describedby="cart-note"
         onClick={() => {
-          add(slug, 1, { name, image, priceMinor }, chosen?.size);
+          add(slug, quantity, { name, image, priceMinor }, size);
           setAdded((current) => current + 1);
         }}
       >

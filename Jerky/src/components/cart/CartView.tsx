@@ -59,7 +59,9 @@ export function CartView({ locale, dict }: { locale: Locale; dict: Dictionary })
                 <h2 className="font-display text-[28px] leading-none font-medium md:text-[34px]">
                   {priced?.name ?? line.slug}
                   {line.size ? (
-                    <span className="ml-3 align-middle font-sans text-[13px] font-semibold tracking-[1.5px]">{line.size}</span>
+                    <span className="ml-3 align-middle font-sans text-[13px] font-semibold tracking-[1.5px]">
+                      {formatWeight(Number(line.size), locale)}
+                    </span>
                   ) : null}
                 </h2>
                 <p className="mt-1 text-sm text-text-dark/70">

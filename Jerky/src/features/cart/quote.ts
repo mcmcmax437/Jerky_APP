@@ -1,6 +1,7 @@
 export const MAX_QUANTITY = 20;
 
-export const packSizes = ["S", "M", "L", "XL"] as const;
+export const packSizes = ["50", "100", "250", "500"] as const;
+export const pricedPackGrams = 100;
 export type PackSize = (typeof packSizes)[number];
 
 export function isPackSize(value: unknown): value is PackSize {

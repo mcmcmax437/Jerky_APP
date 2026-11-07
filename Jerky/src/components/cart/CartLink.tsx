@@ -10,6 +10,7 @@ import { MAX_QUANTITY } from "@/features/cart/quote";
 import { quoteCart } from "@/features/checkout/actions";
 import { useCart } from "@/features/cart/cart-context";
 import type { Quote } from "@/features/cart/quote";
+import { formatWeight } from "@/lib/format";
 import type { Locale } from "@/lib/i18n/locales";
 
 const openEvent = "jerky-cart-open";
@@ -192,7 +193,7 @@ export function CartLink({
                         <p className="truncate font-display text-[22px] leading-none font-medium">
                           {priced?.name ?? line.slug}
                         </p>
-                        {line.size ? <p className="mt-1 text-[13px] font-semibold tracking-[1.5px]">{line.size}</p> : null}
+                        {line.size ? <p className="mt-1 text-[13px] font-semibold tracking-[1.5px]">{formatWeight(Number(line.size), locale)}</p> : null}
                         {priced ? (
                           <Price
                             amountMinor={lineTotal}

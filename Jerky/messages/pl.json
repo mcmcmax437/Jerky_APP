@@ -81,6 +81,13 @@
     "reviewsEmpty": "Nie ma jeszcze zatwierdzonych opinii.",
     "related": "Pozostałe smaki",
     "size": "Rozmiar",
+    "packSize": "Rozmiar opakowania",
+    "kind": "Wołowina jerky",
+    "tabDescription": "Opis",
+    "tabIngredients": "Skład",
+    "tabNutrition": "Wartość odżywcza",
+    "nutritionBody": "Wartość odżywcza zostanie opublikowana dopiero po potwierdzeniu obliczeń. Nie podajemy jej z góry.",
+    "zoom": "Powiększ zdjęcie",
     "placeholder": "Szkic koncepcyjny. To nie jest zdjęcie produktu ani gotowe opakowanie.",
     "back": "Wróć do sklepu"
   },
