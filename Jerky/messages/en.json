@@ -214,6 +214,7 @@
     "banner": "This is a local test order. No payment is taken, and the order is not passed to a seller or a delivery service.",
     "number": "Number",
     "status": "TEST",
+    "date": "Date",
     "back": "Back to the shop"
   },
   "auth": {

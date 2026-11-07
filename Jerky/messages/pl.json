@@ -214,6 +214,7 @@
     "banner": "To lokalne zamówienie testowe. Płatność nie jest pobierana, a zamówienie nie trafia do sprzedawcy ani do firmy kurierskiej.",
     "number": "Numer",
     "status": "TEST",
+    "date": "Data",
     "back": "Wróć do sklepu"
   },
   "auth": {

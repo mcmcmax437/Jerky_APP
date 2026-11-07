@@ -180,6 +180,7 @@ export type Dictionary = {
     banner: string;
     number: string;
     status: string;
+    date: string;
     back: string;
   };
   auth: {
