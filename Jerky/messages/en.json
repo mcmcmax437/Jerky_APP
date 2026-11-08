@@ -288,6 +288,7 @@
     "sent": "The message is saved.",
     "settingsBack": "Back to settings",
     "yourMessages": "Your messages",
+    "ordersItem": "Item",
     "errors": {
       "name": "Enter your name.",
       "email": "Enter a valid email.",

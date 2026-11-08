@@ -62,6 +62,7 @@ export function AccountHome({
       <AccountDesk
         locale={locale}
         copy={copy}
+        dict={dict}
         logoutLabel={dict.auth.logout}
         comingSoon={dict.price.comingSoon}
         pendingLabel={dict.auth.pending}

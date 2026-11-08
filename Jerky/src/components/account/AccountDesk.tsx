@@ -53,6 +53,7 @@ function sectionFromHash() {
 export function AccountDesk({
   locale,
   copy,
+  dict,
   logoutLabel,
   comingSoon,
   pendingLabel,
@@ -64,6 +65,7 @@ export function AccountDesk({
 }: {
   locale: Locale;
   copy: Dictionary["account"];
+  dict: Dictionary;
   logoutLabel: string;
   comingSoon: string;
   pendingLabel: string;
@@ -149,7 +151,7 @@ export function AccountDesk({
                   {copy.allOrders}
                 </button>
               </div>
-              <OrderList locale={locale} orders={orders} empty={copy.empty} comingSoon={comingSoon} testLabel={copy.test} />
+              <OrderList locale={locale} orders={orders} empty={copy.empty} comingSoon={comingSoon} testLabel={copy.test} dict={dict} />
             </div>
           </section>
         ) : null}
@@ -157,7 +159,7 @@ export function AccountDesk({
         {section === "orders" ? (
           <section>
             <h2 className="font-display text-[42px] leading-[1.05] font-medium">{copy.orders}</h2>
-            <OrderList locale={locale} orders={orders} empty={copy.empty} comingSoon={comingSoon} testLabel={copy.test} />
+            <OrderList locale={locale} orders={orders} empty={copy.empty} comingSoon={comingSoon} testLabel={copy.test} dict={dict} />
           </section>
         ) : null}
 
@@ -180,32 +182,55 @@ function OrderList({
   empty,
   comingSoon,
   testLabel,
+  dict,
 }: {
   locale: Locale;
   orders: DeskOrder[];
   empty: string;
   comingSoon: string;
   testLabel: string;
+  dict: Dictionary;
 }) {
   if (orders.length === 0) return <p className="mt-4 text-base text-text-dark/75">{empty}</p>;
   return (
-    <ul className="mt-4 grid gap-3">
+    <ul className="mt-4 grid gap-4">
       {orders.map((order) => (
         <li key={order.id}>
-          <Link href={`/${locale}/order-confirmation/${order.id}`} className="flex items-center gap-4 rounded-2xl border border-ink-800/10 bg-white/70 px-3 py-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={order.slug ? catalogPackshot(order.slug) : "/catalog/unknown.jpg"} alt="" className="h-14 w-12 shrink-0 rounded-lg bg-ink-950 object-cover" />
-            <span className="min-w-0 flex-1">
-              <span className="block truncate font-semibold">{order.number}</span>
-              <span className="mt-1 block text-sm text-text-dark/60">{order.dateLabel}</span>
-            </span>
-            <span className="hidden items-center gap-2 text-sm sm:inline-flex">
-              <span className={`h-2 w-2 rounded-full ${statusDot[order.status]}`} />
-              {order.statusLabel}
-              {order.isTest ? <span className="text-text-dark/45">{testLabel}</span> : null}
-            </span>
-            <Price amountMinor={order.totalMinor} locale={locale} comingSoon={comingSoon} />
-            <span aria-hidden="true" className="text-text-dark/40">›</span>
+          <Link href={`/${locale}/order-confirmation/${order.id}`} className="group flex flex-col rounded-2xl border border-ink-800/10 bg-white/70 p-4 transition hover:shadow-lg">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex items-center gap-3">
+                <span className={`h-3 w-3 shrink-0 rounded-full ${statusDot[order.status]}`} />
+                <div>
+                  <span className="font-display text-[28px] font-medium">{order.number}</span>
+                  <span className="ml-3 text-sm text-text-dark/60">{order.dateLabel}</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 sm:flex-col sm:items-end sm:justify-end">
+                <Price amountMinor={order.totalMinor} locale={locale} comingSoon={comingSoon} />
+                <div className="hidden items-center gap-2 text-sm sm:flex">
+                  {order.isTest ? <span className="text-text-dark/45">{testLabel}</span> : null}
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 border-t border-ink-800/10 pt-4">
+              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-text-dark/60">{dict.account.ordersItem}</p>
+              <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                <li className="flex items-center gap-3 rounded-xl bg-white/50 p-2">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={order.slug ? catalogPackshot(order.slug) : "/catalog/unknown.jpg"} alt="" className="h-16 w-14 shrink-0 rounded-lg bg-ink-950 object-cover" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium text-text-dark">{order.slug ? order.slug.replace(/-/g, " ") : "Product"}</p>
+                    <p className="text-sm text-text-dark/70">
+                      {dict.cart.quantity}: 1
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div className="mt-4 flex items-center justify-between border-t border-ink-800/10 pt-4">
+              <span className="text-sm font-semibold uppercase tracking-[1.5px] text-text-dark/60">{order.statusLabel}</span>
+              <span aria-hidden="true" className="text-text-dark/40">›</span>
+            </div>
           </Link>
         </li>
       ))}

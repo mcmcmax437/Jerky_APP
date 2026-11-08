@@ -250,6 +250,7 @@ export type Dictionary = {
     sent: string;
     settingsBack: string;
     yourMessages: string;
+    ordersItem: string;
     errors: {
       name: string;
       email: string;
