@@ -121,11 +121,11 @@ export function ProductBoard({
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-white/10 text-xs tracking-[0.16em] text-[#9c9186] uppercase">
-                <th className="py-3 pr-4 font-semibold">{dict.admin.sort}</th>
-                <th className="py-3 pr-4 font-semibold">{dict.auth.name}</th>
-                <th className="py-3 pr-4 font-semibold">{dict.admin.slug}</th>
-                <th className="py-3 pr-4 font-semibold">{dict.admin.price}</th>
-                <th className="py-3 pr-4 font-semibold">{dict.admin.published}</th>
+                <th className="w-px py-3 pr-4 font-semibold whitespace-nowrap lg:pr-5">{dict.admin.sort}</th>
+                <th className="w-px py-3 pr-4 font-semibold whitespace-nowrap lg:pr-6">{dict.auth.name}</th>
+                <th className="w-px py-3 pr-4 font-semibold whitespace-nowrap lg:pr-6">{dict.admin.slug}</th>
+                <th className="w-px py-3 pr-4 font-semibold whitespace-nowrap lg:pr-6">{dict.admin.price}</th>
+                <th className="w-px py-3 pr-4 font-semibold whitespace-nowrap lg:pr-6">{dict.admin.published}</th>
                 <th className="py-3 font-semibold">
                   <span className="sr-only">{dict.admin.editAction}</span>
                 </th>
@@ -134,23 +134,23 @@ export function ProductBoard({
             <tbody className="rise-rows">
               {rows.map((product) => (
                 <tr key={product.id} className="border-b border-white/10">
-                  <td className="py-3 pr-4">
+                  <td className="w-px py-3 pr-4 whitespace-nowrap lg:pr-5">
                     <SlotMark slot={slotOf(product.id)} />
                   </td>
-                  <td className="py-3 pr-4">
+                  <td className="w-px py-3 pr-4 whitespace-nowrap lg:pr-6">
                     <Link href={`/${locale}/admin/products/${product.id}`} className="flex items-center gap-3 font-semibold text-[#e7d3bc]">
                       {product.photo ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={product.photo} alt="" className="h-16 w-12 object-cover" />
+                        <img src={product.photo} alt="" className="h-16 w-12 shrink-0 object-cover" />
                       ) : null}
                       {product.name}
                     </Link>
                   </td>
-                  <td className="py-3 pr-4">{product.slug}</td>
-                  <td className="py-3 pr-4">
+                  <td className="w-px py-3 pr-4 whitespace-nowrap lg:pr-6">{product.slug}</td>
+                  <td className="w-px py-3 pr-4 whitespace-nowrap lg:pr-6">
                     <Price amountMinor={product.priceMinor} locale={locale} comingSoon={dict.price.comingSoon} />
                   </td>
-                  <td className="py-3 pr-4">{product.published ? dict.admin.published : dict.admin.notInShop}</td>
+                  <td className="w-px py-3 pr-4 whitespace-nowrap lg:pr-6">{product.published ? dict.admin.published : dict.admin.notInShop}</td>
                   <td className="py-3 text-right">
                     <Link
                       href={`/${locale}/admin/products/${product.id}`}
