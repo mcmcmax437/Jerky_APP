@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { CartProvider } from "@/features/cart/cart-context";
+import { recordVisit } from "@/features/site/visits";
 import { getSession } from "@/features/auth/session";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
@@ -37,6 +38,8 @@ export default async function LocaleLayout({
   const pathname = (await headers()).get("x-pathname") ?? "";
   const isAdmin = pathname === `/${locale}/admin` || pathname.startsWith(`/${locale}/admin/`);
 
+  if (!isAdmin && pathname) await recordVisit(locale, pathname);
+
   if (isAdmin) {
     return <main id="content" className="min-h-screen bg-[#100e0c]">{children}</main>;
   }
@@ -49,11 +52,15 @@ export default async function LocaleLayout({
       >
         {dict.nav.skip}
       </a>
-      <CartProvider>
-        <Header locale={locale} dict={dict} role={session?.role ?? null} />
-        <main id="content">{children}</main>
-      </CartProvider>
-      <Footer locale={locale} dict={dict} />
+      <div className="min-h-screen flex flex-col">
+        <CartProvider>
+          <Header locale={locale} dict={dict} role={session?.role ?? null} />
+          <main id="content" className="flex-1">
+            {children}
+          </main>
+        </CartProvider>
+        <Footer locale={locale} dict={dict} />
+      </div>
     </>
   );
 }

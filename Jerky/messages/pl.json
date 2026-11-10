@@ -143,6 +143,16 @@
     },
     "disabledNote": "Formularz jest wyłączony. Nic nie zostaje zapisane i nic nie jest wysyłane."
   },
+  "chat": {
+    "open": "Need some help?",
+    "title": "Help chat",
+    "lede": "Ask here. An admin answers in the panel.",
+    "placeholder": "Type your question",
+    "send": "Send",
+    "close": "Close chat",
+    "live": "Answers appear here.",
+    "empty": "No questions yet."
+  },
   "legal": {
     "draft": "Szkic. To nie jest zatwierdzony dokument prawny.",
     "privacyTitle": "Prywatność",
@@ -422,6 +432,18 @@
       "supportLede": "Wiadomości z kont. Nie wysyłamy ich e-mailem.",
       "supportEmpty": "Nie ma jeszcze wiadomości.",
       "settings": "Ustawienia",
+      "settingsLede": "Panel settings. Only language is here now.",
+      "language": "Language",
+      "visitors": "Visitors",
+      "visitorsLede": "Own counter. No cookies, no outside service.",
+      "visitorsEmpty": "No visits yet.",
+      "visits": "Visits",
+      "paths": "Paths",
+      "chat": "Live chat",
+      "chatLede": "Client questions and admin answers.",
+      "chatReply": "Answer",
+      "chatEmpty": "No chat threads.",
+      "chatGuest": "Gość",
       "ranges": { "7": "Ostatnie 7 dni", "30": "Ostatnie 30 dni", "90": "Ostatnie 90 dni" },
       "revenue": "Przychód",
       "produced": "Wyprodukowano",
@@ -453,7 +475,10 @@
         "reason": "Powód",
         "reasonExample": "Powtarzane zamówienia testowe",
         "role": "Rola",
-        "self": "To Twoje konto"
+        "self": "To Twoje konto",
+        "password": "Password",
+        "passwordGenerate": "Generate password",
+        "passwordNote": "Showed once. Copy it before you close the page."
       },
       "internalScore": "Ocena wewnętrzna",
       "orderSeries": "Liczba zamówień. Kwot jeszcze nie ma.",

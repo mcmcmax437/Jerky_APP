@@ -15,6 +15,8 @@ export const buckets = {
   supportIp: { limit: 8, windowMs: 60 * 60_000, lockMs: 60 * 60_000 },
   checkoutIp: { limit: 8, windowMs: 60 * 60_000, lockMs: 60 * 60_000 },
   passwordUser: { limit: 8, windowMs: 15 * 60_000, lockMs: 15 * 60_000 },
+  chatIp: { limit: 20, windowMs: 10 * 60_000, lockMs: 30 * 60_000 },
+  chatUser: { limit: 20, windowMs: 10 * 60_000, lockMs: 30 * 60_000 },
 } as const satisfies Record<string, RateRule>;
 
 type RateState = {

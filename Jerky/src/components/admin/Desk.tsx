@@ -176,7 +176,7 @@ export function Desk({
     { href: `/${locale}/admin/products/new`, label: copy.addProduct, icon: "package-add" },
     { href: `/${locale}/admin/recipes/new`, label: copy.addRecipe, icon: "chef-hat" },
     { href: `/${locale}/admin/batches`, label: copy.planBatch, icon: "clipboard-plus" },
-    { href: `/${locale}/admin/purchases`, label: copy.addCost, icon: "invoice-01" },
+    { href: `/${locale}/admin/costs`, label: copy.addCost, icon: "invoice-01" },
   ];
 
   return (

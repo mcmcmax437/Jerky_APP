@@ -143,6 +143,16 @@
     },
     "disabledNote": "Форму вимкнено. Нічого не зберігається і нічого не надсилається."
   },
+  "chat": {
+    "open": "Need some help?",
+    "title": "Help chat",
+    "lede": "Ask here. An admin answers in the panel.",
+    "placeholder": "Type your question",
+    "send": "Send",
+    "close": "Close chat",
+    "live": "Answers appear here.",
+    "empty": "No questions yet."
+  },
   "legal": {
     "draft": "Чернетка. Це не затверджений юридичний документ.",
     "privacyTitle": "Приватність",
@@ -422,6 +432,18 @@
       "supportLede": "Звернення з акаунтів. Листи нікуди не відправляються.",
       "supportEmpty": "Звернень ще немає.",
       "settings": "Налаштування",
+      "settingsLede": "Панель настра. Тіки язык у presently.",
+      "language": "Язык",
+      "visitors": "Visitor statistics",
+      "visitorsLede": "Own counter. No cookies, no outside service.",
+      "visitorsEmpty": "Visits ще немає.",
+      "visits": "Visits",
+      "paths": "Paths",
+      "chat": "Live chat",
+      "chatLede": "Client questions and admin answers.",
+      "chatReply": "Answer",
+      "chatEmpty": "Chat threads ще немає.",
+      "chatGuest": "Guest",
       "ranges": { "7": "Останні 7 днів", "30": "Останні 30 днів", "90": "Останні 90 днів" },
       "revenue": "Дохід",
       "produced": "Вироблено",
@@ -453,7 +475,10 @@
         "reason": "Причина",
         "reasonExample": "Повторні тестові замовлення",
         "role": "Роль",
-        "self": "Це ваш акаунт"
+        "self": "Це ваш акаунт",
+        "password": "Password",
+        "passwordGenerate": "Generate password",
+        "passwordNote": "Showed once. Copy it before you close the page."
       },
       "internalScore": "Внутрішня оцінка",
       "orderSeries": "Кількість замовлень. Сум ще немає.",

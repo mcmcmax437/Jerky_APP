@@ -143,6 +143,16 @@
     },
     "disabledNote": "The form is switched off. Nothing is stored and nothing is sent."
   },
+  "chat": {
+    "open": "Need some help?",
+    "title": "Help chat",
+    "lede": "Ask here. An admin answers in the panel.",
+    "placeholder": "Type your question",
+    "send": "Send",
+    "close": "Close chat",
+    "live": "Answers appear here.",
+    "empty": "No questions yet."
+  },
   "legal": {
     "draft": "Draft. This is not an approved legal document.",
     "privacyTitle": "Privacy",
@@ -422,6 +432,18 @@
       "supportLede": "Messages from accounts. They are not emailed.",
       "supportEmpty": "No messages yet.",
       "settings": "Settings",
+      "settingsLede": "Panel settings. Only language is here now.",
+      "language": "Language",
+      "visitors": "Visitors",
+      "visitorsLede": "Own counter. No cookies, no outside service.",
+      "visitorsEmpty": "No visits yet.",
+      "visits": "Visits",
+      "paths": "Paths",
+      "chat": "Live chat",
+      "chatLede": "Client questions and admin answers.",
+      "chatReply": "Answer",
+      "chatEmpty": "No chat threads.",
+      "chatGuest": "Guest",
       "ranges": { "7": "Last 7 days", "30": "Last 30 days", "90": "Last 90 days" },
       "revenue": "Revenue",
       "produced": "Produced",
@@ -453,7 +475,10 @@
         "reason": "Reason",
         "reasonExample": "Repeated test orders",
         "role": "Role",
-        "self": "This is your account"
+        "self": "This is your account",
+        "password": "Password",
+        "passwordGenerate": "Generate password",
+        "passwordNote": "Showed once. Copy it before you close the page."
       },
       "internalScore": "Internal score",
       "orderSeries": "Order count. Amounts are not set yet.",

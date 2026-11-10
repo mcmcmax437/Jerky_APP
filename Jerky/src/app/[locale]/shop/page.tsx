@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CatalogHero } from "@/components/shop/CatalogHero";
 import { ShopCatalog } from "@/components/shop/ShopCatalog";
+import { ChatFab } from "@/components/site/ChatFab";
 import { listProducts } from "@/features/catalog/queries";
 import { readLocale } from "@/lib/i18n/request";
 
@@ -25,6 +26,7 @@ export default async function ShopPage({
     <>
       <CatalogHero eyebrow={dict.shop.eyebrow} title={dict.shop.title} lede={dict.shop.lede} />
       <ShopCatalog locale={locale} dict={dict} products={products} criteria />
+      <ChatFab href={`/${locale}/chat`} label={dict.chat.open} />
     </>
   );
 }

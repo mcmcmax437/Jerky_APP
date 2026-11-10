@@ -118,6 +118,16 @@ export type Dictionary = {
     example: { name: string; email: string; message: string };
     disabledNote: string;
   };
+  chat: {
+    open: string;
+    title: string;
+    lede: string;
+    placeholder: string;
+    send: string;
+    close: string;
+    live: string;
+    empty: string;
+  };
   legal: {
     draft: string;
     privacyTitle: string;
@@ -371,6 +381,18 @@ export type Dictionary = {
       supportLede: string;
       supportEmpty: string;
       settings: string;
+      settingsLede: string;
+      language: string;
+      visitors: string;
+      visitorsLede: string;
+      visitorsEmpty: string;
+      visits: string;
+      paths: string;
+      chat: string;
+      chatGuest: string;
+      chatLede: string;
+      chatReply: string;
+      chatEmpty: string;
       ranges: { "7": string; "30": string; "90": string };
       revenue: string;
       produced: string;
@@ -403,6 +425,9 @@ export type Dictionary = {
         reasonExample: string;
         role: string;
         self: string;
+        password: string;
+        passwordGenerate: string;
+        passwordNote: string;
       };
       internalScore: string;
       orderSeries: string;

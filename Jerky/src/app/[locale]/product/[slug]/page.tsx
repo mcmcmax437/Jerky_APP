@@ -5,6 +5,7 @@ import { ProductBuy } from "@/components/product/ProductBuy";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductTabs } from "@/components/product/ProductTabs";
 import { ShopCard } from "@/components/shop/ShopCard";
+import { ChatFab } from "@/components/site/ChatFab";
 import { getProductBySlug, listProducts } from "@/features/catalog/queries";
 import { catalogPackshot } from "@/features/catalog/packshots";
 import { readLocale } from "@/lib/i18n/request";
@@ -88,6 +89,8 @@ export default async function ProductPage({
           </div>
         </section>
       ) : null}
+
+      <ChatFab href={`/${locale}/chat`} label={dict.chat.open} />
     </>
   );
 }

@@ -103,6 +103,8 @@ model User {
   sessions        Session[]
   orders          Order[]
   supportMessages SupportMessage[]
+  chatThreads     ChatThread[]
+  chatMessages    ChatMessage[]
 
   @@index([role])
 }
@@ -118,6 +120,29 @@ model SupportMessage {
 
   @@index([userId])
   @@index([createdAt])
+}
+
+model ChatThread {
+  id        String        @id @default(cuid())
+  userId    String?
+  user      User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt DateTime      @default(now())
+  messages  ChatMessage[]
+
+  @@index([createdAt])
+}
+
+model ChatMessage {
+  id        String     @id @default(cuid())
+  threadId  String
+  thread    ChatThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  authorId  String?
+  author    User?      @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  admin     Boolean    @default(false)
+  body      String     @db.VarChar(1000)
+  createdAt DateTime   @default(now())
+
+  @@index([threadId, createdAt])
 }
 
 model RateLimit {

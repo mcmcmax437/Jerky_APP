@@ -4,6 +4,7 @@ import { AdminPage } from "@/components/admin/AdminPage";
 import { Icon } from "@/components/brand/Icon";
 import { OrderLines } from "@/components/admin/OrderLines";
 import { OrderStatusPill } from "@/components/admin/OrderStatus";
+import { Price } from "@/components/product/Price";
 import { orderStatuses } from "@/features/admin/order-status";
 import { isAdminOrderStatus, listAdminOrders, orderLines } from "@/features/admin/queries";
 import { formatDateTime } from "@/lib/format";
@@ -66,33 +67,60 @@ export default async function AdminOrdersPage({
         </button>
       </form>
       {orders.length === 0 ? <p>{dict.admin.empty}</p> : null}
-      <ul className="rise divide-y divide-white/10 border-y border-white/10">
-        {orders.map((order, index) => (
-          <li key={order.id} className="py-4">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-              <Link href={`/${locale}/admin/orders/${order.id}`} className="font-semibold text-[#e7d3bc]">
-                {order.number}
-              </Link>
-              <OrderStatusPill status={order.status} label={dict.admin.statuses[order.status]} />
-              <span className="text-xs text-[#9c9186]">{formatDateTime(order.createdAt, locale)}</span>
-              <Link
-                href={`/${locale}/admin/orders/${order.id}`}
-                aria-label={dict.admin.editAction}
-                className="press inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 text-[#e7d3bc]"
-              >
-                <Icon name="settings-02" size={18} />
-              </Link>
-            </div>
-            <p className="mt-2">
-              {order.customerName}
-              <span className="text-[#9c9186]"> · {order.email}</span>
-            </p>
-            <div className="mt-2">
-              <OrderLines lines={lines[index] ?? []} dict={dict} />
-            </div>
-          </li>
-        ))}
-      </ul>
+      {orders.length > 0 ? (
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="text-xs uppercase tracking-[0.16em] text-[#9c9186]">
+              <tr>
+                <th className="py-2 pr-4 font-medium">{dict.admin.orders}</th>
+                <th className="py-2 pr-4 font-medium">{dict.admin.customer}</th>
+                <th className="py-2 pr-4 font-medium">{dict.admin.status}</th>
+                <th className="py-2 pr-4 font-medium">{dict.admin.items}</th>
+                <th className="py-2 pr-4 font-medium">{dict.cart.total}</th>
+                <th className="py-2 font-medium">
+                  <span className="sr-only">{dict.admin.editAction}</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="rise-rows">
+              {orders.map((order, index) => (
+                <tr key={order.id} className="border-t border-white/10 align-top">
+                  <td className="py-4 pr-4 whitespace-nowrap">
+                    <Link href={`/${locale}/admin/orders/${order.id}`} className="font-semibold text-[#e7d3bc]">
+                      {order.number}
+                    </Link>
+                    <span className="mt-1 block text-xs text-[#9c9186]">{formatDateTime(order.createdAt, locale)}</span>
+                    {order.isTest ? <span className="mt-1 block text-xs text-[#9c9186]">{dict.account.test}</span> : null}
+                  </td>
+                  <td className="py-4 pr-4">
+                    <span className="block">{order.customerName}</span>
+                    <span className="mt-1 block text-[#9c9186]">{order.email}</span>
+                    {order.phone ? <span className="mt-1 block text-[#9c9186]">{order.phone}</span> : null}
+                  </td>
+                  <td className="py-4 pr-4 whitespace-nowrap">
+                    <OrderStatusPill status={order.status} label={dict.admin.statuses[order.status]} />
+                  </td>
+                  <td className="py-4 pr-4">
+                    <OrderLines lines={lines[index] ?? []} dict={dict} />
+                  </td>
+                  <td className="py-4 pr-4 whitespace-nowrap">
+                    <Price amountMinor={order.totalMinor} locale={locale} comingSoon={dict.price.comingSoon} />
+                  </td>
+                  <td className="py-4 text-right">
+                    <Link
+                      href={`/${locale}/admin/orders/${order.id}`}
+                      aria-label={dict.admin.editAction}
+                      className="press inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 text-[#e7d3bc]"
+                    >
+                      <Icon name="settings-02" size={18} />
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
     </AdminPage>
   );
 }

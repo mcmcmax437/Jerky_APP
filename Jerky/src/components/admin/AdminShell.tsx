@@ -29,13 +29,13 @@ export function AdminShell({
     { href: `/${locale}/admin/orders`, label: dict.admin.orders, icon: "shopping-bag-01", count: newOrders },
     { href: `/${locale}/admin/products`, label: dict.admin.products, icon: "package" },
     { href: `/${locale}/admin/recipes`, label: terminal.recipes, icon: "book-02" },
-    { href: `/${locale}/admin/purchases`, label: terminal.purchased, icon: "shopping-basket-01" },
     { href: `/${locale}/admin/batches`, label: terminal.batches, icon: "layers-01" },
     { href: `/${locale}/admin/warehouse`, label: terminal.warehouse, icon: "warehouse" },
     { href: `/${locale}/admin/costs`, label: terminal.costs, icon: "pie-chart" },
     { href: `/${locale}/admin/reviews`, label: terminal.reviews, icon: "star" },
     { href: `/${locale}/admin/users`, label: terminal.users, icon: "user-group" },
     { href: `/${locale}/admin/support`, label: terminal.support, icon: "message-01" },
+    { href: `/${locale}/admin/visitors`, label: terminal.visitors, icon: "chart-02" },
     { href: `/${locale}/admin/settings`, label: terminal.settings, icon: "settings-01" },
   ];
 

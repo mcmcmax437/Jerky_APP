@@ -1,4 +1,6 @@
 import { prisma } from "@/lib/db/prisma";
+import { catalogPackshot } from "@/features/catalog/packshots";
+import { defaultLocale, isLocale } from "@/lib/i18n/locales";
 import { meatTypes, type MeatTypeName } from "./recipe";
 import { isOrderStatus, type OrderStatusName } from "./order-status";
 
@@ -8,6 +10,7 @@ export const isAdminOrderStatus = isOrderStatus;
 export type OrderLine = {
   id: string;
   name: string;
+  image: string;
   grams: number;
   quantity: number;
   meat: MeatTypeName | null;
@@ -42,15 +45,37 @@ async function recipeFacts(productIds: Array<string | null>) {
   return facts;
 }
 
+async function productPhotos(productIds: Array<string | null>) {
+  const ids = [...new Set(productIds.filter((id): id is string => Boolean(id)))];
+  const photos = new Map<string, string>();
+  if (ids.length === 0) return photos;
+  const media = await prisma.productMedia.findMany({
+    where: { productId: { in: ids } },
+    orderBy: { sortOrder: "asc" },
+    select: { productId: true, kind: true, publicPath: true },
+  });
+  for (const id of ids) {
+    const rows = media.filter((item) => item.productId === id);
+    const photo = rows.find((item) => item.kind === "packshot") ?? rows[0];
+    if (photo) photos.set(id, photo.publicPath);
+  }
+  return photos;
+}
+
 export async function orderLines(
-  items: Array<{ id: string; productId: string | null; name: string; netWeightG: number; quantity: number }>,
+  items: Array<{ id: string; productId: string | null; slug: string; name: string; netWeightG: number; quantity: number }>,
 ): Promise<OrderLine[]> {
-  const facts = await recipeFacts(items.map((item) => item.productId));
+  const [facts, photos] = await Promise.all([
+    recipeFacts(items.map((item) => item.productId)),
+    productPhotos(items.map((item) => item.productId)),
+  ]);
   return items.map((item) => {
     const fact = item.productId ? facts.get(item.productId) : undefined;
+    const photo = item.productId ? photos.get(item.productId) : undefined;
     return {
       id: item.id,
       name: item.name,
+      image: photo ?? catalogPackshot(item.slug),
       grams: item.netWeightG,
       quantity: item.quantity,
       meat: fact?.meat ?? null,
@@ -93,7 +118,7 @@ export async function listAdminOrders(filters: { status?: AdminOrderStatus; quer
     },
     orderBy: { createdAt: "desc" },
     take: 100,
-    include: { items: { select: { id: true, productId: true, name: true, netWeightG: true, quantity: true } } },
+    include: { items: { select: { id: true, productId: true, slug: true, name: true, netWeightG: true, quantity: true } } },
   });
 }
 
@@ -312,6 +337,19 @@ export async function listAdminUsers() {
     orderBy: { createdAt: "desc" },
     select: { id: true, name: true, email: true, role: true, banned: true, banReason: true, createdAt: true },
   });
+}
+
+export async function listGeneratedPasswords() {
+  return prisma.adminSetting.findMany({
+    where: { key: { startsWith: "password:" } },
+    select: { key: true, value: true, updatedAt: true },
+  });
+}
+
+export async function getPanelLocale() {
+  const setting = await prisma.adminSetting.findUnique({ where: { key: "panel-locale" }, select: { value: true } });
+  if (!setting) return null;
+  return isLocale(setting.value) ? setting.value : null;
 }
 
 export async function listAdminReviews() {

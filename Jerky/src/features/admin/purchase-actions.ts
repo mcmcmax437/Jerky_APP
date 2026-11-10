@@ -8,7 +8,7 @@ import { matchPurchaseQr, parsePurchaseQr } from "./purchase-qr";
 
 async function requireAdmin() {
   const session = await getSession();
-  if (!session || session.role !== "ADMIN") redirect("/pl/login?next=/pl/admin/purchases");
+  if (!session || session.role !== "ADMIN") redirect("/pl/login?next=/pl/admin/costs");
   return session;
 }
 
@@ -51,7 +51,7 @@ export async function createPurchase(formData: FormData) {
     quantity > 1_000_000 ||
     !measure
   ) {
-    redirect(`/${locale}/admin/purchases?error=fields`);
+    redirect(`/${locale}/admin/costs?error=fields`);
   }
 
   const recipe = await prisma.recipe.findUnique({
@@ -66,7 +66,7 @@ export async function createPurchase(formData: FormData) {
   });
   const version = recipe?.versions[0];
   const matches = version?.ingredients.filter((item) => item.name.trim().toLowerCase() === componentName.toLowerCase()) ?? [];
-  if (matches.length === 0) redirect(`/${locale}/admin/purchases?error=fields`);
+  if (matches.length === 0) redirect(`/${locale}/admin/costs?error=fields`);
 
   const price = Math.round(unitPrice * 10000) / 10000;
   const bought = Math.round(quantity * 1000) / 1000;
@@ -77,14 +77,14 @@ export async function createPurchase(formData: FormData) {
     where: { id: { in: matches.map((item) => item.id) } },
     data: { plannedUnitPrice: price },
   });
-  redirect(`/${locale}/admin/purchases`);
+  redirect(`/${locale}/admin/costs`);
 }
 
 export async function addPurchaseFromQr(formData: FormData) {
   await requireAdmin();
   const locale = localeFrom(formData);
   const parsed = parsePurchaseQr(String(formData.get("code") ?? ""));
-  if (!parsed) redirect(`/${locale}/admin/purchases?error=qr`);
+  if (!parsed) redirect(`/${locale}/admin/costs?error=qr`);
 
   const recipes = await prisma.recipe.findMany({
     include: {
@@ -99,8 +99,8 @@ export async function addPurchaseFromQr(formData: FormData) {
     })),
   );
   const matches = matchPurchaseQr(lines, parsed);
-  if (matches.length === 0) redirect(`/${locale}/admin/purchases?error=unknown`);
-  if (matches.length > 1) redirect(`/${locale}/admin/purchases?error=many`);
+  if (matches.length === 0) redirect(`/${locale}/admin/costs?error=unknown`);
+  if (matches.length > 1) redirect(`/${locale}/admin/costs?error=many`);
 
   const match = matches[0];
   await prisma.purchasedProduct.create({
@@ -111,7 +111,7 @@ export async function addPurchaseFromQr(formData: FormData) {
       purchasedOn: new Date(`${new Date().toISOString().slice(0, 10)}T00:00:00.000Z`),
     },
   });
-  redirect(`/${locale}/admin/purchases?saved=1`);
+  redirect(`/${locale}/admin/costs?saved=1`);
 }
 
 export async function deletePurchase(formData: FormData) {
@@ -119,5 +119,5 @@ export async function deletePurchase(formData: FormData) {
   const locale = localeFrom(formData);
   const id = String(formData.get("id") ?? "");
   if (id) await prisma.purchasedProduct.deleteMany({ where: { id } });
-  redirect(`/${locale}/admin/purchases`);
+  redirect(`/${locale}/admin/costs`);
 }
