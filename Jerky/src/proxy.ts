@@ -5,10 +5,22 @@ const floodWindowMs = 10_000;
 const floodMax = 120;
 const floods = new Map<string, { count: number; start: number }>();
 
+function isAppDataRead(request: NextRequest) {
+  if (request.method !== "GET" && request.method !== "HEAD") return false;
+  const headers = request.headers;
+  if (headers.get("next-router-prefetch")) return true;
+  const purpose = `${headers.get("purpose") ?? ""} ${headers.get("sec-purpose") ?? ""}`.toLowerCase();
+  if (purpose.includes("prefetch")) return true;
+  if (headers.has("rsc")) return true;
+  if (headers.get("accept")?.includes("text/x-component")) return true;
+  return false;
+}
+
 function flooded(request: NextRequest) {
   const now = Date.now();
   const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  const ip = forwarded && forwarded.length <= 80 ? forwarded : "local";
+  const ip = forwarded && forwarded.length <= 80 ? forwarded : request.ip;
+  if (!ip || ip.length > 80) return false;
   const current = floods.get(ip);
   if (!current || now - current.start > floodWindowMs) {
     floods.set(ip, { count: 1, start: now });
@@ -33,10 +45,11 @@ function localeFromPath(pathname: string): Locale | undefined {
 }
 
 export function proxy(request: NextRequest) {
-  if (flooded(request)) {
+  const { pathname } = request.nextUrl;
+  const isAdmin = pathname === "/admin" || pathname.includes("/admin/") || pathname.endsWith("/admin");
+  if (!isAdmin && !isAppDataRead(request) && flooded(request)) {
     return new NextResponse("Too many requests", { status: 429, headers: { "Retry-After": "10" } });
   }
-  const { pathname } = request.nextUrl;
   const existing = localeFromPath(pathname);
 
   if (existing) {
