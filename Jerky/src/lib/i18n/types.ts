@@ -277,9 +277,15 @@ export type Dictionary = {
     panel: string;
     test: string;
   };
+  closed: {
+    title: string;
+    body: string;
+    login: string;
+  };
   admin: {
     dashboard: string;
     orders: string;
+    row: string;
     products: string;
     back: string;
     overviewEyebrow: string;
@@ -383,6 +389,11 @@ export type Dictionary = {
       settings: string;
       settingsLede: string;
       language: string;
+      siteOpen: string;
+      siteClosed: string;
+      siteClosedBody: string;
+      closeSite: string;
+      openSite: string;
       visitors: string;
       visitorsLede: string;
       visitorsEmpty: string;

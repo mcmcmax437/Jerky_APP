@@ -315,9 +315,15 @@
     "panel": "Панель",
     "test": "TEST"
   },
+  "closed": {
+    "title": "Сайт тимчасово закрито",
+    "body": "Зараз триває технічний огляд. Крамниця, кошик і замовлення недоступні.",
+    "login": "Вхід для адміністратора"
+  },
   "admin": {
     "dashboard": "Пульт",
     "orders": "Замовлення",
+    "row": "№",
     "products": "Продукти",
     "back": "Крамниця",
     "overviewEyebrow": "Панель",
@@ -432,8 +438,13 @@
       "supportLede": "Звернення з акаунтів. Листи нікуди не відправляються.",
       "supportEmpty": "Звернень ще немає.",
       "settings": "Налаштування",
-      "settingsLede": "Панель настра. Тіки язык у presently.",
-      "language": "Язык",
+    "settingsLede": "Панель настра. Тіки язык у presently.",
+    "language": "Язык",
+    "siteOpen": "Сайт відкритий",
+    "siteClosed": "Сайт закритий",
+    "siteClosedBody": "Відвідувачі бачать лише повідомлення про технічний огляд. Панель адміністратора лишається доступною.",
+    "closeSite": "Закрити сайт",
+    "openSite": "Відкрити сайт",
       "visitors": "Visitor statistics",
       "visitorsLede": "Own counter. No cookies, no outside service.",
       "visitorsEmpty": "Visits ще немає.",

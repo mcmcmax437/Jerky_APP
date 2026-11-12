@@ -315,9 +315,15 @@
     "panel": "Panel",
     "test": "TEST"
   },
+  "closed": {
+    "title": "Sklep jest tymczasowo zamknięty",
+    "body": "Trwa przegląd techniczny. Katalog, koszyk i zamówienia są niedostępne.",
+    "login": "Wejście administratora"
+  },
   "admin": {
     "dashboard": "Pulpit",
     "orders": "Zamówienia",
+    "row": "№",
     "products": "Produkty",
     "back": "Sklep",
     "overviewEyebrow": "Panel",
@@ -432,8 +438,13 @@
       "supportLede": "Wiadomości z kont. Nie wysyłamy ich e-mailem.",
       "supportEmpty": "Nie ma jeszcze wiadomości.",
       "settings": "Ustawienia",
-      "settingsLede": "Panel settings. Only language is here now.",
-      "language": "Language",
+    "settingsLede": "Panel settings. Only language is here now.",
+    "language": "Language",
+    "siteOpen": "Sklep otwarty",
+    "siteClosed": "Sklep zamknięty",
+    "siteClosedBody": "Odwiedzający widzą tylko informację o przeglądzie technicznym. Panel administratora zostaje dostępny.",
+    "closeSite": "Zamknij sklep",
+    "openSite": "Otwórz sklep",
       "visitors": "Visitors",
       "visitorsLede": "Own counter. No cookies, no outside service.",
       "visitorsEmpty": "No visits yet.",

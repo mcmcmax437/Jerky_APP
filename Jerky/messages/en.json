@@ -315,9 +315,15 @@
     "panel": "Panel",
     "test": "TEST"
   },
+  "closed": {
+    "title": "The shop is temporarily closed",
+    "body": "A technical check is in progress. The catalog, cart, and orders are unavailable.",
+    "login": "Administrator sign-in"
+  },
   "admin": {
     "dashboard": "Desk",
     "orders": "Orders",
+    "row": "№",
     "products": "Products",
     "back": "Shop",
     "overviewEyebrow": "Panel",
@@ -432,8 +438,13 @@
       "supportLede": "Messages from accounts. They are not emailed.",
       "supportEmpty": "No messages yet.",
       "settings": "Settings",
-      "settingsLede": "Panel settings. Only language is here now.",
-      "language": "Language",
+    "settingsLede": "Panel settings. Only language is here now.",
+    "language": "Language",
+    "siteOpen": "Shop is open",
+    "siteClosed": "Shop is closed",
+    "siteClosedBody": "Visitors only see the technical-check notice. The admin panel stays available.",
+    "closeSite": "Close the shop",
+    "openSite": "Open the shop",
       "visitors": "Visitors",
       "visitorsLede": "Own counter. No cookies, no outside service.",
       "visitorsEmpty": "No visits yet.",

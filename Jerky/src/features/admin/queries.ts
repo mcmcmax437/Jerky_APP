@@ -352,6 +352,11 @@ export async function getPanelLocale() {
   return isLocale(setting.value) ? setting.value : null;
 }
 
+export async function isSiteClosed() {
+  const setting = await prisma.adminSetting.findUnique({ where: { key: "site-closed" }, select: { value: true } });
+  return setting?.value === "1";
+}
+
 export async function listAdminReviews() {
   return prisma.customerReview.findMany({
     orderBy: { createdAt: "desc" },

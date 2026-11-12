@@ -40,8 +40,8 @@ export function AdminShell({
   ];
 
   return (
-    <div className="min-h-screen bg-[#100e0c] text-[#f3efe6] lg:grid lg:grid-cols-[248px_minmax(0,1fr)]">
-      <aside className="relative border-b border-white/10 bg-[#141210] lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:border-r lg:border-b-0">
+    <div className="flex min-h-full flex-1 flex-col bg-[#100e0c] text-[#f3efe6] lg:grid lg:min-h-[calc(100vh-4.75rem)] lg:grid-cols-[248px_minmax(0,1fr)]">
+      <aside className="relative border-b border-white/10 bg-[#141210] lg:sticky lg:top-[4.75rem] lg:flex lg:h-[calc(100vh-4.75rem)] lg:flex-col lg:border-r lg:border-b-0">
         <Link href={`/${locale}/admin`} className="flex items-center gap-3 px-5 py-5">
           <LogoLockup compact />
           <span className="text-[10px] font-semibold tracking-[0.22em] text-[#b7a898] uppercase">{terminal.panel}</span>

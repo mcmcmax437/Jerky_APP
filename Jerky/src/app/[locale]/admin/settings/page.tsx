@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { AdminPage } from "@/components/admin/AdminPage";
-import { setPanelLocale } from "@/features/admin/settings-actions";
-import { getPanelLocale } from "@/features/admin/queries";
+import { setPanelLocale, setSiteClosed } from "@/features/admin/settings-actions";
+import { getPanelLocale, isSiteClosed } from "@/features/admin/queries";
 import { readLocale } from "@/lib/i18n/request";
 import { locales } from "@/lib/i18n/locales";
 
@@ -19,7 +19,7 @@ export default async function AdminSettingsPage({
 }) {
   const { locale, dict } = await readLocale(params);
   const query = await searchParams;
-  const saved = await getPanelLocale();
+  const [saved, closed] = await Promise.all([getPanelLocale(), isSiteClosed()]);
   const copy = dict.admin.terminal;
 
   return (
@@ -43,6 +43,17 @@ export default async function AdminSettingsPage({
           </form>
         ))}
       </div>
+      <section className="mt-10 max-w-xl border-t border-white/10 pt-8">
+        <h2 className="text-lg">{closed ? copy.siteClosed : copy.siteOpen}</h2>
+        <p className="mt-2 text-sm text-[#b7aa9d]">{copy.siteClosedBody}</p>
+        <form action={setSiteClosed} className="mt-5">
+          <input type="hidden" name="current" value={locale} />
+          <input type="hidden" name="closed" value={closed ? "0" : "1"} />
+          <button type="submit" className="rounded-lg bg-[#e7d3bc] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#1a1612]">
+            {closed ? copy.openSite : copy.closeSite}
+          </button>
+        </form>
+      </section>
     </AdminPage>
   );
 }

@@ -72,6 +72,7 @@ export default async function AdminOrdersPage({
           <table className="w-full text-left text-sm">
             <thead className="text-xs uppercase tracking-[0.16em] text-[#9c9186]">
               <tr>
+                <th className="w-px py-2 pr-4 font-medium">{dict.admin.row}</th>
                 <th className="py-2 pr-4 font-medium">{dict.admin.orders}</th>
                 <th className="py-2 pr-4 font-medium">{dict.admin.customer}</th>
                 <th className="py-2 pr-4 font-medium">{dict.admin.status}</th>
@@ -85,6 +86,7 @@ export default async function AdminOrdersPage({
             <tbody className="rise-rows">
               {orders.map((order, index) => (
                 <tr key={order.id} className="border-t border-white/10 align-top">
+                  <td className="py-4 pr-4 whitespace-nowrap tabular-nums text-[#9c9186]">{index + 1}</td>
                   <td className="py-4 pr-4 whitespace-nowrap">
                     <Link href={`/${locale}/admin/orders/${order.id}`} className="font-semibold text-[#e7d3bc]">
                       {order.number}

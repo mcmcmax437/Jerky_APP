@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { CartProvider } from "@/features/cart/cart-context";
+import { isSiteClosed } from "@/features/admin/queries";
 import { recordVisit } from "@/features/site/visits";
 import { getSession } from "@/features/auth/session";
+import { ClosedSite } from "@/components/site/ClosedSite";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
@@ -37,11 +39,26 @@ export default async function LocaleLayout({
   const session = await getSession();
   const pathname = (await headers()).get("x-pathname") ?? "";
   const isAdmin = pathname === `/${locale}/admin` || pathname.startsWith(`/${locale}/admin/`);
+  const isLogin = pathname === `/${locale}/login`;
+  const staff = session?.role === "ADMIN";
+
+  if ((await isSiteClosed()) && !staff && !isAdmin && !isLogin) {
+    return <ClosedSite locale={locale} dict={dict} />;
+  }
 
   if (!isAdmin && pathname) await recordVisit(locale, pathname);
 
   if (isAdmin) {
-    return <main id="content" className="min-h-screen bg-[#100e0c]">{children}</main>;
+    return (
+      <CartProvider>
+        <div className="flex min-h-screen flex-col bg-[#100e0c]">
+          <Header locale={locale} dict={dict} role={session?.role ?? null} />
+          <main id="content" className="flex flex-1 flex-col">
+            {children}
+          </main>
+        </div>
+      </CartProvider>
+    );
   }
 
   return (
