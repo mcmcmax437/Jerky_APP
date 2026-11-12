@@ -8,7 +8,9 @@ import { isLocale, type Locale } from "@/lib/i18n/locales";
 import { getSession } from "@/features/auth/session";
 import { parsePriceMinor } from "./price";
 import { photoIsInvalid, removeUploadedPhoto, saveProductPhoto } from "./product-photo";
-import { isOrderStatus } from "./order-status";
+import { isOrderStatus, type OrderStatusName } from "./order-status";
+import { formatDateTime } from "@/lib/format";
+import { getAdminOrder, orderLines, type OrderLine } from "./queries";
 import { slotAssignments } from "./slots";
 
 const accents = ["bone", "teriyaki", "chili"] as const;
@@ -57,6 +59,59 @@ export async function moveOrder(id: string, status: string) {
       },
     });
   }
+  revalidatePath("/", "layout");
+  return true;
+}
+
+export type OrderPopupData = {
+  id: string;
+  number: string;
+  status: OrderStatusName;
+  customerName: string;
+  email: string;
+  phone: string | null;
+  address: string;
+  lines: OrderLine[];
+  notes: { id: string; body: string; at: string }[];
+  events: { id: string; fromStatus: OrderStatusName | null; toStatus: OrderStatusName; at: string }[];
+};
+
+export async function readOrderPopup(id: string, locale: string): Promise<OrderPopupData | null> {
+  await requireAdmin();
+  if (id.length < 1 || id.length > 80) return null;
+  const language = isLocale(locale) ? locale : "pl";
+  const order = await getAdminOrder(id);
+  if (!order || !isOrderStatus(order.status)) return null;
+  const lines = await orderLines(order.items);
+  return {
+    id: order.id,
+    number: order.number,
+    status: order.status,
+    customerName: order.customerName,
+    email: order.email,
+    phone: order.phone,
+    address: [order.addressLine, order.postalCode, order.city, order.country].filter(Boolean).join(", "),
+    lines,
+    notes: order.notes.map((note) => ({ id: note.id, body: note.body, at: formatDateTime(note.createdAt, language) })),
+    events: order.events.flatMap((event) => {
+      if (!isOrderStatus(event.toStatus) || (event.fromStatus && !isOrderStatus(event.fromStatus))) return [];
+      return [{
+        id: event.id,
+        fromStatus: event.fromStatus,
+        toStatus: event.toStatus,
+        at: formatDateTime(event.createdAt, language),
+      }];
+    }),
+  };
+}
+
+export async function saveOrderNote(id: string, body: string) {
+  await requireAdmin();
+  const text = body.trim();
+  if (id.length < 1 || id.length > 80 || text.length < 1 || text.length > 4000) return false;
+  const order = await prisma.order.findUnique({ where: { id }, select: { id: true } });
+  if (!order) return false;
+  await prisma.orderNote.create({ data: { orderId: id, body: text } });
   revalidatePath("/", "layout");
   return true;
 }

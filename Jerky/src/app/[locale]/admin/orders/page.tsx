@@ -34,6 +34,7 @@ export default async function AdminOrdersPage({ params }: { params: Promise<{ lo
         searchLabel={dict.admin.search}
         emptyLabel={dict.admin.empty}
         comingSoon={dict.price.comingSoon}
+        dict={dict}
       />
     </AdminPage>
   );

@@ -1,11 +1,12 @@
 "use client";
 
 import { useRef, useState, useTransition, type PointerEvent } from "react";
-import { useRouter } from "next/navigation";
+import { OrderPopup } from "@/components/admin/OrderPopup";
 import { moveOrder } from "@/features/admin/actions";
 import { isOrderStatus, orderStatuses, orderStatusTone, type OrderStatusName } from "@/features/admin/order-status";
 import { formatPrice } from "@/lib/format";
 import type { Locale } from "@/lib/i18n/locales";
+import type { Dictionary } from "@/lib/i18n/types";
 
 const columnWash: Record<OrderStatusName, string> = {
   NEW: "bg-[#221e19]",
@@ -67,6 +68,7 @@ export function OrderBoard({
   searchLabel,
   emptyLabel,
   comingSoon,
+  dict,
 }: {
   locale: Locale;
   orders: OrderTicket[];
@@ -74,9 +76,10 @@ export function OrderBoard({
   searchLabel: string;
   emptyLabel: string;
   comingSoon: string;
+  dict: Dictionary;
 }) {
-  const router = useRouter();
   const [items, setItems] = useState(orders);
+  const [openId, setOpenId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [over, setOver] = useState<OrderStatusName | null>(null);
@@ -208,7 +211,7 @@ export function OrderBoard({
                             order={order}
                             locale={locale}
                             comingSoon={comingSoon}
-                            onOpen={() => router.push(`/${locale}/admin/orders/${order.id}`)}
+                            onOpen={() => setOpenId(order.id)}
                           />
                         </article>
                       </li>
@@ -220,6 +223,15 @@ export function OrderBoard({
           })}
         </div>
       </div>
+      {openId ? (
+        <OrderPopup
+          id={openId}
+          locale={locale}
+          dict={dict}
+          onClose={() => setOpenId(null)}
+          onStatus={(status) => setItems((list) => list.map((order) => (order.id === openId ? { ...order, status } : order)))}
+        />
+      ) : null}
     </div>
   );
 }
