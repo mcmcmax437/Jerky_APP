@@ -21,14 +21,27 @@ function TicketFace({
   order,
   locale,
   comingSoon,
+  onOpen,
 }: {
   order: OrderTicket;
   locale: Locale;
   comingSoon: string;
+  onOpen?: () => void;
 }) {
   return (
     <>
-      <p className="font-semibold text-[#f3efe6]">{order.number}</p>
+      {onOpen ? (
+        <button
+          type="button"
+          className="cursor-pointer text-left font-semibold text-[#f3efe6] underline-offset-2 hover:underline"
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={onOpen}
+        >
+          {order.number}
+        </button>
+      ) : (
+        <p className="font-semibold text-[#f3efe6]">{order.number}</p>
+      )}
       <p className="mt-1 text-sm text-[#d9cfc4]">{order.customerName}</p>
       <p className="mt-2 flex items-center justify-between gap-2 text-xs text-[#9c9186]">
         <span>{order.dateLabel}</span>
@@ -185,20 +198,18 @@ export function OrderBoard({
                     ) : (
                       <li key={order.id}>
                         <article
-                          role="button"
-                          aria-label={order.number}
                           onPointerDown={(event) => onPointerDown(event, order.id)}
                           onPointerMove={onPointerMove}
                           onPointerUp={(event) => finishGesture(event.clientX, event.clientY)}
                           onPointerCancel={() => finishGesture(-1, -1)}
-                          onDoubleClick={() => router.push(`/${locale}/admin/orders/${order.id}`)}
-                          onKeyDown={(event) => {
-                            if (event.key === "Enter") router.push(`/${locale}/admin/orders/${order.id}`);
-                          }}
-                          tabIndex={0}
-                          className={`cursor-grab rounded-lg bg-black/35 px-3 py-3 ring-inset active:cursor-grabbing ${draggingId === order.id ? "opacity-40 ring-2 ring-[#e7d3bc]" : "ring-1 ring-white/10"}`}
+                          className={`cursor-grab rounded-lg bg-black/35 px-3 py-3 ring-inset transition-transform duration-150 ease-out active:scale-[0.98] active:cursor-grabbing ${draggingId === order.id ? "opacity-40 ring-2 ring-[#e7d3bc]" : "ring-1 ring-white/10"}`}
                         >
-                          <TicketFace order={order} locale={locale} comingSoon={comingSoon} />
+                          <TicketFace
+                            order={order}
+                            locale={locale}
+                            comingSoon={comingSoon}
+                            onOpen={() => router.push(`/${locale}/admin/orders/${order.id}`)}
+                          />
                         </article>
                       </li>
                     ),
