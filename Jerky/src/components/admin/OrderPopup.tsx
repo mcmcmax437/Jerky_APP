@@ -26,6 +26,7 @@ export function OrderPopup({
   const [note, setNote] = useState("");
   const [noteError, setNoteError] = useState(false);
   const [reload, setReload] = useState(0);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const copy = dict.admin;
 
   useEffect(() => {
@@ -37,6 +38,10 @@ export function OrderPopup({
       live = false;
     };
   }, [id, locale, reload]);
+
+  useEffect(() => {
+    setHistoryOpen(false);
+  }, [id]);
 
   useEffect(() => {
     const previous = document.body.style.overflow;
@@ -149,18 +154,29 @@ export function OrderPopup({
               </label>
             </section>
             <section>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">{copy.history}</h3>
-              <ol className="mt-4 grid gap-3">
-                {detail.events.map((event) => (
-                  <li key={event.id} className="text-sm">
-                    <span className="font-semibold">
-                      {event.fromStatus ? `${copy.statuses[event.fromStatus]} → ` : ""}
-                      {copy.statuses[event.toStatus]}
-                    </span>
-                    <span className="ml-3 text-[#9c9186]">{event.at}</span>
-                  </li>
-                ))}
-              </ol>
+              <button
+                type="button"
+                aria-expanded={historyOpen}
+                onClick={() => setHistoryOpen((open) => !open)}
+                className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]"
+              >
+                {copy.history}
+                <span className="tabular-nums">{detail.events.length}</span>
+                <span aria-hidden="true">{historyOpen ? "−" : "+"}</span>
+              </button>
+              {historyOpen ? (
+                <ol className="mt-4 grid gap-3">
+                  {detail.events.map((event) => (
+                    <li key={event.id} className="text-sm">
+                      <span className="font-semibold">
+                        {event.fromStatus ? `${copy.statuses[event.fromStatus]} → ` : ""}
+                        {copy.statuses[event.toStatus]}
+                      </span>
+                      <span className="ml-3 text-[#9c9186]">{event.at}</span>
+                    </li>
+                  ))}
+                </ol>
+              ) : null}
             </section>
           </>
         ) : null}
