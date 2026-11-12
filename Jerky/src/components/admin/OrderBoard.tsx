@@ -105,9 +105,9 @@ export function OrderBoard({
                   <h2 className="text-xs font-semibold uppercase tracking-[0.14em]">{labels[status]}</h2>
                   <span className="text-xs tabular-nums">{column.length}</span>
                 </header>
-                <ul>
+                <ul className="grid gap-2 p-2">
                   {column.map((order) => (
-                    <li key={order.id} className="border-t border-white/10">
+                    <li key={order.id}>
                       <article
                         role="button"
                         aria-label={order.number}
@@ -130,7 +130,7 @@ export function OrderBoard({
                           if (event.key === "Enter") router.push(`/${locale}/admin/orders/${order.id}`);
                         }}
                         tabIndex={0}
-                        className="cursor-grab px-3 py-3 active:cursor-grabbing"
+                        className="cursor-grab rounded-lg bg-black/35 px-3 py-3 ring-1 ring-white/10 ring-inset active:cursor-grabbing"
                       >
                         <p className="font-semibold text-[#f3efe6]">{order.number}</p>
                         <p className="mt-1 text-sm text-[#d9cfc4]">{order.customerName}</p>
