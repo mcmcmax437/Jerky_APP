@@ -18,8 +18,7 @@ function isAppDataRead(request: NextRequest) {
 
 function flooded(request: NextRequest) {
   const now = Date.now();
-  const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  const ip = forwarded && forwarded.length <= 80 ? forwarded : request.ip;
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
   if (!ip || ip.length > 80) return false;
   const current = floods.get(ip);
   if (!current || now - current.start > floodWindowMs) {
