@@ -44,7 +44,7 @@ export function OrderBoard({
   const router = useRouter();
   const [items, setItems] = useState(orders);
   const [query, setQuery] = useState("");
-  const [over, setOver] = useState<OrderStatusName | null>(null);
+  const [draggingId, setDraggingId] = useState<string | null>(null);
   const dragId = useRef<string | null>(null);
   const dragged = useRef(false);
   const [, startTransition] = useTransition();
@@ -57,7 +57,7 @@ export function OrderBoard({
   function dropOn(status: OrderStatusName) {
     const id = dragId.current;
     dragId.current = null;
-    setOver(null);
+    setDraggingId(null);
     if (!id) return;
     const current = items.find((order) => order.id === id);
     if (!current || current.status === status) return;
@@ -90,16 +90,12 @@ export function OrderBoard({
               <section
                 key={status}
                 aria-label={labels[status]}
-                onDragOver={(event) => {
-                  event.preventDefault();
-                  setOver(status);
-                }}
-                onDragLeave={() => setOver((current) => (current === status ? null : current))}
+                onDragOver={(event) => event.preventDefault()}
                 onDrop={(event) => {
                   event.preventDefault();
                   dropOn(status);
                 }}
-                className={`min-h-64 border-r border-white/15 last:border-r-0 ${columnWash[status]} ${over === status ? "ring-2 ring-[#e7d3bc] ring-inset" : ""}`}
+                className={`min-h-64 border-r border-white/15 last:border-r-0 select-none ${columnWash[status]}`}
               >
                 <header className={`flex items-center justify-between gap-2 px-3 py-3 ${orderStatusTone[status]}`}>
                   <h2 className="text-xs font-semibold uppercase tracking-[0.14em]">{labels[status]}</h2>
@@ -112,12 +108,18 @@ export function OrderBoard({
                         role="button"
                         aria-label={order.number}
                         draggable
-                        onDragStart={() => {
+                        onDragStart={(event) => {
                           dragId.current = order.id;
                           dragged.current = true;
+                          setDraggingId(order.id);
+                          event.dataTransfer.effectAllowed = "move";
+                          event.dataTransfer.setData("text/plain", order.id);
+                          const card = event.currentTarget;
+                          const rect = card.getBoundingClientRect();
+                          event.dataTransfer.setDragImage(card, event.clientX - rect.left, event.clientY - rect.top);
                         }}
                         onDragEnd={() => {
-                          setOver(null);
+                          setDraggingId(null);
                           window.setTimeout(() => {
                             dragged.current = false;
                           }, 0);
@@ -130,7 +132,7 @@ export function OrderBoard({
                           if (event.key === "Enter") router.push(`/${locale}/admin/orders/${order.id}`);
                         }}
                         tabIndex={0}
-                        className="cursor-grab rounded-lg bg-black/35 px-3 py-3 ring-1 ring-white/10 ring-inset active:cursor-grabbing"
+                        className={`cursor-grab rounded-lg bg-black/35 px-3 py-3 ring-inset active:cursor-grabbing ${draggingId === order.id ? "ring-2 ring-[#e7d3bc]" : "ring-1 ring-white/10"}`}
                       >
                         <p className="font-semibold text-[#f3efe6]">{order.number}</p>
                         <p className="mt-1 text-sm text-[#d9cfc4]">{order.customerName}</p>
