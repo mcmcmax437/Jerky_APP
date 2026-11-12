@@ -498,6 +498,7 @@ export type Dictionary = {
       IN_PROCESS: string;
       CANCELLED: string;
       READY: string;
+      PACKING: string;
       SHIPPED: string;
       DELIVERED: string;
     };

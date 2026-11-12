@@ -36,6 +36,7 @@ const statusDot: Record<OrderStatusName, string> = {
   NEW: "bg-copper",
   IN_PROCESS: "bg-[#c4a574]",
   READY: "bg-[#c4a574]",
+  PACKING: "bg-[#c4a574]",
   SHIPPED: "bg-[#c4a574]",
   DELIVERED: "bg-emerald-600",
   CANCELLED: "bg-[#8d8278]",

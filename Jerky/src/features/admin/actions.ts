@@ -43,6 +43,24 @@ export async function reorderProducts(ids: string[]) {
   revalidatePath("/", "layout");
 }
 
+export async function moveOrder(id: string, status: string) {
+  await requireAdmin();
+  if (!isOrderStatus(status) || id.length < 1 || id.length > 80) return false;
+  const order = await prisma.order.findUnique({ where: { id }, select: { status: true } });
+  if (!order) return false;
+  if (order.status !== status) {
+    await prisma.order.update({
+      where: { id },
+      data: {
+        status,
+        events: { create: { fromStatus: order.status, toStatus: status } },
+      },
+    });
+  }
+  revalidatePath("/", "layout");
+  return true;
+}
+
 export async function setOrderStatus(formData: FormData) {
   await requireAdmin();
   const locale = localeFrom(formData);

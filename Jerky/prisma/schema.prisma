@@ -14,10 +14,11 @@ datasource db {
 enum OrderStatus {
   NEW
   IN_PROCESS
-  CANCELLED
   READY
+  PACKING
   SHIPPED
   DELIVERED
+  CANCELLED
 }
 
 enum RecipeStatus {

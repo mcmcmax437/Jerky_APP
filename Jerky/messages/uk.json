@@ -559,12 +559,13 @@
       "photo": "Фото має бути JPG, PNG або WebP і не більше 4 МБ."
     },
     "statuses": {
-      "NEW": "Нове",
+      "NEW": "Нові",
       "IN_PROCESS": "В процесі",
-      "CANCELLED": "Скасовано",
-      "READY": "Готове",
-      "SHIPPED": "Відправлене",
-      "DELIVERED": "Доставлене"
+      "READY": "Готово",
+      "PACKING": "Пакується",
+      "SHIPPED": "Відправлено",
+      "DELIVERED": "Доставлено",
+      "CANCELLED": "Скасовано"
     }
   }
 }

@@ -563,6 +563,7 @@
       "IN_PROCESS": "W trakcie",
       "CANCELLED": "Anulowane",
       "READY": "Gotowe",
+      "PACKING": "Pakowanie",
       "SHIPPED": "Wysłane",
       "DELIVERED": "Dostarczone"
     }

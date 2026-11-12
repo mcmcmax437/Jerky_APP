@@ -1,7 +1,7 @@
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "@/generated/prisma/client";
 
-const clientVersion = "15";
+const clientVersion = "16";
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient; prismaVersion?: string };
 
 function createPrismaClient() {
