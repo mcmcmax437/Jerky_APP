@@ -20,6 +20,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* A phone pinch otherwise shrinks the page and leaves an empty gutter. */
+  overflow-x: clip;
+  touch-action: pan-x pan-y;
 }
 
 body {

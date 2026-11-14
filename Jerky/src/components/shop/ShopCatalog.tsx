@@ -111,7 +111,7 @@ export function ShopCatalog({
               );
             })}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex min-w-0 max-w-full flex-wrap items-center gap-2">
             {criteria ? (
               <div ref={filterRef} className="relative">
                 <button
@@ -127,7 +127,7 @@ export function ShopCatalog({
                   {filtersActive > 0 ? <span className="rounded-full bg-white/15 px-1.5 text-[10px]">{filtersActive}</span> : null}
                 </button>
                 {filterOpen ? (
-                  <div id="shop-filter" className="absolute right-0 z-30 mt-2 max-h-[min(32rem,calc(100vh-8rem))] w-[min(20rem,calc(100vw-2.5rem))] overflow-y-auto rounded-2xl border border-ink-800/10 bg-ivory-100 p-4 text-text-dark shadow-[0_24px_50px_rgba(0,0,0,0.18)]">
+                  <div id="shop-filter" className="absolute left-0 z-30 mt-2 max-h-[min(32rem,calc(100vh-8rem))] w-[min(20rem,calc(100vw-2.5rem))] overflow-y-auto rounded-2xl border border-ink-800/10 bg-ivory-100 p-4 text-text-dark shadow-[0_24px_50px_rgba(0,0,0,0.18)] lg:left-auto lg:right-0">
                     <label className="block text-[13px] font-semibold uppercase tracking-[1.5px]">
                       {dict.shop.search}
                       <input
@@ -216,18 +216,18 @@ export function ShopCatalog({
                 ) : null}
               </div>
             ) : null}
-            <label className="inline-flex items-center gap-2 rounded-full border border-ink-800/10 bg-white/50 px-3 py-2 text-[13px] font-semibold uppercase tracking-[1.5px] text-muted">
-              <span>{dict.home.sortLabel}:</span>
+            <label className="inline-flex min-w-0 max-w-full items-center gap-2 rounded-full border border-ink-800/10 bg-white/50 px-3 py-2 text-[13px] font-semibold uppercase tracking-[1.5px] text-muted">
+              <span className="shrink-0">{dict.home.sortLabel}:</span>
               <select
                 value={sort}
                 onChange={(event) => setSort(event.target.value as Sort)}
-                className="bg-transparent text-text-dark uppercase outline-none"
+                className="min-w-0 max-w-full bg-transparent text-[16px] text-text-dark uppercase outline-none md:text-[13px]"
               >
                 <option value="recommended">{dict.home.sortRecommended}</option>
                 <option value="name">{dict.home.sortName}</option>
               </select>
             </label>
-            <div className="inline-flex rounded-full border border-ink-800/10 bg-white/50 p-1">
+            <div className="inline-flex shrink-0 rounded-full border border-ink-800/10 bg-white/50 p-1">
               <button
                 type="button"
                 aria-label={dict.shop.viewGrid}
