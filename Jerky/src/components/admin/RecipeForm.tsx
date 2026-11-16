@@ -7,11 +7,11 @@ import { formatAmount } from "@/lib/format";
 import type { Locale } from "@/lib/i18n/locales";
 import type { Dictionary } from "@/lib/i18n/types";
 
-type ComponentFields = { name: string; quantity: string; unit: RecipeUnit; unitPrice: string };
+type ComponentFields = { ingredientId: string; quantity: string; unit: RecipeUnit; unitPrice: string };
 type ComponentRow = ComponentFields & { id: string };
 
 function blankRow(): ComponentRow {
-  return { id: crypto.randomUUID(), name: "", quantity: "", unit: "G", unitPrice: "" };
+  return { id: crypto.randomUUID(), ingredientId: "", quantity: "", unit: "G", unitPrice: "" };
 }
 
 function parseAmount(value: string) {
@@ -31,6 +31,7 @@ export function RecipeForm({
   error,
   saved,
   products,
+  ingredients,
   recipe,
 }: {
   locale: Locale;
@@ -39,6 +40,7 @@ export function RecipeForm({
   error?: string;
   saved?: boolean;
   products: { id: string; name: string }[];
+  ingredients: { id: string; name: string }[];
   recipe?: {
     id: string;
     title: string;
@@ -57,7 +59,7 @@ export function RecipeForm({
   );
   const cost = recipeCost(
     components
-      .filter((row) => row.name.trim() || row.quantity.trim())
+      .filter((row) => row.ingredientId.trim() || row.quantity.trim())
       .map((row) => ({
         quantity: parseAmount(row.quantity) ?? 0,
         unitPrice: parseAmount(row.unitPrice),
@@ -127,15 +129,20 @@ export function RecipeForm({
               setComponents((current) => current.map((item) => (item.id === row.id ? { ...item, ...patch } : item)));
             return (
               <div key={row.id} className="grid gap-2 sm:grid-cols-[minmax(0,1.4fr)_110px_100px_140px_120px_auto]">
-                <input
-                  name="componentName"
+                <select
+                  name="componentIngredient"
                   aria-label={copy.ingredientName}
-                  value={row.name}
-                  maxLength={160}
-                  placeholder={copy.example.ingredient}
-                  onChange={(event) => update({ name: event.target.value })}
+                  value={row.ingredientId}
+                  onChange={(event) => update({ ingredientId: event.target.value })}
                   className={fieldClass}
-                />
+                >
+                  <option value="">{copy.choose}</option>
+                  {ingredients.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
                 <input
                   name="componentQty"
                   aria-label={copy.quantity}

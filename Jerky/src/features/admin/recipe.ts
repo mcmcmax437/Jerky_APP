@@ -13,7 +13,7 @@ export type RecipeDraft = {
   meatType: MeatTypeName;
   marinadeHours: number | null;
   processPlan: string | null;
-  components: { name: string; quantity: number; unit: RecipeUnit; unitPrice: number | null }[];
+  components: { ingredientId: string; quantity: number; unit: RecipeUnit; unitPrice: number | null }[];
   mode: "save" | "version";
 };
 
@@ -49,23 +49,23 @@ export function parseRecipeForm(formData: FormData): { ok: true; data: RecipeDra
   const processPlan = optionalText(String(formData.get("processPlan") ?? ""), 8000);
   if (marinadeHours === "invalid" || processPlan === "invalid") return { ok: false };
 
-  const names = formData.getAll("componentName").map((item) => String(item));
+  const ids = formData.getAll("componentIngredient").map((item) => String(item));
   const quantities = formData.getAll("componentQty").map((item) => String(item));
   const units = formData.getAll("componentUnit").map((item) => String(item));
   const prices = formData.getAll("componentPrice").map((item) => String(item));
-  if (names.length !== quantities.length || names.length !== units.length || names.length !== prices.length) return { ok: false };
+  if (ids.length !== quantities.length || ids.length !== units.length || ids.length !== prices.length) return { ok: false };
   const components: RecipeDraft["components"] = [];
-  for (let index = 0; index < names.length; index += 1) {
-    const name = names[index].trim();
+  for (let index = 0; index < ids.length; index += 1) {
+    const ingredientId = ids[index].trim();
     const quantityText = quantities[index].trim();
     const unit = units[index];
-    if (!name && !quantityText && !prices[index].trim()) continue;
+    if (!ingredientId && !quantityText && !prices[index].trim()) continue;
     const quantity = optionalNumber(quantityText, 3);
     const unitPrice = optionalNumber(prices[index], 4);
-    if (!name || name.length > 160 || quantity == null || quantity === "invalid" || quantity <= 0) return { ok: false };
+    if (!ingredientId || !/^[a-z0-9]{20,32}$/.test(ingredientId) || quantity == null || quantity === "invalid" || quantity <= 0) return { ok: false };
     if (unitPrice === "invalid") return { ok: false };
     if (!recipeUnits.includes(unit as RecipeUnit)) return { ok: false };
-    components.push({ name, quantity, unit: unit as RecipeUnit, unitPrice });
+    components.push({ ingredientId, quantity, unit: unit as RecipeUnit, unitPrice });
   }
 
   return {

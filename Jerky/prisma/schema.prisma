@@ -336,6 +336,7 @@ model Recipe {
   productId String?
   title     String       @db.VarChar(160)
   status    RecipeStatus @default(DRAFT)
+  rating    Decimal?     @db.Decimal(4, 1)
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
   product   Product?     @relation(fields: [productId], references: [id], onDelete: SetNull)

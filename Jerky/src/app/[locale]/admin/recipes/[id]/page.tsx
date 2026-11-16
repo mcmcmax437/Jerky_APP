@@ -5,7 +5,7 @@ import { DeleteRecipeButton } from "@/components/admin/DeleteRecipeButton";
 import { RecipeForm } from "@/components/admin/RecipeForm";
 import { deleteRecipe, updateRecipe } from "@/features/admin/recipe-actions";
 import { meatTypes, type MeatTypeName } from "@/features/admin/recipe";
-import { getAdminRecipe, listAdminProducts } from "@/features/admin/queries";
+import { getAdminRecipe, listAdminIngredients, listAdminProducts } from "@/features/admin/queries";
 import { readLocale } from "@/lib/i18n/request";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; id: string }> }): Promise<Metadata> {
@@ -28,7 +28,7 @@ export default async function EditRecipePage({
   const { locale: localeParam, id } = await params;
   const { locale, dict } = await readLocale(Promise.resolve({ locale: localeParam }));
   const query = await searchParams;
-  const [recipe, products] = await Promise.all([getAdminRecipe(id), listAdminProducts()]);
+  const [recipe, products, ingredients] = await Promise.all([getAdminRecipe(id), listAdminProducts(), listAdminIngredients()]);
   if (!recipe) notFound();
   const version = recipe.versions[0];
   const copy = dict.admin.terminal.recipe;
@@ -48,6 +48,7 @@ export default async function EditRecipePage({
         action={updateRecipe}
         error={query.error}
         saved={query.saved === "1"}
+        ingredients={ingredients}
         products={products.map((product) => ({
           id: product.id,
           name: product.translations.find((item) => item.locale === locale)?.name ?? product.slug,
@@ -63,7 +64,7 @@ export default async function EditRecipePage({
           processPlan: version?.processPlan ?? "",
           components:
             version?.ingredients.map((item) => ({
-              name: item.name,
+              ingredientId: item.ingredientId ?? "",
               quantity: decimal(item.quantity),
               unit: item.unit,
               unitPrice: decimal(item.plannedUnitPrice),

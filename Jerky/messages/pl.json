@@ -552,6 +552,11 @@
         "shoppingLede": "Połączone składniki dla zaznaczonych receptur.",
         "shoppingEmpty": "Zaznaczone receptury nie mają składników.",
         "shoppingFrom": "Z receptur",
+        "rating": "Moja ocena",
+        "meatKg": "Mięso, kg",
+        "rate": "Zapisz ocena",
+        "rated": "Ocena zapisano.",
+        "rateBad": "Ocena 0-10, mięso kg > 0.",
         "units": { "G": "g", "KG": "kg", "ML": "ml", "L": "l", "PCS": "szt." }
       }
     },

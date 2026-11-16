@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AdminPage } from "@/components/admin/AdminPage";
 import { RecipeForm } from "@/components/admin/RecipeForm";
 import { createRecipe } from "@/features/admin/recipe-actions";
-import { listAdminProducts } from "@/features/admin/queries";
+import { listAdminIngredients, listAdminProducts } from "@/features/admin/queries";
 import { readLocale } from "@/lib/i18n/request";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -19,7 +19,7 @@ export default async function NewRecipePage({
 }) {
   const { locale, dict } = await readLocale(params);
   const query = await searchParams;
-  const products = await listAdminProducts();
+  const [products, ingredients] = await Promise.all([listAdminProducts(), listAdminIngredients()]);
 
   return (
     <AdminPage title={dict.admin.terminal.recipe.newTitle} lede={dict.admin.terminal.recipe.private} back={{ href: `/${locale}/admin/recipes`, label: dict.admin.formBack }}>
@@ -28,6 +28,7 @@ export default async function NewRecipePage({
         dict={dict}
         action={createRecipe}
         error={query.error}
+        ingredients={ingredients}
         products={products.map((product) => ({
           id: product.id,
           name: product.translations.find((item) => item.locale === locale)?.name ?? product.slug,

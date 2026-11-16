@@ -1,0 +1,1 @@
+ALTER TABLE `Recipe` ADD COLUMN `rating` DECIMAL(4, 1) NULL;

@@ -261,20 +261,32 @@ export async function adminPulse(days: number) {
 export async function listAdminRecipes() {
   return prisma.recipe.findMany({
     orderBy: { updatedAt: "desc" },
-    include: {
+    select: {
+      id: true,
+      title: true,
+      status: true,
+      rating: true,
       product: { select: { translations: { select: { locale: true, name: true } } } },
       versions: {
         orderBy: { versionNumber: "desc" },
         take: 1,
         select: {
           versionNumber: true,
+          rawMeatWeightG: true,
           ingredients: {
             orderBy: { sortOrder: "asc" },
-            select: { name: true, quantity: true, unit: true, plannedUnitPrice: true },
+            select: { ingredientId: true, name: true, quantity: true, unit: true, plannedUnitPrice: true },
           },
         },
       },
     },
+  });
+}
+
+export async function listAdminIngredients() {
+  return prisma.ingredient.findMany({
+    orderBy: [{ name: "asc" }, { id: "asc" }],
+    select: { id: true, name: true, unit: true },
   });
 }
 

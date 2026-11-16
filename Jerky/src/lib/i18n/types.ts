@@ -487,6 +487,11 @@ export type Dictionary = {
         shoppingLede: string;
         shoppingEmpty: string;
         shoppingFrom: string;
+        rating: string;
+        meatKg: string;
+        rate: string;
+        rated: string;
+        rateBad: string;
         units: { G: string; KG: string; ML: string; L: string; PCS: string };
       };
     };

@@ -552,6 +552,11 @@
         "shoppingLede": "Merged ingredients for the checked recipes.",
         "shoppingEmpty": "Checked recipes have no ingredients.",
         "shoppingFrom": "From recipes",
+        "rating": "My rating",
+        "meatKg": "Meat, kg",
+        "rate": "Save rating",
+        "rated": "Rating saved.",
+        "rateBad": "Rating must be 0 to 10, meat kg above zero.",
         "units": { "G": "g", "KG": "kg", "ML": "ml", "L": "l", "PCS": "pcs" }
       }
     },
