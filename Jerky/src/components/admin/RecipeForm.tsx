@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { IngredientsMenu } from "@/components/admin/IngredientsMenu";
 import { lineCost, recipeCost } from "@/features/costing/calculate";
 import { meatTypes, recipeUnits, type MeatTypeName, type RecipeUnit } from "@/features/admin/recipe";
 import { formatAmount } from "@/lib/format";
@@ -31,7 +32,7 @@ export function RecipeForm({
   error,
   saved,
   products,
-  ingredients,
+  ingredients: initialIngredients,
   recipe,
 }: {
   locale: Locale;
@@ -57,6 +58,7 @@ export function RecipeForm({
   const [components, setComponents] = useState<ComponentRow[]>(() =>
     recipe?.components.length ? recipe.components.map((row) => ({ ...row, id: crypto.randomUUID() })) : [blankRow()],
   );
+  const [ingredients, setIngredients] = useState(initialIngredients);
   const cost = recipeCost(
     components
       .filter((row) => row.ingredientId.trim() || row.quantity.trim())
@@ -121,7 +123,10 @@ export function RecipeForm({
 
       <fieldset className="grid gap-3">
         <legend className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">{copy.marinade}</legend>
-        <p className="text-sm normal-case tracking-normal text-[#9c9186]">{copy.costHint}</p>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="text-sm normal-case tracking-normal text-[#9c9186]">{copy.costHint}</p>
+          <IngredientsMenu items={ingredients} dict={dict} onItemsChange={setIngredients} />
+        </div>
         <div className="rise grid gap-3">
           {components.map((row) => {
             const amount = lineCost(parseAmount(row.quantity) ?? Number.NaN, parseAmount(row.unitPrice));

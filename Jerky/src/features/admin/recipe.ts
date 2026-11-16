@@ -6,6 +6,8 @@ export type RecipeUnit = (typeof recipeUnits)[number];
 export type RecipeStatusName = (typeof recipeStatuses)[number];
 export type MeatTypeName = (typeof meatTypes)[number];
 
+export type IngredientItem = { id: string; name: string };
+
 export type RecipeDraft = {
   title: string;
   productId: string | null;

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AdminPage } from "@/components/admin/AdminPage";
-import { addIngredient, rateRecipe, shoppingList } from "@/features/admin/recipe-actions";
+import { IngredientsMenu } from "@/components/admin/IngredientsMenu";
+import { rateRecipe, shoppingList } from "@/features/admin/recipe-actions";
 import type { RecipeUnit } from "@/features/admin/recipe";
 import { listAdminIngredients, listAdminRecipes } from "@/features/admin/queries";
 import { localeTag } from "@/lib/i18n/locales";
@@ -66,7 +67,7 @@ export default async function AdminRecipesPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ shopping?: string; ids?: string; rated?: string; added?: string; error?: string }>;
+  searchParams: Promise<{ shopping?: string; ids?: string; rated?: string }>;
 }) {
   const { locale, dict } = await readLocale(params);
   const query = await searchParams;
@@ -74,8 +75,6 @@ export default async function AdminRecipesPage({
   const copy = dict.admin.terminal.recipe;
   const picked = (query.ids ?? "").split(",").filter(Boolean);
   const number = new Intl.NumberFormat(localeTag(locale), { maximumFractionDigits: 3 });
-  const inputClass =
-    "w-full rounded-lg border border-white/10 bg-[#100e0c] px-3 py-2 text-sm text-[#f3efe6] outline-none placeholder:normal-case placeholder:tracking-normal placeholder:text-[#8d8278] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper";
 
   const lines = new Map<string, ShoppingLine>();
   if (query.shopping === "1") {
@@ -98,34 +97,7 @@ export default async function AdminRecipesPage({
       lede={copy.private}
       action={
         <div className="flex flex-wrap items-center gap-3">
-          <details className="relative">
-            <summary className="press w-fit cursor-pointer list-none rounded-lg border border-white/15 px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-[#e7d3bc]">
-              {copy.ingredients}
-            </summary>
-            <div className="absolute right-0 z-20 mt-2 grid w-[min(20rem,calc(100vw-3rem))] gap-3 rounded-xl border border-white/10 bg-[#171310] p-4 shadow-2xl">
-              <ul className="grid max-h-60 gap-1 overflow-y-auto text-sm">
-                {ingredients.length === 0 ? <li className="text-[#9c9186]">—</li> : null}
-                {ingredients.map((item) => (
-                  <li key={item.id}>{item.name}</li>
-                ))}
-              </ul>
-              <form action={addIngredient} className="grid gap-2">
-                <input type="hidden" name="locale" value={locale} />
-                <input
-                  name="name"
-                  maxLength={160}
-                  aria-label={copy.ingredientName}
-                  placeholder={copy.example.ingredient}
-                  className={inputClass}
-                />
-                <button className="press w-fit rounded-lg bg-[#e7d3bc] px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#1a1612]">
-                  {copy.addIngredient}
-                </button>
-              </form>
-              {query.added === "1" ? <p className="text-xs text-emerald-300">{dict.admin.saved}</p> : null}
-              {query.error === "fields" ? <p className="text-xs text-chili">{dict.admin.errors.fields}</p> : null}
-            </div>
-          </details>
+          <IngredientsMenu items={ingredients} dict={dict} />
           <Link
             href={`/${locale}/admin/recipes/new`}
             className="press inline-flex rounded-lg bg-[#e7d3bc] px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-[#1a1612]"
@@ -137,7 +109,6 @@ export default async function AdminRecipesPage({
     >
       {query.rated === "bad" ? <p className="text-sm text-chili">{copy.rateBad}</p> : null}
       {query.rated === "1" ? <p className="text-sm text-emerald-300">{copy.rated}</p> : null}
-      {query.error === "fields" ? <p className="text-sm text-chili">{dict.admin.errors.fields}</p> : null}
       {recipes.length === 0 ? <p className="text-sm text-[#b7aa9d]">{copy.empty}</p> : null}
       <form id="shopping" action={shoppingList}>
         <input type="hidden" name="locale" value={locale} />

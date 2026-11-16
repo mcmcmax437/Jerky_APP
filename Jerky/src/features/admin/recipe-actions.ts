@@ -120,16 +120,6 @@ export async function shoppingList(formData: FormData) {
   redirect(`/${locale}/admin/recipes?shopping=1&ids=${ids.join(",")}`);
 }
 
-export async function addIngredient(formData: FormData) {
-  await requireAdmin();
-  const locale = localeFrom(formData);
-  const name = String(formData.get("name") ?? "").trim();
-  if (!name || name.length > 160) redirect(`/${locale}/admin/recipes?error=fields`);
-  const existing = await prisma.ingredient.findMany({ where: { name }, take: 1, select: { id: true } });
-  if (existing.length === 0) await prisma.ingredient.create({ data: { name } });
-  redirect(`/${locale}/admin/recipes?added=1`);
-}
-
 function decimalOf(value: string) {
   const text = value.trim().replace(",", ".");
   if (!text) return null;

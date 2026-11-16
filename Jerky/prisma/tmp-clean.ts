@@ -15,7 +15,7 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
-  const ids = ["cmwjk12em0006dwqzar8x0vvo", "cmwjk162r000adwqzx6u6atsy", "cmwjk0y3y0003dwqz1xd2hphu"];
+  const ids = ["cmwjkoyp00002asqz7f2y4mpp"];
   const versions = await prisma.recipeVersion.findMany({ where: { recipeId: { in: ids } }, select: { id: true } });
   const versionIds = versions.map((row) => row.id);
   if (versionIds.length > 0) {
@@ -24,7 +24,7 @@ async function main() {
   }
   await prisma.recipeVersion.deleteMany({ where: { recipeId: { in: ids } } });
   await prisma.recipe.deleteMany({ where: { id: { in: ids } } });
-  await prisma.ingredient.deleteMany({ where: { id: { in: ["cmwjk0nw80002dwqzi06sx07y", "cmwjk0la00001dwqzfcrmvyo4"] } } });
+  await prisma.ingredient.deleteMany({ where: { name: { in: ["Salt Fine", "Cukier"] } } });
   console.log("cleaned");
 }
 
