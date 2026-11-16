@@ -4,7 +4,7 @@ import { redirect, unstable_rethrow } from "next/navigation";
 import { prisma } from "@/lib/db/prisma";
 import { isLocale, type Locale } from "@/lib/i18n/locales";
 import { getSession } from "@/features/auth/session";
-import { parseRecipeForm, recipeUnits, type RecipeDraft, type RecipeUnit } from "./recipe";
+import { parseRecipeForm, type RecipeDraft } from "./recipe";
 
 async function requireAdmin() {
   const session = await getSession();
@@ -124,10 +124,9 @@ export async function addIngredient(formData: FormData) {
   await requireAdmin();
   const locale = localeFrom(formData);
   const name = String(formData.get("name") ?? "").trim();
-  const unit = String(formData.get("unit") ?? "");
-  if (!name || name.length > 160 || !recipeUnits.includes(unit as RecipeUnit)) redirect(`/${locale}/admin/recipes?error=fields`);
+  if (!name || name.length > 160) redirect(`/${locale}/admin/recipes?error=fields`);
   const existing = await prisma.ingredient.findMany({ where: { name }, take: 1, select: { id: true } });
-  if (existing.length === 0) await prisma.ingredient.create({ data: { name, unit: unit as RecipeUnit } });
+  if (existing.length === 0) await prisma.ingredient.create({ data: { name } });
   redirect(`/${locale}/admin/recipes?added=1`);
 }
 

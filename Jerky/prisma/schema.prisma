@@ -309,7 +309,7 @@ model PurchasedProduct {
 model Ingredient {
   id        String      @id @default(cuid())
   name      String      @db.VarChar(160)
-  unit      MeasureUnit
+  unit      MeasureUnit?
   notes     String?     @db.Text
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt

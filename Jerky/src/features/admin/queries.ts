@@ -272,6 +272,8 @@ export async function listAdminRecipes() {
         take: 1,
         select: {
           versionNumber: true,
+          meatType: true,
+          marinadeHours: true,
           rawMeatWeightG: true,
           ingredients: {
             orderBy: { sortOrder: "asc" },
@@ -286,7 +288,7 @@ export async function listAdminRecipes() {
 export async function listAdminIngredients() {
   return prisma.ingredient.findMany({
     orderBy: [{ name: "asc" }, { id: "asc" }],
-    select: { id: true, name: true, unit: true },
+    select: { id: true, name: true },
   });
 }
 
