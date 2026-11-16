@@ -482,6 +482,11 @@ export type Dictionary = {
         remove: string;
         removeConfirm: string;
         used: string;
+        shopping: string;
+        shoppingTitle: string;
+        shoppingLede: string;
+        shoppingEmpty: string;
+        shoppingFrom: string;
         units: { G: string; KG: string; ML: string; L: string; PCS: string };
       };
     };

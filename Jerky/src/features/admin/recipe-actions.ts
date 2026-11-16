@@ -95,6 +95,18 @@ export async function updateRecipe(formData: FormData) {
   redirect(`/${locale}/admin/recipes/${id}?saved=1`);
 }
 
+export async function shoppingList(formData: FormData) {
+  await requireAdmin();
+  const locale = localeFrom(formData);
+  const ids = formData
+    .getAll("ids")
+    .map((value) => String(value))
+    .filter((value) => /^[a-z0-9]{20,32}$/.test(value))
+    .slice(0, 50);
+  if (ids.length === 0) redirect(`/${locale}/admin/recipes`);
+  redirect(`/${locale}/admin/recipes?shopping=1&ids=${ids.join(",")}`);
+}
+
 export async function deleteRecipe(formData: FormData) {
   await requireAdmin();
   const locale = localeFrom(formData);

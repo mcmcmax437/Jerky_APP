@@ -547,6 +547,11 @@
         "remove": "Delete recipe",
         "removeConfirm": "Delete this recipe?",
         "used": "This recipe cannot be deleted because a batch or a purchase uses it.",
+        "shopping": "What to buy",
+        "shoppingTitle": "Shopping list",
+        "shoppingLede": "Merged ingredients for the checked recipes.",
+        "shoppingEmpty": "Checked recipes have no ingredients.",
+        "shoppingFrom": "From recipes",
         "units": { "G": "g", "KG": "kg", "ML": "ml", "L": "l", "PCS": "pcs" }
       }
     },

@@ -547,6 +547,11 @@
         "remove": "Usuń recepturę",
         "removeConfirm": "Usunąć tę recepturę?",
         "used": "Tej receptury nie można usunąć, bo jest powiązana z partią albo zakupem.",
+        "shopping": "Co kupić",
+        "shoppingTitle": "Lista zakupów",
+        "shoppingLede": "Połączone składniki dla zaznaczonych receptur.",
+        "shoppingEmpty": "Zaznaczone receptury nie mają składników.",
+        "shoppingFrom": "Z receptur",
         "units": { "G": "g", "KG": "kg", "ML": "ml", "L": "l", "PCS": "szt." }
       }
     },
