@@ -308,32 +308,11 @@ export async function getAdminRecipe(id: string) {
   });
 }
 
-export async function listPurchaseRecipes() {
-  return prisma.recipe.findMany({
-    orderBy: { title: "asc" },
-    include: {
-      versions: {
-        orderBy: { versionNumber: "desc" },
-        take: 1,
-        include: { ingredients: { orderBy: { sortOrder: "asc" } } },
-      },
-    },
-  });
-}
-
 export async function listPurchases() {
   return prisma.purchasedProduct.findMany({
     orderBy: [{ purchasedOn: "desc" }, { createdAt: "desc" }],
     include: {
-      recipe: {
-        include: {
-          versions: {
-            orderBy: { versionNumber: "desc" },
-            take: 1,
-            include: { ingredients: true },
-          },
-        },
-      },
+      ingredient: { select: { id: true, name: true } },
     },
   });
 }

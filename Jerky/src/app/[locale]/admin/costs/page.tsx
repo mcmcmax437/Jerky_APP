@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { AdminPage } from "@/components/admin/AdminPage";
 import { PurchaseForm } from "@/components/admin/PurchaseForm";
 import { QrScanner } from "@/components/admin/QrScanner";
 import { addPurchaseFromQr, createPurchase, deletePurchase } from "@/features/admin/purchase-actions";
-import { listPurchaseRecipes, listPurchases } from "@/features/admin/queries";
+import { listAdminIngredients, listPurchases } from "@/features/admin/queries";
 import { lineCost } from "@/features/costing/calculate";
 import { formatAmount } from "@/lib/format";
 import { localeTag } from "@/lib/i18n/locales";
@@ -28,7 +27,7 @@ export default async function AdminCostsPage({
 }) {
   const { locale, dict } = await readLocale(params);
   const query = await searchParams;
-  const [recipes, purchases] = await Promise.all([listPurchaseRecipes(), listPurchases()]);
+  const [ingredients, purchases] = await Promise.all([listAdminIngredients(), listPurchases()]);
   const copy = dict.admin.terminal;
   const units = copy.recipe.units;
   const today = new Date().toISOString().slice(0, 10);
@@ -42,10 +41,7 @@ export default async function AdminCostsPage({
   return (
     <AdminPage title={copy.costs} lede={copy.costsLede}>
       {query.saved ? <p className="text-sm text-emerald-300">{dict.admin.saved}</p> : null}
-      {query.error === "unknown" ? <p className="text-sm text-chili">{copy.purchase.unknown}</p> : null}
-      {query.error === "many" ? <p className="text-sm text-chili">{copy.purchase.many}</p> : null}
       {query.error === "qr" ? <p className="text-sm text-chili">{copy.purchase.unknown}</p> : null}
-      {query.error === "fields" ? <p className="text-sm text-chili">{copy.purchase.missing}</p> : null}
       <QrScanner locale={locale} dict={dict} action={addPurchaseFromQr} />
       <PurchaseForm
         locale={locale}
@@ -53,16 +49,7 @@ export default async function AdminCostsPage({
         action={createPurchase}
         error={query.error}
         today={today}
-        recipes={recipes.map((recipe) => ({
-          id: recipe.id,
-          title: recipe.title,
-          lines:
-            recipe.versions[0]?.ingredients.map((item) => ({
-              name: item.name,
-              quantity: amount(item.quantity),
-              unit: item.unit,
-            })) ?? [],
-        }))}
+        ingredients={ingredients}
       />
       {rows.length === 0 ? <p className="text-sm text-[#b7aa9d]">{copy.costsEmpty}</p> : null}
       {rows.length > 0 ? (
@@ -82,11 +69,8 @@ export default async function AdminCostsPage({
             <tbody className="rise-rows">
               {rows.map(({ purchase, unitPrice, bought, spent }) => (
                 <tr key={purchase.id} className="border-t border-white/10 align-top">
-                  <td className="py-3 pr-4">
-                    {purchase.name}
-                    <span className="mt-1 block text-xs text-[#9c9186]">{purchase.recipe.title}</span>
-                  </td>
-                  <td className="py-3 pr-4">{purchase.componentName}</td>
+                  <td className="py-3 pr-4">{purchase.name}</td>
+                  <td className="py-3 pr-4">{purchase.ingredient?.name ?? purchase.componentName ?? copy.purchase.missing}</td>
                   <td className="py-3 pr-4">
                     {bought == null || purchase.quantity == null || purchase.unit == null ? copy.purchase.missing : `${amount(purchase.quantity)} ${units[purchase.unit]}`}
                   </td>

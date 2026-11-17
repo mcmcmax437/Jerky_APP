@@ -367,6 +367,7 @@ export type Dictionary = {
         empty: string;
         noLines: string;
         missing: string;
+        invalid: string;
         none: string;
         scan: string;
         stop: string;

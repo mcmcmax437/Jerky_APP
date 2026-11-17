@@ -293,17 +293,20 @@ model OrderNote {
 model PurchasedProduct {
   id            String   @id @default(cuid())
   name          String   @db.VarChar(160)
-  recipeId      String
-  componentName String   @db.VarChar(160)
+  recipeId      String?
+  componentName String?  @db.VarChar(160)
+  ingredientId  String?
   unitPrice     Decimal? @db.Decimal(12, 4)
   quantity      Decimal? @db.Decimal(12, 3)
   unit          MeasureUnit?
   purchasedOn   DateTime
   note          String?  @db.VarChar(500)
   createdAt     DateTime @default(now())
-  recipe        Recipe   @relation(fields: [recipeId], references: [id], onDelete: Restrict)
+  recipe        Recipe?   @relation(fields: [recipeId], references: [id], onDelete: SetNull)
+  ingredient    Ingredient? @relation(fields: [ingredientId], references: [id], onDelete: SetNull)
 
   @@index([recipeId, purchasedOn])
+  @@index([ingredientId, purchasedOn])
 }
 
 model Ingredient {
@@ -317,6 +320,7 @@ model Ingredient {
   prices      IngredientPriceRecord[]
   recipeLines RecipeIngredient[]
   batchUsages BatchIngredientUsage[]
+  purchases   PurchasedProduct[]
 }
 
 model IngredientPriceRecord {

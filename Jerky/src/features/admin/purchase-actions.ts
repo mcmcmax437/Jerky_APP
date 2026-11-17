@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db/prisma";
 import { isLocale, type Locale } from "@/lib/i18n/locales";
 import { getSession } from "@/features/auth/session";
-import { matchPurchaseQr, parsePurchaseQr } from "./purchase-qr";
+import { parsePurchaseQr } from "./purchase-qr";
 
 async function requireAdmin() {
   const session = await getSession();
@@ -27,8 +27,7 @@ export async function createPurchase(formData: FormData) {
   await requireAdmin();
   const locale = localeFrom(formData);
   const name = String(formData.get("name") ?? "").trim();
-  const recipeId = String(formData.get("recipeId") ?? "");
-  const componentName = String(formData.get("componentName") ?? "").trim();
+  const ingredientId = String(formData.get("ingredientId") ?? "").trim();
   const purchasedOn = parseDate(String(formData.get("purchasedOn") ?? ""));
   const note = String(formData.get("note") ?? "").trim().slice(0, 500);
   const priceText = String(formData.get("unitPrice") ?? "").trim().replace(",", ".");
@@ -41,8 +40,7 @@ export async function createPurchase(formData: FormData) {
   if (
     name.length < 1 ||
     name.length > 160 ||
-    !recipeId ||
-    !componentName ||
+    !ingredientId ||
     !purchasedOn ||
     !Number.isFinite(unitPrice) ||
     unitPrice < 0 ||
@@ -54,30 +52,23 @@ export async function createPurchase(formData: FormData) {
     redirect(`/${locale}/admin/costs?error=fields`);
   }
 
-  const recipe = await prisma.recipe.findUnique({
-    where: { id: recipeId },
-    include: {
-      versions: {
-        orderBy: { versionNumber: "desc" },
-        take: 1,
-        include: { ingredients: true },
-      },
-    },
-  });
-  const version = recipe?.versions[0];
-  const matches = version?.ingredients.filter((item) => item.name.trim().toLowerCase() === componentName.toLowerCase()) ?? [];
-  if (matches.length === 0) redirect(`/${locale}/admin/costs?error=fields`);
+  const ingredient = await prisma.ingredient.findMany({ where: { id: ingredientId }, take: 1, select: { id: true } });
+  if (ingredient.length === 0) redirect(`/${locale}/admin/costs?error=fields`);
 
   const price = Math.round(unitPrice * 10000) / 10000;
   const bought = Math.round(quantity * 1000) / 1000;
   await prisma.purchasedProduct.create({
-    data: { name, recipeId, componentName, unitPrice: price, quantity: bought, unit: measure, purchasedOn, note: note || null },
+    data: {
+      name,
+      ingredientId,
+      unitPrice: price,
+      quantity: bought,
+      unit: measure,
+      purchasedOn,
+      note: note || null,
+    },
   });
-  await prisma.recipeIngredient.updateMany({
-    where: { id: { in: matches.map((item) => item.id) } },
-    data: { plannedUnitPrice: price },
-  });
-  redirect(`/${locale}/admin/costs`);
+  redirect(`/${locale}/admin/costs?saved=1`);
 }
 
 export async function addPurchaseFromQr(formData: FormData) {
@@ -86,28 +77,16 @@ export async function addPurchaseFromQr(formData: FormData) {
   const parsed = parsePurchaseQr(String(formData.get("code") ?? ""));
   if (!parsed) redirect(`/${locale}/admin/costs?error=qr`);
 
-  const recipes = await prisma.recipe.findMany({
-    include: {
-      versions: { orderBy: { versionNumber: "desc" }, take: 1, include: { ingredients: true } },
-    },
+  const ingredient = await prisma.ingredient.findMany({
+    where: { name: parsed.component },
+    take: 1,
+    select: { id: true },
   });
-  const lines = recipes.flatMap((recipe) =>
-    (recipe.versions[0]?.ingredients ?? []).map((item) => ({
-      recipeId: recipe.id,
-      recipeTitle: recipe.title,
-      componentName: item.name,
-    })),
-  );
-  const matches = matchPurchaseQr(lines, parsed);
-  if (matches.length === 0) redirect(`/${locale}/admin/costs?error=unknown`);
-  if (matches.length > 1) redirect(`/${locale}/admin/costs?error=many`);
-
-  const match = matches[0];
   await prisma.purchasedProduct.create({
     data: {
       name: parsed.name,
-      recipeId: match.recipeId,
-      componentName: match.componentName,
+      ingredientId: ingredient[0]?.id ?? null,
+      componentName: ingredient.length === 0 ? parsed.component : null,
       purchasedOn: new Date(`${new Date().toISOString().slice(0, 10)}T00:00:00.000Z`),
     },
   });
