@@ -15,6 +15,7 @@ export type RecipeDraft = {
   meatType: MeatTypeName;
   marinadeHours: number | null;
   processPlan: string | null;
+  ownerNotes: string | null;
   components: { ingredientId: string; quantity: number; unit: RecipeUnit; unitPrice: number | null }[];
   mode: "save" | "version";
 };
@@ -49,7 +50,8 @@ export function parseRecipeForm(formData: FormData): { ok: true; data: RecipeDra
 
   const marinadeHours = optionalNumber(String(formData.get("marinadeHours") ?? ""), 2);
   const processPlan = optionalText(String(formData.get("processPlan") ?? ""), 8000);
-  if (marinadeHours === "invalid" || processPlan === "invalid") return { ok: false };
+  const ownerNotes = optionalText(String(formData.get("notes") ?? ""), 8000);
+  if (marinadeHours === "invalid" || processPlan === "invalid" || ownerNotes === "invalid") return { ok: false };
 
   const ids = formData.getAll("componentIngredient").map((item) => String(item));
   const quantities = formData.getAll("componentQty").map((item) => String(item));
@@ -79,6 +81,7 @@ export function parseRecipeForm(formData: FormData): { ok: true; data: RecipeDra
       meatType: meatType as MeatTypeName,
       marinadeHours,
       processPlan,
+      ownerNotes,
       components,
       mode,
     },

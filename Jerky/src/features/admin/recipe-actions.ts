@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db/prisma";
 import { isLocale, type Locale } from "@/lib/i18n/locales";
 import { getSession } from "@/features/auth/session";
 import { parseRecipeForm, type RecipeDraft } from "./recipe";
+import { recipePhotoIsInvalid, removeRecipePhoto, saveRecipePhoto } from "./recipe-photo";
 
 async function requireAdmin() {
   const session = await getSession();
@@ -36,7 +37,7 @@ function versionData(data: RecipeDraft, names: Map<string, string>) {
     sliceThicknessMm: null,
     equipment: null,
     processPlan: data.processPlan,
-    ownerNotes: null,
+    ownerNotes: data.ownerNotes,
     ingredients: {
       create: data.components.map((item, index) => ({
         ingredientId: item.ingredientId,
@@ -50,9 +51,28 @@ function versionData(data: RecipeDraft, names: Map<string, string>) {
   };
 }
 
+async function attachRecipePhoto(versionId: string, file: FormDataEntryValue | null) {
+  if (!(file instanceof File) || file.size === 0) return;
+  const previous = await prisma.mediaAsset.findMany({ where: { recipeVersionId: versionId }, select: { relativePath: true } });
+  for (const item of previous) await removeRecipePhoto(item.relativePath);
+  await prisma.mediaAsset.deleteMany({ where: { recipeVersionId: versionId } });
+  const upload = await saveRecipePhoto(file);
+  if (!upload) return;
+  await prisma.mediaAsset.create({
+    data: {
+      relativePath: upload.relativePath,
+      mimeType: upload.mimeType,
+      sizeBytes: upload.sizeBytes,
+      category: "RESULT",
+      recipeVersionId: versionId,
+    },
+  });
+}
+
 export async function createRecipe(formData: FormData) {
   await requireAdmin();
   const locale = localeFrom(formData);
+  if (recipePhotoIsInvalid(formData.get("photo"))) redirect(`/${locale}/admin/recipes/new?error=photo`);
   const parsed = parseRecipeForm(formData);
   if (!parsed.ok) redirect(`/${locale}/admin/recipes/new?error=recipe`);
   const data = parsed.data;
@@ -70,6 +90,8 @@ export async function createRecipe(formData: FormData) {
       versions: { create: { versionNumber: 1, ...versionData(data, names) } },
     },
   });
+  const first = await prisma.recipeVersion.findMany({ where: { recipeId: recipe.id }, take: 1, select: { id: true } });
+  await attachRecipePhoto(first[0].id, formData.get("photo"));
   redirect(`/${locale}/admin/recipes/${recipe.id}?saved=1`);
 }
 
@@ -77,6 +99,7 @@ export async function updateRecipe(formData: FormData) {
   await requireAdmin();
   const locale = localeFrom(formData);
   const id = String(formData.get("id") ?? "");
+  if (recipePhotoIsInvalid(formData.get("photo"))) redirect(`/${locale}/admin/recipes/${id}?error=photo`);
   const parsed = parseRecipeForm(formData);
   if (!parsed.ok) redirect(`/${locale}/admin/recipes/${id}?error=recipe`);
   const data = parsed.data;
@@ -96,15 +119,21 @@ export async function updateRecipe(formData: FormData) {
     data: { title: data.title, status: data.status, productId: data.productId },
   });
   const latest = recipe.versions[0];
+  let versionId: string;
   if (!latest || data.mode === "version") {
-    await prisma.recipeVersion.create({
-      data: { recipeId: id, versionNumber: (latest?.versionNumber ?? 0) + 1, ...versionData(data, names) },
-    });
+    versionId = (
+      await prisma.recipeVersion.create({
+        data: { recipeId: id, versionNumber: (latest?.versionNumber ?? 0) + 1, ...versionData(data, names) },
+        select: { id: true }
+      })
+    ).id;
   } else {
+    versionId = latest.id;
     await prisma.recipeIngredient.deleteMany({ where: { recipeVersionId: latest.id } });
     await prisma.recipeStep.deleteMany({ where: { recipeVersionId: latest.id } });
     await prisma.recipeVersion.update({ where: { id: latest.id }, data: versionData(data, names) });
   }
+  await attachRecipePhoto(versionId, formData.get("photo"));
   redirect(`/${locale}/admin/recipes/${id}?saved=1`);
 }
 

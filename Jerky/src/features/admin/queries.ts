@@ -275,6 +275,12 @@ export async function listAdminRecipes() {
           meatType: true,
           marinadeHours: true,
           rawMeatWeightG: true,
+          ownerNotes: true,
+          assets: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+            select: { id: true },
+          },
           ingredients: {
             orderBy: { sortOrder: "asc" },
             select: { ingredientId: true, name: true, quantity: true, unit: true, plannedUnitPrice: true },
@@ -302,6 +308,11 @@ export async function getAdminRecipe(id: string) {
         include: {
           ingredients: { orderBy: { sortOrder: "asc" } },
           steps: { orderBy: { sortOrder: "asc" } },
+          assets: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+            select: { id: true },
+          },
         },
       },
     },

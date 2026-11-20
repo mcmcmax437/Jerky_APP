@@ -143,6 +143,12 @@ export default async function AdminRecipesPage({
                   {copy.ingredients}
                 </th>
                 <th scope="col" className="whitespace-nowrap px-3 py-3 font-semibold">
+                  {copy.notes}
+                </th>
+                <th scope="col" className="whitespace-nowrap px-3 py-3 font-semibold">
+                  {dict.admin.photo}
+                </th>
+                <th scope="col" className="whitespace-nowrap px-3 py-3 font-semibold">
                   {copy.rating}
                 </th>
               </tr>
@@ -197,6 +203,21 @@ export default async function AdminRecipesPage({
                       {version?.marinadeHours == null ? "—" : number.format(Number(version.marinadeHours))}
                     </td>
                     <td className="px-3 py-3">{version ? version.ingredients.length : 0}</td>
+                    <td className="px-3 py-3">
+                      {version?.ownerNotes ? (
+                        <span className="block max-w-64 truncate text-xs text-[#9c9186]">{version.ownerNotes}</span>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+                    <td className="px-3 py-3">
+                      {version?.assets[0] ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={`/api/private-media/${version.assets[0].id}`} alt={recipe.title} className="h-12 w-12 object-cover rounded-lg" />
+                      ) : (
+                        "—"
+                      )}
+                    </td>
                     <td className="px-3 py-3">
                       <form action={rateRecipe}>
                         <input type="hidden" name="locale" value={locale} />

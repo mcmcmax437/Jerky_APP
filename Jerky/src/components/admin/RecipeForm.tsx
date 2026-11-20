@@ -51,6 +51,8 @@ export function RecipeForm({
     meatType: MeatTypeName | "";
     marinadeHours: string;
     processPlan: string;
+    notes: string;
+    photoId: string | null;
     components: ComponentFields[];
   };
 }) {
@@ -67,7 +69,8 @@ export function RecipeForm({
         unitPrice: parseAmount(row.unitPrice),
       })),
   );
-  const message = error === "recipe" ? dict.admin.errors.recipe : error === "used" ? copy.used : null;
+  const message =
+    error === "recipe" ? dict.admin.errors.recipe : error === "used" ? copy.used : error === "photo" ? dict.admin.errors.photo : null;
 
   return (
     <form action={action} className="grid max-w-3xl gap-6">
@@ -209,6 +212,25 @@ export function RecipeForm({
       <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
         {copy.process}
         <textarea name="processPlan" rows={4} defaultValue={recipe?.processPlan ?? ""} placeholder={copy.example.process} className={fieldClass} />
+      </label>
+
+      <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
+        {copy.notes}
+        <textarea name="notes" rows={3} maxLength={8000} defaultValue={recipe?.notes ?? ""} className={fieldClass} />
+      </label>
+
+      <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
+        {dict.admin.photo}
+        {recipe?.photoId ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={`/api/private-media/${recipe.photoId}`} alt="" className="mt-3 w-full max-h-40 object-cover rounded-lg" />
+        ) : null}
+        <input
+          name="photo"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          className={`${fieldClass} file:mr-3 file:border-0 file:bg-transparent file:text-xs file:uppercase file:tracking-[0.14em] file:text-[#e7d3bc]`}
+        />
       </label>
 
       <div className="flex flex-wrap gap-3">

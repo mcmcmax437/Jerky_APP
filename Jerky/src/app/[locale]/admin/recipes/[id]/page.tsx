@@ -62,6 +62,8 @@ export default async function EditRecipePage({
           meatType: meatTypes.includes(version?.meatType as MeatTypeName) ? (version?.meatType as MeatTypeName) : "",
           marinadeHours: decimal(version?.marinadeHours),
           processPlan: version?.processPlan ?? "",
+          notes: version?.ownerNotes ?? "",
+          photoId: version?.assets[0]?.id ?? null,
           components:
             version?.ingredients.map((item) => ({
               ingredientId: item.ingredientId ?? "",
