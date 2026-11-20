@@ -260,7 +260,7 @@ export async function adminPulse(days: number) {
 
 export async function listAdminRecipes() {
   return prisma.recipe.findMany({
-    orderBy: { updatedAt: "desc" },
+    orderBy: { createdAt: "desc" },
     select: {
       id: true,
       title: true,

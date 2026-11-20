@@ -273,6 +273,83 @@ button:not(:disabled):active,
   animation-delay: 360ms;
 }
 
+.stars-preview {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 80ms linear;
+}
+
+.stars:has([data-tap="0.5"]:hover) .stars-preview[data-tap="0.5"],
+.stars:has([data-tap="1"]:hover) .stars-preview[data-tap="1"],
+.stars:has([data-tap="1.5"]:hover) .stars-preview[data-tap="1.5"],
+.stars:has([data-tap="2"]:hover) .stars-preview[data-tap="2"],
+.stars:has([data-tap="2.5"]:hover) .stars-preview[data-tap="2.5"],
+.stars:has([data-tap="3"]:hover) .stars-preview[data-tap="3"],
+.stars:has([data-tap="3.5"]:hover) .stars-preview[data-tap="3.5"],
+.stars:has([data-tap="4"]:hover) .stars-preview[data-tap="4"],
+.stars:has([data-tap="4.5"]:hover) .stars-preview[data-tap="4.5"],
+.stars:has([data-tap="5"]:hover) .stars-preview[data-tap="5"],
+.stars:has([data-tap="5.5"]:hover) .stars-preview[data-tap="5.5"],
+.stars:has([data-tap="6"]:hover) .stars-preview[data-tap="6"],
+.stars:has([data-tap="6.5"]:hover) .stars-preview[data-tap="6.5"],
+.stars:has([data-tap="7"]:hover) .stars-preview[data-tap="7"],
+.stars:has([data-tap="7.5"]:hover) .stars-preview[data-tap="7.5"],
+.stars:has([data-tap="8"]:hover) .stars-preview[data-tap="8"],
+.stars:has([data-tap="8.5"]:hover) .stars-preview[data-tap="8.5"],
+.stars:has([data-tap="9"]:hover) .stars-preview[data-tap="9"],
+.stars:has([data-tap="9.5"]:hover) .stars-preview[data-tap="9.5"],
+.stars:has([data-tap="10"]:hover) .stars-preview[data-tap="10"] {
+  opacity: 1;
+}
+
+@keyframes score-pop {
+  0% {
+    transform: scale(0.86);
+  }
+
+  60% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.score-pop {
+  animation: score-pop 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: left center;
+}
+
+@keyframes score-fill {
+  from {
+    width: 0%;
+  }
+}
+
+.score-fill {
+  animation: score-fill 340ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+@keyframes score-flash {
+  from {
+    background-color: rgba(166, 110, 75, 0.26);
+  }
+
+  to {
+    background-color: rgba(166, 110, 75, 0);
+  }
+}
+
+.score-flash {
+  animation: score-flash 900ms ease-out both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

@@ -23,40 +23,62 @@ function ingredientKey(item: { ingredientId: string | null; name: string }) {
 
 const starPath = "M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3.1-5.8 3.1 1.1-6.5L2.6 9.3l6.5-.9z";
 
-function Stars({ rating, text }: { rating: number | null; text: string }) {
+function Stars({ rating, text, animate }: { rating: number | null; text: string; animate: boolean }) {
   const value = rating ?? 0;
   return (
-    <span className="flex items-center gap-0.5">
-      {Array.from({ length: 10 }, (_, index) => {
-        const step = index + 1;
-        const portion = Math.max(0, Math.min(1, value - index));
-        return (
-          <span key={step} className="relative inline-flex h-5 w-5">
-            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-[#3a3029]" fill="currentColor">
-              <path d={starPath} />
-            </svg>
-            <span className="pointer-events-none absolute inset-0 overflow-hidden" style={{ width: `${portion * 100}%` }}>
-              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-[#e7d3bc]" fill="currentColor">
+    <span className="inline-flex items-center gap-1">
+      <span className={`stars relative inline-flex gap-0.5${animate ? " score-pop" : ""}`}>
+        {Array.from({ length: 10 }, (_, index) => {
+          const step = index + 1;
+          const portion = Math.max(0, Math.min(1, value - index));
+          return (
+            <span key={step} className="relative inline-flex h-5 w-5">
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-[#3a3029]" fill="currentColor">
+                <path d={starPath} />
+              </svg>
+              <span
+                className={`absolute inset-0 overflow-hidden pointer-events-none${animate ? " score-fill" : ""}`}
+                style={{ animationDelay: animate ? `${index * 45}ms` : undefined, width: `${portion * 100}%` }}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-[#e7d3bc]" fill="currentColor">
+                  <path d={starPath} />
+                </svg>
+              </span>
+              <button
+                type="submit"
+                name="rating"
+                data-tap={String(step - 0.5)}
+                value={String(step - 0.5)}
+                aria-label={String(step - 0.5)}
+                className="absolute inset-y-0 left-0 w-1/2 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
+              />
+              <button
+                type="submit"
+                name="rating"
+                data-tap={String(step)}
+                value={String(step)}
+                aria-label={String(step)}
+                className="absolute inset-y-0 right-0 w-1/2 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
+              />
+            </span>
+          );
+        })}
+        {Array.from({ length: 20 }, (_, index) => {
+          const tap = (index + 1) / 2;
+          return (
+            <span
+              key={String(tap)}
+              data-tap={String(tap)}
+              className="stars-preview overflow-hidden"
+              style={{ width: `${(tap / 10) * 100}%` }}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-[#a66e4b]" fill="currentColor">
                 <path d={starPath} />
               </svg>
             </span>
-            <button
-              type="submit"
-              name="rating"
-              value={String(step - 0.5)}
-              aria-label={String(step - 0.5)}
-              className="absolute inset-y-0 left-0 w-1/2 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
-            />
-            <button
-              type="submit"
-              name="rating"
-              value={String(step)}
-              aria-label={String(step)}
-              className="absolute inset-y-0 right-0 w-1/2 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper"
-            />
-          </span>
-        );
-      })}
+          );
+        })}
+      </span>
       <span className="ml-1 text-xs text-[#9c9186]">{text}</span>
     </span>
   );
@@ -74,6 +96,7 @@ export default async function AdminRecipesPage({
   const [recipes, ingredients] = await Promise.all([listAdminRecipes(), listAdminIngredients()]);
   const copy = dict.admin.terminal.recipe;
   const picked = (query.ids ?? "").split(",").filter(Boolean);
+  const ratedId = /^[a-z0-9]{20,32}$/.test(query.rated ?? "") ? query.rated : "";
   const number = new Intl.NumberFormat(localeTag(locale), { maximumFractionDigits: 3 });
 
   const lines = new Map<string, ShoppingLine>();
@@ -108,7 +131,7 @@ export default async function AdminRecipesPage({
       }
     >
       {query.rated === "bad" ? <p className="text-sm text-chili">{copy.rateBad}</p> : null}
-      {query.rated === "1" ? <p className="text-sm text-emerald-300">{copy.rated}</p> : null}
+      {ratedId ? <p className="text-sm text-emerald-300">{copy.rated}</p> : null}
       {recipes.length === 0 ? <p className="text-sm text-[#b7aa9d]">{copy.empty}</p> : null}
       <form id="shopping" action={shoppingList}>
         <input type="hidden" name="locale" value={locale} />
@@ -158,8 +181,9 @@ export default async function AdminRecipesPage({
                 const version = recipe.versions[0];
                 const rating = recipe.rating == null ? null : Number(recipe.rating.toString());
                 const meatKg = version?.rawMeatWeightG == null ? null : version.rawMeatWeightG / 1000;
+                const isRated = ratedId === recipe.id;
                 return (
-                  <tr key={recipe.id} className="border-t border-white/5 align-top">
+                  <tr key={recipe.id} className={`border-t border-white/5 align-top${isRated ? " score-flash" : ""}`}>
                     <td className="px-3 py-3">
                       <input
                         type="checkbox"
@@ -222,7 +246,7 @@ export default async function AdminRecipesPage({
                       <form action={rateRecipe}>
                         <input type="hidden" name="locale" value={locale} />
                         <input type="hidden" name="id" value={recipe.id} />
-                        <Stars rating={rating} text={rating == null ? "" : number.format(rating)} />
+                        <Stars rating={rating} text={rating == null ? "" : number.format(rating)} animate={isRated} />
                       </form>
                     </td>
                   </tr>

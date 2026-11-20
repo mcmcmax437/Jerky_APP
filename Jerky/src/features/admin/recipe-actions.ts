@@ -183,7 +183,7 @@ export async function rateRecipe(formData: FormData) {
       });
     }
   }
-  redirect(`/${locale}/admin/recipes?rated=1`);
+  redirect(`/${locale}/admin/recipes?rated=${id}`);
 }
 
 export async function deleteRecipe(formData: FormData) {
