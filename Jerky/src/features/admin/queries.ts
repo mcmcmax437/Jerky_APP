@@ -275,7 +275,7 @@ export async function listAdminRecipes() {
           meatType: true,
           marinadeHours: true,
           rawMeatWeightG: true,
-          ownerNotes: true,
+          processPlan: true,
           assets: {
             orderBy: { createdAt: "desc" },
             take: 1,

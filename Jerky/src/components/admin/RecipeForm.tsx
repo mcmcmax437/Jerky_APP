@@ -51,7 +51,6 @@ export function RecipeForm({
     meatType: MeatTypeName | "";
     marinadeHours: string;
     processPlan: string;
-    notes: string;
     photoId: string | null;
     components: ComponentFields[];
   };
@@ -210,13 +209,8 @@ export function RecipeForm({
       </fieldset>
 
       <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
-        {copy.process}
-        <textarea name="processPlan" rows={4} defaultValue={recipe?.processPlan ?? ""} placeholder={copy.example.process} className={fieldClass} />
-      </label>
-
-      <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">
         {copy.notes}
-        <textarea name="notes" rows={3} maxLength={8000} defaultValue={recipe?.notes ?? ""} className={fieldClass} />
+        <textarea name="processPlan" rows={4} defaultValue={recipe?.processPlan ?? ""} placeholder={copy.example.process} className={fieldClass} />
       </label>
 
       <label className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b7aa9d]">

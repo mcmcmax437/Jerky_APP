@@ -37,7 +37,6 @@ function versionData(data: RecipeDraft, names: Map<string, string>) {
     sliceThicknessMm: null,
     equipment: null,
     processPlan: data.processPlan,
-    ownerNotes: data.ownerNotes,
     ingredients: {
       create: data.components.map((item, index) => ({
         ingredientId: item.ingredientId,

@@ -204,8 +204,8 @@ export default async function AdminRecipesPage({
                     </td>
                     <td className="px-3 py-3">{version ? version.ingredients.length : 0}</td>
                     <td className="px-3 py-3">
-                      {version?.ownerNotes ? (
-                        <span className="block max-w-64 truncate text-xs text-[#9c9186]">{version.ownerNotes}</span>
+                      {version?.processPlan ? (
+                        <span className="block max-w-64 truncate text-xs text-[#9c9186]">{version.processPlan}</span>
                       ) : (
                         "—"
                       )}
